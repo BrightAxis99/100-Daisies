@@ -674,14 +674,15 @@ function endIntroQuiz(){
 }
 
 /* ============ DAISY RAIN (arcade / falling) ============ */
+// Every round keeps a NUMBER on one side — either a number falls and you pick
+// the matching item, or an item falls and you recall its number. (Pure
+// word<->picture rounds are left out: they teach artwork ID, not the numbers.)
 const RAIN_CHALLENGES=[
-  {show:'num',    pick:'pic'},
-  {show:'num',    pick:'word'},
-  {show:'word',   pick:'num'},
-  {show:'word',   pick:'pic'},
-  {show:'pic',    pick:'num'},
-  {show:'pic',    pick:'word'},
-  {show:'picword',pick:'num'},
+  {show:'num',    pick:'pic'},   // number falls -> pick its picture
+  {show:'num',    pick:'word'},  // number falls -> pick its word
+  {show:'word',   pick:'num'},   // word falls   -> recall the number
+  {show:'pic',    pick:'num'},   // picture falls-> recall the number
+  {show:'picword',pick:'num'},   // picture+word -> recall the number
 ];
 function rainCardHTML(p, show){
   if(show==='num')  return '<div class="rnum">'+two(p.n)+'</div>';
