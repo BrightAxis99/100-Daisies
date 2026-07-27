@@ -6,7 +6,7 @@ Everything lives in a single `index.html` file: 101 hand-drawn SVG icons and all
 
 ## How to play
 
-Open `index.html` in any browser, then work through the six modes:
+Open `index.html` in any browser. New to the system? **Start with The Code** — a one-screen reference (with memory hooks) of which consonant sounds map to each digit 0–9, plus a quick self-quiz. Every peg word is built from it. Then work through the six practice modes:
 
 1. **Learn** — flip through the cards to study each number, picture, and word.
 2. **Drill** — mixed-direction multiple choice; reinforces the links, weighted toward your shakier pegs.
