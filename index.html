@@ -117,6 +117,42 @@
   .timerbar{height:8px; background:var(--paper-2); border-radius:99px; overflow:hidden; margin:8px 0 4px}
   .timerbar > i{display:block; height:100%; background:var(--accent); width:100%; transition:width .25s linear}
 
+  /* ---------- daisy rain (arcade / falling) ---------- */
+  .rlives{display:flex; gap:5px; align-items:center}
+  .rlife{font-size:1.05rem; line-height:1}
+  .rlife.spent{opacity:.22; filter:grayscale(1)}
+  .stage.rain{padding:0; overflow:hidden}
+  .stage.rain::before{inset:0; border:none}
+  .sky{position:relative; height:min(52vh,360px); overflow:hidden;
+       background:linear-gradient(180deg,#f4ecda 0%,var(--card) 72%); border-radius:16px}
+  .sky .ground{position:absolute; left:0; right:0; bottom:0; height:3px;
+       background:repeating-linear-gradient(90deg,var(--accent) 0 10px,transparent 10px 20px); opacity:.5}
+  .rcard{position:absolute; top:0; left:50%; transform:translateX(-50%);
+         width:132px; background:var(--card); border:1.5px solid var(--line);
+         border-radius:14px; box-shadow:var(--shadow); padding:12px 10px; text-align:center; will-change:top}
+  .rcard .rnum{font-family:var(--serif); font-weight:700; font-size:2.7rem; color:var(--accent-deep); line-height:1}
+  .rcard .ricon{width:82px; height:82px; margin:0 auto}
+  .rcard .ricon svg{width:100%; height:100%}
+  .rcard .rword{font-family:var(--serif); font-weight:600; font-size:1.05rem; margin-top:4px}
+  @keyframes burst{0%{transform:translateX(-50%) scale(1);opacity:1}55%{transform:translateX(-50%) scale(1.28);opacity:1}100%{transform:translateX(-50%) scale(.4);opacity:0}}
+  .rcard.burst{animation:burst .28s ease-in forwards}
+  @keyframes shake{0%,100%{transform:translateX(-50%)}25%{transform:translateX(-59%)}75%{transform:translateX(-41%)}}
+  .rcard.miss{animation:shake .3s; border-color:var(--red)}
+  .rain-opts{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:14px}
+  @media(max-width:520px){.rain-opts{grid-template-columns:repeat(2,1fr)}}
+  .ropt{background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:10px 6px;
+        cursor:pointer; display:flex; align-items:center; justify-content:center; min-height:64px;
+        transition:transform .1s, background .1s}
+  .ropt:hover{background:#fff; transform:translateY(-1px)}
+  .ropt:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+  .ropt .iconbox{width:56px; height:56px; margin:0}
+  .ropt .rnum-opt{font-family:var(--serif); font-weight:700; font-size:1.7rem; color:var(--ink)}
+  .ropt .rword-opt{font-family:var(--serif); font-weight:600; font-size:1rem; text-align:center; line-height:1.15; color:var(--ink); padding:0 2px}
+  .rcard .rword.solo{font-size:1.3rem; margin-top:0; padding:6px 2px}
+  .ropt.correct{background:#e7f1ea; border-color:var(--good)}
+  .ropt.wrong{background:#f6e3e0; border-color:var(--red)}
+  .ropt[disabled]{cursor:default}
+
   .flipcard{perspective:1200px; margin:8px auto 0; width:260px; max-width:100%}
   .flipinner{position:relative; transition:transform .5s; transform-style:preserve-3d; min-height:250px}
   .flipcard.flipped .flipinner{transform:rotateY(180deg)}
@@ -218,6 +254,11 @@
         <div class="step">STEP 5</div><h3>Speed</h3>
         <p>Beat the clock. Rapid-fire recall to turn &ldquo;I can work it out&rdquo; into &ldquo;it&rsquo;s just there.&rdquo;</p>
         <div class="how">Timed &middot; multiple choice</div>
+      </button>
+      <button class="mode" onclick="startMode('rain')" style="grid-column:1/-1">
+        <div class="step">STEP 6</div><h3>Daisy Rain &#127804;</h3>
+        <p>Arcade mode. A word, number, or picture drifts down from the sky &mdash; tap its match before it lands. It speeds up as you go. Three lives.</p>
+        <div class="how">Falling &middot; tap the match &middot; survive</div>
       </button>
     </div>
 
@@ -451,6 +492,7 @@ function startMode(mode){
   if(mode==='speed') return runSpeed();
   if(mode==='diagnose') return runDiagnose();
   if(mode==='grind') return runGrind();
+  if(mode==='rain') return runRain();
 }
 function drillShell(title, sub){
   enterPlay();
@@ -525,6 +567,135 @@ function endSpeed(prevBest){
       '<div class="bignum">'+s+'</div>'+
       '<div class="muted">correct in 60 seconds'+(pb?' &middot; new best!':'')+'</div>'+
       '<div class="mt"><button class="btn gold wide" onclick="runSpeed()">Go again</button></div>'+
+      '<div class="mt"><button class="btn ghost wide" onclick="goHome()">Back home</button></div>'+
+    '</div></div>';
+}
+
+/* ============ DAISY RAIN (arcade / falling) ============ */
+const RAIN_CHALLENGES=[
+  {show:'num',    pick:'pic'},
+  {show:'num',    pick:'word'},
+  {show:'word',   pick:'num'},
+  {show:'word',   pick:'pic'},
+  {show:'pic',    pick:'num'},
+  {show:'pic',    pick:'word'},
+  {show:'picword',pick:'num'},
+];
+function rainCardHTML(p, show){
+  if(show==='num')  return '<div class="rnum">'+two(p.n)+'</div>';
+  if(show==='word') return '<div class="rword solo">'+p.word+'</div>';
+  if(show==='pic')  return '<div class="ricon">'+p.svg+'</div>';
+  return '<div class="ricon">'+p.svg+'</div><div class="rword">'+p.word+'</div>'; // picword
+}
+function rainOptHTML(o, pick){
+  if(pick==='pic')  return '<button class="ropt" data-n="'+o+'"><div class="iconbox">'+byN[o].svg+'</div></button>';
+  if(pick==='word') return '<button class="ropt" data-n="'+o+'"><span class="rword-opt">'+byN[o].word+'</span></button>';
+  return '<button class="ropt" data-n="'+o+'"><span class="rnum-opt">'+two(o)+'</span></button>'; // num
+}
+function runRain(){
+  const best=+(localStorage.getItem('ohd.rainBest')||0);
+  session={mode:'rain', score:0, lives:3, fallMs:4200, y:0, q:null, answered:false, over:false};
+  enterPlay();
+  stageHost.innerHTML =
+    '<div class="scoreline"><span>Score <b id="rsc">0</b></span>'+
+      '<span>Best <b>'+best+'</b></span>'+
+      '<span class="rlives" id="rlives"></span></div>'+
+    '<div class="stage rain"><div class="sky" id="sky">'+
+      '<div class="rcard" id="rcard"></div><div class="ground"></div></div></div>'+
+    '<div class="rain-opts" id="ropts"></div>'+
+    '<div class="feedback" id="fb"></div>';
+  updateRainHud();
+  spawnRain();
+  const TICK=25;
+  timerId=setInterval(()=>{
+    if(!session||session.mode!=='rain'||session.answered||session.over) return;
+    const sky=document.getElementById('sky'), card=document.getElementById('rcard');
+    if(!sky||!card) return;
+    const travel=Math.max(0, sky.clientHeight-card.offsetHeight);
+    session.y=Math.min(travel, session.y + travel*TICK/session.fallMs);
+    card.style.top=session.y+'px';
+    if(session.y>=travel) landRain();
+  }, TICK);
+}
+function updateRainHud(){
+  const sc=document.getElementById('rsc'); if(sc) sc.textContent=session.score;
+  const lv=document.getElementById('rlives'); if(lv){
+    let h=''; for(let i=0;i<3;i++) h+='<span class="rlife'+(i<session.lives?'':' spent')+'">🌼</span>';
+    lv.innerHTML=h;
+  }
+}
+function spawnRain(){
+  if(!session||session.over) return;
+  session.answered=false; session.y=0;
+  const n=weightedPick(scope);
+  const ch=RAIN_CHALLENGES[rnd(RAIN_CHALLENGES.length)];
+  session.q={n, show:ch.show, pick:ch.pick};
+  const p=byN[n];
+  const opts=shuffle([n, ...sample(allNums(),3,n)]);
+  const card=document.getElementById('rcard');
+  card.className='rcard'; card.style.top='0px';
+  card.innerHTML=rainCardHTML(p, ch.show);
+  const ropts=document.getElementById('ropts');
+  ropts.innerHTML=opts.map(o=>rainOptHTML(o, ch.pick)).join('');
+  ropts.querySelectorAll('.ropt').forEach(b=>{ b.onclick=()=>answerRain(+b.dataset.n, b); });
+}
+function answerRain(chosen, btn){
+  if(!session||session.answered||session.over) return;
+  session.answered=true;
+  const q=session.q, ok=chosen===q.n;
+  record(q.n, ok, null);
+  const card=document.getElementById('rcard');
+  const fb=document.getElementById('fb');
+  if(ok){
+    session.score++; updateRainHud();
+    if(card) card.classList.add('burst');
+    if(fb){ fb.textContent='✓ '+byN[q.n].word+' is '+two(q.n); fb.className='feedback good'; }
+    session.fallMs=Math.max(1500, session.fallMs*0.92);
+    setTimeout(()=>{ if(session&&!session.over) spawnRain(); }, 300);
+  } else {
+    if(card) card.classList.add('miss');
+    const ropts=document.getElementById('ropts');
+    if(ropts) ropts.querySelectorAll('.ropt').forEach(x=>{
+      x.setAttribute('disabled','');
+      if(+x.dataset.n===q.n) x.classList.add('correct');
+      else if(x===btn) x.classList.add('wrong');
+    });
+    loseLife(two(q.n)+' — '+byN[q.n].word);
+  }
+}
+function landRain(){
+  if(!session||session.answered||session.over) return;
+  session.answered=true;
+  const q=session.q;
+  record(q.n, false, null);
+  const card=document.getElementById('rcard'); if(card) card.classList.add('miss');
+  loseLife('missed — '+two(q.n)+' is '+byN[q.n].word);
+}
+function loseLife(msg){
+  session.lives--; updateRainHud();
+  const fb=document.getElementById('fb');
+  if(fb){ fb.textContent='✗ '+msg; fb.className='feedback bad'; }
+  const gap = session.lives<=0 ? 900 : 850;
+  setTimeout(()=>{
+    if(!session) return;
+    if(session.lives<=0) endRain(); else if(!session.over) spawnRain();
+  }, gap);
+}
+function endRain(){
+  if(!session) return;
+  session.over=true;
+  if(timerId){clearInterval(timerId); timerId=null;}
+  const s=session.score;
+  const prevBest=+(localStorage.getItem('ohd.rainBest')||0);
+  const best=Math.max(prevBest,s);
+  try{localStorage.setItem('ohd.rainBest',best);}catch(e){}
+  const pb=s>prevBest && s>0;
+  stageHost.innerHTML =
+    '<div class="stage"><div class="inner results center">'+
+      '<h2>Out of daisies!</h2>'+
+      '<div class="bignum">'+s+'</div>'+
+      '<div class="muted">caught before landing'+(pb?' &middot; new best!':'')+'</div>'+
+      '<div class="mt"><button class="btn gold wide" onclick="runRain()">Go again</button></div>'+
       '<div class="mt"><button class="btn ghost wide" onclick="goHome()">Back home</button></div>'+
     '</div></div>';
 }
