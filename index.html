@@ -176,6 +176,14 @@
   .peek .iconbox{width:120px;height:120px}
   .peek .tier{font-size:.78rem; color:var(--ink-soft); margin-top:6px; text-transform:uppercase; letter-spacing:.1em}
   .peek-close{position:absolute; top:10px; right:12px; border:none; background:none; font-size:1.3rem; cursor:pointer; color:var(--ink-soft)}
+  .peek.t0{background:#f4ede0}
+  .peek.t1{background:#cfe6c5}
+  .peek.t2{background:#a9d3a0}
+  .peek.t3{background:#6fae74; border-color:#437150}
+  .peek.t3 .num,.peek.t3 .theword,.peek.t3 .thecap{color:#fff}
+  .peek.t4{background:var(--bloom); border-color:var(--accent-deep)}
+  .peek.t4 .num{color:#4a3410}
+  .peek.due::after{content:""; position:absolute; top:12px; left:14px; width:9px; height:9px; border-radius:50%; background:var(--red)}
 
   .settingsrow{display:flex; align-items:center; justify-content:center; gap:14px; margin-top:18px; font-size:.82rem; color:var(--ink-soft)}
   .settingsrow button{font-family:var(--sans); border:1px solid var(--rule); background:var(--card); border-radius:8px; padding:5px 10px; cursor:pointer; color:var(--ink)}
@@ -219,7 +227,7 @@
 
     <button class="daily" onclick="startDaily()">
       <span class="big">&#127807;</span>
-      <span><h3>Daily Practice</h3><p id="dailyDesc">A smart mixed set &mdash; reviews that are due, plus a few new. One round, one score.</p></span>
+      <span><h3>Daily Practice</h3><p id="dailyDesc">A quick 15-question round the game picks for you &mdash; pegs due for review, plus a few new ones.</p></span>
     </button>
 
     <div class="scope">
@@ -397,7 +405,7 @@ function refreshHeader(){
   document.getElementById('xpfill').style.width=Math.min(100,((S.xp-cur)/(next-cur)*100))+'%';
   document.getElementById('soundBtn').textContent=S.sound?'on':'off';
   const dc=document.getElementById('dailyDesc');
-  if(dc){ const due=allNums().filter(isDue).length; dc.textContent = due>0 ? (due+' review'+(due>1?'s':'')+' due, plus a few new. One round, one score.') : 'A smart mixed set to keep every peg fresh. One round, one score.'; }
+  if(dc){ const due=allNums().filter(isDue).length; dc.textContent = due>0 ? (due+' review'+(due>1?'s':'')+' due today, plus a few new — your daily 15 questions.') : 'A quick 15-question round the game picks for you to keep every peg sharp.'; }
 }
 
 /* ---------- meadow grid ---------- */
@@ -416,11 +424,12 @@ function buildGrid(){
 const TIERNAME=['Seed','Sprout','Learning','Solid','Bloomed'];
 function peek(n){
   const p=byN[n]; const t=tier(n); const due=isDue(n);
-  document.getElementById('peekBody').innerHTML =
+  const pb=document.getElementById('peekBody');
+  pb.className='peek t'+t+(due?' due':'');   // colour of the card = memorization level
+  pb.innerHTML =
     '<button class="peek-close" onclick="closePeek()">&times;</button>'+
     '<div class="num">'+two(n)+'</div><div class="iconbox">'+p.svg+'</div>'+
-    '<div class="theword">'+p.word+'</div>'+(p.caption?'<div class="thecap">'+p.caption+'</div>':'')+
-    '<div class="tier">'+TIERNAME[t]+(due?' &middot; review due':'')+'</div>';
+    '<div class="theword">'+p.word+'</div>'+(p.caption?'<div class="thecap">'+p.caption+'</div>':'');
   document.getElementById('modal').classList.add('open');
 }
 function closePeek(){document.getElementById('modal').classList.remove('open');}
@@ -455,7 +464,7 @@ function goHome(){
   document.getElementById('xpwrap').style.display='';
   buildGrid(); refreshHeader();
 }
-function enterPlay(){ homeEl.style.display='none'; playEl.classList.add('active'); document.getElementById('homeBtn').style.display=''; combo=0; comboMax=0; }
+function enterPlay(){ homeEl.style.display='none'; playEl.classList.add('active'); document.getElementById('homeBtn').style.display='inline-block'; combo=0; comboMax=0; }
 
 /* ============ LEARN ============ */
 function startLearn(){
