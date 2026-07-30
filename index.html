@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>One Hundred Daisies</title>
 <style>
   :root{
     --ink:#1a2238; --ink-soft:#48506b; --line:#2b3a67;
     --accent:#e0a458; --accent-deep:#c98a3c;
     --card:#fbf7ef; --paper:#ece3d2; --paper-2:#e4d9c2; --rule:#d8cdb6;
-    --red:#c0392b; --good:#3f7d5a;
+    --red:#c0392b; --good:#3f7d5a; --bloom:#f2c14e; --leaf:#5a9367; --leaf-deep:#437150; --coral:#e8705a;
     --shadow:0 14px 32px -22px rgba(26,34,56,.55);
     --serif:"Iowan Old Style",Georgia,"Times New Roman",serif;
     --sans:ui-sans-serif,"Segoe UI",system-ui,sans-serif;
@@ -17,181 +17,173 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{
-    background:
-      radial-gradient(120% 90% at 50% -10%, #f0e8d6 0%, var(--paper) 55%, var(--paper-2) 100%) fixed;
+    background:linear-gradient(180deg, #cfe8f5 0%, #dcebd0 52%, #e6eed6 100%) fixed;
     color:var(--ink); font-family:var(--sans);
     min-height:100%; display:flex; flex-direction:column; align-items:center;
-    padding:18px 14px 40px;
+    padding:16px 14px calc(40px + env(safe-area-inset-bottom));
   }
-  a{color:inherit}
   .wrap{width:100%; max-width:720px; margin:0 auto}
 
-  /* ---------- top bar ---------- */
-  .bar{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; min-height:40px}
-  .brand{font-family:var(--serif); font-weight:700; font-size:1.15rem; letter-spacing:.01em; display:flex; align-items:center; gap:8px}
+  /* top bar */
+  .bar{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; min-height:40px}
+  .brand{font-family:var(--serif); font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:8px}
   .brand .dot{width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px #f3ecdc}
-  .bar-right{display:flex; align-items:center; gap:10px}
-  .pill{font-family:var(--serif); font-size:.85rem; color:var(--ink-soft); background:var(--card); border:1px solid var(--rule); border-radius:999px; padding:5px 12px}
-  .btn-home{font-family:var(--sans); font-size:.85rem; border:1.5px solid var(--line); background:var(--card); color:var(--ink); border-radius:10px; padding:7px 12px; cursor:pointer}
+  .bar-right{display:flex; align-items:center; gap:8px}
+  .flame{font-family:var(--serif); font-size:.85rem; color:var(--accent-deep); background:var(--card); border:1px solid var(--rule); border-radius:999px; padding:5px 11px; white-space:nowrap}
+  .btn-home{font-family:var(--sans); font-size:.85rem; border:1.5px solid var(--line); background:var(--card); color:var(--ink); border-radius:10px; padding:7px 12px; cursor:pointer; display:none}
   .btn-home:hover{background:#fff}
 
-  /* ---------- home ---------- */
-  .hero{text-align:center; margin:10px 0 22px}
-  .hero h1{font-family:var(--serif); font-size:2.3rem; font-weight:700; letter-spacing:-.01em; line-height:1.05}
-  .hero .sub{color:var(--ink-soft); margin-top:8px; font-size:.98rem}
-  .hero .count{font-family:var(--serif); color:var(--accent-deep); font-weight:700; margin-top:12px; font-size:1rem}
+  /* xp bar */
+  .xpwrap{background:var(--card); border:1.5px solid var(--rule); border-radius:14px; padding:10px 14px; margin-bottom:14px}
+  .xprow{display:flex; align-items:center; justify-content:space-between; font-family:var(--serif); font-size:.9rem; margin-bottom:6px}
+  .xprow .lvl{font-weight:700}
+  .xprow .meadowpct{color:var(--accent-deep); font-weight:700}
+  .xpbar{height:9px; background:var(--paper-2); border-radius:99px; overflow:hidden}
+  .xpbar>i{display:block; height:100%; background:linear-gradient(90deg,var(--leaf),var(--accent-deep)); width:0%; transition:width .5s}
 
-  .scope{display:flex; align-items:center; gap:10px; justify-content:center; margin:6px 0 20px; flex-wrap:wrap}
+  /* hero */
+  .hero{text-align:center; margin:6px 0 16px}
+  .hero h1{font-family:var(--serif); font-size:2.15rem; font-weight:700; line-height:1.05}
+  .hero .sub{color:var(--ink-soft); margin-top:6px; font-size:.95rem}
+
+  .daily{width:100%; margin:0 0 18px; background:linear-gradient(180deg,#fff8ea,#f6ead0); border:1.5px solid var(--accent-deep); border-radius:16px; padding:16px 18px; cursor:pointer; text-align:left; box-shadow:var(--shadow); display:flex; align-items:center; gap:14px}
+  .daily:hover{background:#fff}
+  .daily .big{font-size:1.8rem}
+  .daily h3{font-family:var(--serif); font-size:1.25rem}
+  .daily p{font-size:.84rem; color:var(--ink-soft); margin-top:2px}
+
+  .scope{display:flex; align-items:center; gap:10px; justify-content:center; margin:2px 0 16px; flex-wrap:wrap}
   .scope label{font-size:.85rem; color:var(--ink-soft)}
-  .scope select{font-family:var(--sans); font-size:.9rem; padding:7px 10px; border:1.5px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); cursor:pointer}
+  .scope select{font-family:var(--sans); font-size:.9rem; padding:7px 10px; border:1.5px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink)}
 
-  .modes{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .modes{display:grid; grid-template-columns:1fr 1fr; gap:12px}
   @media(max-width:520px){.modes{grid-template-columns:1fr}}
-  .mode{
-    text-align:left; background:var(--card); border:1.5px solid var(--line); border-radius:16px;
-    padding:18px 18px 16px; cursor:pointer; box-shadow:var(--shadow); position:relative;
-    transition:transform .12s ease, box-shadow .12s ease;
-  }
-  .mode:hover{transform:translateY(-2px); box-shadow:0 20px 40px -22px rgba(26,34,56,.6)}
+  .mode{text-align:left; background:var(--card); border:1.5px solid var(--line); border-radius:16px; padding:16px 16px 14px; cursor:pointer; box-shadow:var(--shadow); transition:transform .12s, box-shadow .12s}
+  .mode:hover{transform:translateY(-2px)}
   .mode:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
-  .mode .step{font-family:var(--serif); font-size:.8rem; color:var(--accent-deep); font-weight:700; letter-spacing:.14em}
-  .mode h3{font-family:var(--serif); font-size:1.3rem; margin:4px 0 6px}
-  .mode p{font-size:.86rem; color:var(--ink-soft); line-height:1.45}
-  .mode .how{margin-top:10px; font-size:.75rem; color:var(--ink-soft); font-style:italic}
+  .mode .step{font-family:var(--serif); font-size:.78rem; color:var(--accent-deep); font-weight:700; letter-spacing:.12em}
+  .mode h3{font-family:var(--serif); font-size:1.22rem; margin:3px 0 5px}
+  .mode p{font-size:.83rem; color:var(--ink-soft); line-height:1.4}
+  .mode .how{margin-top:8px; font-size:.72rem; color:var(--ink-soft); font-style:italic}
 
-  /* ---------- progress grid ---------- */
-  .prog{margin-top:24px}
-  .prog h4{font-family:var(--serif); font-size:1rem; margin-bottom:4px}
-  .prog-tap{font-family:var(--serif); font-size:.9rem; font-weight:600; color:var(--accent-deep); margin-bottom:10px}
-  .prog .legend{font-size:.75rem; color:var(--ink-soft); margin-bottom:10px; display:flex; gap:14px; flex-wrap:wrap}
-  .legend b{font-weight:600}
-  .sw{display:inline-block; width:10px;height:10px;border-radius:3px;vertical-align:middle;margin-right:4px;border:1px solid var(--rule)}
+  /* meadow */
+  .prog{margin-top:22px}
+  .prog h4{font-family:var(--serif); font-size:1.05rem; margin-bottom:2px}
+  .prog .legend{font-size:.72rem; color:var(--ink-soft); margin:6px 0 10px; display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+  .sw{display:inline-block; width:11px;height:11px;border-radius:3px;vertical-align:middle;margin-right:4px;border:1px solid var(--rule)}
   .grid101{display:grid; grid-template-columns:repeat(auto-fill,minmax(30px,1fr)); gap:5px}
-  .cell{aspect-ratio:1; border-radius:6px; border:1px solid var(--rule); background:var(--card); font-family:var(--serif); font-size:.62rem; color:var(--ink-soft); display:flex; align-items:center; justify-content:center; cursor:pointer}
-  .cell.seen{background:#f4e6c9; color:var(--accent-deep)}
-  .cell.mastered{background:var(--accent); color:#3a2c10; border-color:var(--accent-deep); font-weight:700}
+  .cell{position:relative; aspect-ratio:1; border-radius:7px; border:1px solid var(--rule); background:#f4ede0; font-family:var(--serif); font-size:.6rem; color:var(--ink-soft); display:flex; align-items:center; justify-content:center; cursor:pointer; overflow:hidden}
+  .cell.t1{background:#cfe6c5}
+  .cell.t2{background:#a9d3a0}
+  .cell.t3{background:#6fae74; color:#fff}
+  .cell.t4{background:var(--bloom); color:#4a3410; border-color:var(--accent-deep); font-weight:700}
+  .cell.due::after{content:""; position:absolute; top:2px; right:2px; width:6px;height:6px; border-radius:50%; background:var(--red)}
+  .cell .bl{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:.9rem; color:#fff; opacity:.85}
   .cell:hover{outline:2px solid var(--accent)}
 
-  /* ---------- play surface ---------- */
+  /* play surface */
   .play{display:none}
   .play.active{display:block}
-  .stage{background:var(--card); border:1.5px solid var(--line); border-radius:18px; box-shadow:var(--shadow); padding:22px 20px; position:relative}
+  .stage{background:var(--card); border:1.5px solid var(--line); border-radius:18px; box-shadow:var(--shadow); padding:20px; position:relative}
   .stage::before{content:"";position:absolute;inset:6px;border:1px solid var(--rule);border-radius:13px;pointer-events:none}
   .stage .inner{position:relative}
+  .topline{display:flex; align-items:center; justify-content:space-between; font-family:var(--serif); color:var(--ink-soft); font-size:.9rem; margin-bottom:6px; gap:10px}
+  .topline b{color:var(--ink)}
+  .hearts{letter-spacing:2px; font-size:1.05rem; color:var(--coral)}
+  .progbar{height:7px; background:var(--paper-2); border-radius:99px; overflow:hidden; margin-bottom:10px}
+  .progbar>i{display:block;height:100%;background:var(--accent);width:0%;transition:width .25s}
 
-  .prompt-label{text-align:center; font-size:.8rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft)}
-  .bignum{font-family:var(--serif); font-weight:700; font-size:4.2rem; color:var(--accent-deep); text-align:center; line-height:1; margin:6px 0}
-  .iconbox{width:150px;height:150px;margin:6px auto; display:flex; align-items:center; justify-content:center}
+  .prompt-label{text-align:center; font-size:.78rem; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-soft)}
+  .bignum{font-family:var(--serif); font-weight:700; font-size:4rem; color:var(--accent-deep); text-align:center; line-height:1; margin:6px 0}
+  .iconbox{width:140px;height:140px;margin:6px auto; display:flex; align-items:center; justify-content:center}
   .iconbox svg{width:100%;height:100%}
-  .iconbox.sm{width:74px;height:74px;margin:0 auto}
-  .theword{font-family:var(--serif); font-weight:600; font-size:1.9rem; text-align:center}
-  .thecap{text-align:center; font-style:italic; color:var(--ink-soft); font-size:.82rem; margin-top:2px}
+  .iconbox.sm{width:70px;height:70px;margin:0 auto}
+  .theword{font-family:var(--serif); font-weight:600; font-size:1.8rem; text-align:center}
+  .thecap{text-align:center; font-style:italic; color:var(--ink-soft); font-size:.8rem; margin-top:2px}
 
-  .options{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px}
+  .options{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:18px}
   .opt{background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:14px 10px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:6px; font-family:var(--serif); transition:transform .1s, background .1s}
   .opt:hover{background:#fff; transform:translateY(-1px)}
   .opt:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
-  .opt .num-opt{font-size:2rem; font-weight:700; color:var(--ink)}
-  .opt .word-opt{font-size:1.05rem}
+  .opt .num-opt{font-size:1.9rem; font-weight:700; color:var(--ink)}
+  .opt .word-opt{font-size:1rem}
   .opt.correct{background:#e7f1ea; border-color:var(--good)}
   .opt.wrong{background:#f6e3e0; border-color:var(--red)}
   .opt[disabled]{cursor:default}
 
-  .typerow{display:flex; gap:10px; margin-top:20px}
+  .typerow{display:flex; gap:10px; margin-top:18px}
   .typerow input{flex:1; font-family:var(--serif); font-size:1.4rem; text-align:center; padding:12px; border:1.5px solid var(--line); border-radius:12px; background:#fff; color:var(--ink)}
-  .typerow input:focus{outline:3px solid var(--accent); outline-offset:1px}
-  .btn{font-family:var(--sans); font-weight:600; border:1.5px solid var(--line); background:var(--ink); color:#fdf8ee; border-radius:12px; padding:0 20px; cursor:pointer; font-size:1rem}
+  .typerow input:focus{outline:3px solid var(--accent)}
+  .btn{font-family:var(--sans); font-weight:600; border:1.5px solid var(--line); background:var(--ink); color:#fdf8ee; border-radius:12px; padding:0 20px; cursor:pointer; font-size:1rem; min-height:46px}
   .btn:hover{background:#0f1730}
   .btn.ghost{background:var(--card); color:var(--ink)}
   .btn.ghost:hover{background:#fff}
   .btn.gold{background:var(--accent); color:#3a2c10; border-color:var(--accent-deep)}
   .btn.wide{width:100%; padding:14px}
 
-  .feedback{text-align:center; min-height:26px; margin-top:14px; font-family:var(--serif); font-size:1.05rem}
-  .feedback.good{color:var(--good)}
-  .feedback.bad{color:var(--red)}
+  .feedback{text-align:center; min-height:26px; margin-top:12px; font-family:var(--serif); font-size:1.02rem}
+  .feedback.good{color:var(--good)} .feedback.bad{color:var(--red)}
+  .combo{position:absolute; top:8px; right:10px; font-family:var(--serif); font-weight:700; color:var(--accent-deep); font-size:1.1rem; opacity:0; transition:opacity .2s, transform .2s}
+  .combo.show{opacity:1; transform:translateY(-2px)}
 
-  .controls{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:16px}
-  .scoreline{font-family:var(--serif); color:var(--ink-soft); font-size:.95rem; display:flex; gap:16px; align-items:center; justify-content:center; margin-bottom:4px}
-  .scoreline b{color:var(--ink)}
-  .timer{font-family:var(--serif); font-weight:700; font-size:1.3rem; color:var(--accent-deep)}
-  .timerbar{height:8px; background:var(--paper-2); border-radius:99px; overflow:hidden; margin:8px 0 4px}
-  .timerbar > i{display:block; height:100%; background:var(--accent); width:100%; transition:width .25s linear}
+  .controls{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:14px}
 
-  /* ---------- daisy rain (arcade / falling) ---------- */
-  .rlives{display:flex; gap:5px; align-items:center}
-  .rlife{font-size:1.05rem; line-height:1}
-  .rlife.spent{opacity:.22; filter:grayscale(1)}
-  .stage.rain{padding:0; overflow:hidden}
-  .stage.rain::before{inset:0; border:none}
-  .sky{position:relative; height:min(70vh,620px); overflow:hidden;
-       background:linear-gradient(180deg,#f4ecda 0%,var(--card) 72%); border-radius:16px}
-  .sky .ground{position:absolute; left:0; right:0; bottom:0; height:3px;
-       background:repeating-linear-gradient(90deg,var(--accent) 0 10px,transparent 10px 20px); opacity:.5}
-  .rcard{position:absolute; top:0; left:50%; transform:translateX(-50%);
-         width:132px; background:var(--card); border:1.5px solid var(--line);
-         border-radius:14px; box-shadow:var(--shadow); padding:12px 10px; text-align:center; will-change:top}
-  .rcard .rnum{font-family:var(--serif); font-weight:700; font-size:2.7rem; color:var(--accent-deep); line-height:1}
-  .rcard .ricon{width:82px; height:82px; margin:0 auto}
-  .rcard .ricon svg{width:100%; height:100%}
-  .rcard .rword{font-family:var(--serif); font-weight:600; font-size:1.05rem; margin-top:4px}
-  @keyframes burst{0%{transform:translateX(-50%) scale(1);opacity:1}55%{transform:translateX(-50%) scale(1.28);opacity:1}100%{transform:translateX(-50%) scale(.4);opacity:0}}
-  .rcard.burst{animation:burst .28s ease-in forwards}
-  @keyframes shake{0%,100%{transform:translateX(-50%)}25%{transform:translateX(-59%)}75%{transform:translateX(-41%)}}
-  .rcard.miss{animation:shake .3s; border-color:var(--red)}
-  .rain-opts{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:14px}
-  @media(max-width:520px){.rain-opts{grid-template-columns:repeat(2,1fr)}}
-  .ropt{background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:10px 6px;
-        cursor:pointer; display:flex; align-items:center; justify-content:center; min-height:64px;
-        transition:transform .1s, background .1s}
-  .ropt:hover{background:#fff; transform:translateY(-1px)}
-  .ropt:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
-  .ropt .iconbox{width:56px; height:56px; margin:0}
-  .ropt .rnum-opt{font-family:var(--serif); font-weight:700; font-size:1.7rem; color:var(--ink)}
-  .ropt .rword-opt{font-family:var(--serif); font-weight:600; font-size:1rem; text-align:center; line-height:1.15; color:var(--ink); padding:0 2px}
-  .rcard .rword.solo{font-size:1.3rem; margin-top:0; padding:6px 2px}
-  .ropt.correct{background:#e7f1ea; border-color:var(--good)}
-  .ropt.wrong{background:#f6e3e0; border-color:var(--red)}
-  .ropt[disabled]{cursor:default}
-
-  /* ---------- intro / the code ---------- */
-  .codenote{font-size:.9rem; color:var(--ink-soft); line-height:1.55; margin-bottom:14px; text-align:center}
-  .codenote b{color:var(--ink)}
-  .codelist{display:grid; gap:8px}
-  .coderow{display:flex; align-items:center; gap:14px; background:var(--card); border:1.5px solid var(--line); border-radius:12px; padding:10px 14px}
-  .coderow .cd{font-family:var(--serif); font-weight:700; font-size:2rem; color:var(--accent-deep); width:38px; text-align:center; flex:none}
-  .coderow .ctext{display:flex; flex-direction:column}
-  .coderow .csnd{font-family:var(--serif); font-weight:700; font-size:1.15rem; color:var(--ink)}
-  .coderow .chook{font-size:.8rem; color:var(--ink-soft); font-style:italic; margin-top:1px}
-  .introbtns{display:flex; flex-direction:column; gap:10px; margin-top:16px}
-
-  .flipcard{perspective:1200px; margin:8px auto 0; width:260px; max-width:100%}
+  /* flip */
+  .flipcard{perspective:1200px; margin:6px auto 0; width:260px; max-width:100%}
   .flipinner{position:relative; transition:transform .5s; transform-style:preserve-3d; min-height:250px}
   .flipcard.flipped .flipinner{transform:rotateY(180deg)}
   .face{position:absolute; inset:0; backface-visibility:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px}
   .face.back{transform:rotateY(180deg)}
 
-  .center{text-align:center}
-  .muted{color:var(--ink-soft)}
-  .mt{margin-top:16px}
-  .results h2{font-family:var(--serif); text-align:center; font-size:1.7rem; margin-bottom:6px}
-  .weaklist{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:14px 0}
+  /* results / scorecard */
+  .results h2{font-family:var(--serif); text-align:center; font-size:1.7rem; margin-bottom:2px}
+  .results .sub{text-align:center; color:var(--ink-soft); margin-bottom:14px}
+  .statgrid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:6px 0 14px}
+  .stat{background:#fff8ea; border:1px solid var(--rule); border-radius:12px; padding:12px; text-align:center}
+  .stat .v{font-family:var(--serif); font-weight:700; font-size:1.6rem; color:var(--accent-deep)}
+  .stat .k{font-size:.72rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.1em}
+  .bloomrow{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:10px 0}
+  .bloomtag{font-family:var(--serif); background:var(--bloom); border:1px solid var(--accent-deep); color:#4a3410; border-radius:999px; padding:4px 12px; font-size:.9rem}
   .weaktag{font-family:var(--serif); background:#f4e6c9; border:1px solid var(--accent-deep); color:var(--accent-deep); border-radius:999px; padding:4px 12px; font-size:.9rem}
+  .center{text-align:center} .muted{color:var(--ink-soft)} .mt{margin-top:12px}
+
+  /* daisy rain */
+  #rainStage{position:relative; height:60vh; min-height:380px; max-height:560px; overflow:hidden; border-radius:14px; background:linear-gradient(180deg,#d6ebf5 0%,#e6efd6 100%); border:1px solid var(--rule)}
+  .faller{position:absolute; top:-90px; display:flex; flex-direction:column; align-items:center; gap:2px; will-change:transform}
+  .faller .fnum{font-family:var(--serif); font-weight:700; font-size:2.4rem; color:var(--accent-deep)}
+  .faller .ficon{width:74px;height:74px}
+  .faller .fword{font-family:var(--serif); font-weight:600; font-size:1.3rem}
+  .rainchoices{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:10px}
+  .rchoice{background:var(--card); border:1.5px solid var(--line); border-radius:12px; padding:10px 4px; cursor:pointer; font-family:var(--serif); display:flex; flex-direction:column; align-items:center; gap:2px}
+  .rchoice:hover{background:#fff}
+  .rchoice .rn{font-size:1.5rem; font-weight:700}
+  .rchoice .riconbox{width:52px;height:52px}
+  .rainhud{display:flex; align-items:center; justify-content:space-between; font-family:var(--serif); margin-bottom:8px}
+  .diffrow{display:flex; gap:8px; justify-content:center; margin:14px 0}
+  .diffbtn{font-family:var(--sans); border:1.5px solid var(--line); background:var(--card); border-radius:12px; padding:10px 16px; cursor:pointer}
+  .diffbtn.sel{background:var(--accent); border-color:var(--accent-deep); color:#3a2c10; font-weight:700}
+
+  .bloomflash{position:fixed; inset:0; pointer-events:none; display:flex; align-items:center; justify-content:center; z-index:30}
+  .bloomflash .b{font-size:5rem; opacity:0; transform:scale(.4)}
+  @keyframes pop{0%{opacity:0;transform:scale(.4)}30%{opacity:1;transform:scale(1.1)}70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.2)}}
+  .bloomflash.go .b{animation:pop 1.1s ease forwards}
 
   /* peek modal */
   .modal{position:fixed; inset:0; background:rgba(26,34,56,.45); display:none; align-items:center; justify-content:center; padding:20px; z-index:20}
   .modal.open{display:flex}
-  .peek{background:var(--card); border:1.5px solid var(--line); border-radius:18px; box-shadow:var(--shadow); padding:24px; width:260px; text-align:center; position:relative}
+  .peek{background:var(--card); border:1.5px solid var(--line); border-radius:18px; box-shadow:var(--shadow); padding:22px; width:270px; text-align:center; position:relative}
   .peek .num{font-family:var(--serif); font-weight:700; font-size:2rem; color:var(--accent-deep)}
   .peek .iconbox{width:120px;height:120px}
-  .peek .theword{font-size:1.5rem}
+  .peek .tier{font-size:.78rem; color:var(--ink-soft); margin-top:6px; text-transform:uppercase; letter-spacing:.1em}
   .peek-close{position:absolute; top:10px; right:12px; border:none; background:none; font-size:1.3rem; cursor:pointer; color:var(--ink-soft)}
 
-  @media (prefers-reduced-motion: reduce){
-    .flipinner{transition:none} .mode{transition:none} .opt{transition:none}
-  }
+  .settingsrow{display:flex; align-items:center; justify-content:center; gap:14px; margin-top:18px; font-size:.82rem; color:var(--ink-soft)}
+  .settingsrow button{font-family:var(--sans); border:1px solid var(--rule); background:var(--card); border-radius:8px; padding:5px 10px; cursor:pointer; color:var(--ink)}
 
-  /* icon color classes (shared by all embedded SVGs) */
+  @media (prefers-reduced-motion: reduce){
+    .flipinner,.mode,.opt{transition:none}
+    .bloomflash.go .b{animation-duration:.5s}
+  }
   svg{fill:none}
   .st{stroke:#2b3a67;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round}
   .stf{stroke:#2b3a67;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;fill:#fbf7ef}
@@ -206,723 +198,586 @@
 </head>
 <body>
 <div class="wrap">
-
   <div class="bar">
     <div class="brand"><span class="dot"></span> One Hundred Daisies</div>
     <div class="bar-right">
-      <span class="pill" id="pill">0 / 101 mastered</span>
-      <button class="btn-home" id="homeBtn" style="display:none" onclick="goHome()">&larr; Home</button>
+      <span class="flame" id="flame">&#128293; 0</span>
+      <button class="btn-home" id="homeBtn" onclick="goHome()">&larr; Home</button>
     </div>
   </div>
 
-  <!-- ============ HOME ============ -->
+  <div class="xpwrap" id="xpwrap">
+    <div class="xprow"><span class="lvl" id="lvlLabel">Level 1</span><span class="meadowpct" id="meadowPct">Meadow 0%</span></div>
+    <div class="xpbar"><i id="xpfill"></i></div>
+  </div>
+
   <section id="home">
     <div class="hero">
       <h1>One Hundred Daisies</h1>
-      <div class="sub">Train your 0&ndash;100 number pegs until every one is instant &mdash; both ways.</div>
-      <div class="count" id="heroCount"></div>
+      <div class="sub">Grow the meadow &mdash; bloom all 100 pegs by learning them for real, both ways.</div>
     </div>
+
+    <button class="daily" onclick="startDaily()">
+      <span class="big">&#127807;</span>
+      <span><h3>Daily Practice</h3><p id="dailyDesc">A smart mixed set &mdash; reviews that are due, plus a few new. One round, one score.</p></span>
+    </button>
 
     <div class="scope">
       <label for="scopeSel">Practice&nbsp;set:</label>
       <select id="scopeSel" onchange="setScope(this.value)">
         <option value="all">All 0&ndash;100</option>
-        <option value="0-9">0&ndash;9</option>
-        <option value="10-19">10&ndash;19</option>
-        <option value="20-29">20&ndash;29</option>
-        <option value="30-39">30&ndash;39</option>
-        <option value="40-49">40&ndash;49</option>
-        <option value="50-59">50&ndash;59</option>
-        <option value="60-69">60&ndash;69</option>
-        <option value="70-79">70&ndash;79</option>
-        <option value="80-89">80&ndash;89</option>
-        <option value="90-100">90&ndash;100</option>
-        <option value="weak">Weak spots only</option>
+        <option value="0-9">0&ndash;9</option><option value="10-19">10&ndash;19</option>
+        <option value="20-29">20&ndash;29</option><option value="30-39">30&ndash;39</option>
+        <option value="40-49">40&ndash;49</option><option value="50-59">50&ndash;59</option>
+        <option value="60-69">60&ndash;69</option><option value="70-79">70&ndash;79</option>
+        <option value="80-89">80&ndash;89</option><option value="90-100">90&ndash;100</option>
+        <option value="due">Reviews due</option><option value="weak">Weak spots</option>
       </select>
     </div>
 
     <div class="modes">
-      <button class="mode" onclick="startMode('intro')" style="grid-column:1/-1; border-color:var(--accent-deep)">
-        <div class="step">START HERE</div><h3>The Code</h3>
-        <p>The secret behind every peg: which letter-sounds stand for each digit 0&ndash;9. Learn this first &mdash; the whole system is built on it. Then quiz yourself.</p>
-        <div class="how">Reference &middot; self-quiz</div>
-      </button>
-      <button class="mode" onclick="startLearn()">
-        <div class="step">STEP 1</div><h3>Learn</h3>
-        <p>Flip through the cards to study each number, picture, and word.</p>
-        <div class="how">Flip &amp; self-rate</div>
-      </button>
-      <button class="mode" onclick="startMode('drill')">
-        <div class="step">STEP 2</div><h3>Drill</h3>
-        <p>Mixed practice, both directions. Reinforce until the links feel natural.</p>
-        <div class="how">Multiple choice</div>
-      </button>
-      <button class="mode" onclick="startMode('diagnose')">
-        <div class="step">STEP 3</div><h3>Diagnose</h3>
-        <p>One pass over the set to find exactly which pegs are shaky.</p>
-        <div class="how">Multiple choice &rarr; weak-spot map</div>
-      </button>
-      <button class="mode" onclick="startMode('grind')">
-        <div class="step">STEP 4</div><h3>Grind</h3>
-        <p>Drill only your weak pegs &mdash; by typing &mdash; until each is solid.</p>
-        <div class="how">Type the answer</div>
-      </button>
-      <button class="mode" onclick="startMode('speed')" style="grid-column:1/-1">
-        <div class="step">STEP 5</div><h3>Speed</h3>
-        <p>Beat the clock. Rapid-fire recall to turn &ldquo;I can work it out&rdquo; into &ldquo;it&rsquo;s just there.&rdquo;</p>
-        <div class="how">Timed &middot; multiple choice</div>
-      </button>
-      <button class="mode" onclick="startMode('rain')" style="grid-column:1/-1">
-        <div class="step">STEP 6</div><h3>Daisy Rain &#127804;</h3>
-        <p>Arcade mode. A word, number, or picture drifts down from the sky &mdash; tap its match before it lands. It speeds up as you go. Three lives.</p>
-        <div class="how">Falling &middot; tap the match &middot; survive</div>
-      </button>
+      <button class="mode" onclick="startLearn()"><div class="step">LEARN</div><h3>Study</h3><p>Flip through the cards &mdash; number, picture, word.</p><div class="how">Flip &amp; self-rate</div></button>
+      <button class="mode" onclick="startRound('drill')"><div class="step">DRILL</div><h3>Practice Round</h3><p>15 questions, both directions, then a scorecard.</p><div class="how">Multiple choice &middot; combo</div></button>
+      <button class="mode" onclick="startRound('diagnose')"><div class="step">DIAGNOSE</div><h3>Check-up</h3><p>One pass to map exactly which pegs are shaky.</p><div class="how">MC &rarr; weak-spot map</div></button>
+      <button class="mode" onclick="startRound('grind')"><div class="step">GRIND</div><h3>Weak Pegs</h3><p>Type-the-answer drilling on just your weak pegs.</p><div class="how">Type &middot; clear the set</div></button>
+      <button class="mode" onclick="startRound('speed')"><div class="step">SPEED</div><h3>Beat the Clock</h3><p>60 seconds of rapid recall. Race your best.</p><div class="how">Timed &middot; combo</div></button>
+      <button class="mode" onclick="rainIntro()"><div class="step">ARCADE</div><h3>Daisy Rain &#127804;</h3><p>Pegs drift down &mdash; tap the match before they land. Starts gentle, 3 lives.</p><div class="how">Falling &middot; survive</div></button>
     </div>
 
     <div class="prog">
-      <h4>Your 101</h4>
-      <p class="prog-tap">&#128072; Tap any number to see its peg &mdash; symbol, word &amp; caption.</p>
+      <h4>Your meadow</h4>
       <div class="legend">
-        <span><span class="sw" style="background:var(--card)"></span>unseen</span>
-        <span><span class="sw" style="background:#f4e6c9"></span>learning</span>
-        <span><span class="sw" style="background:var(--accent)"></span>mastered</span>
+        <span><span class="sw" style="background:#f4ede0"></span>seed</span>
+        <span><span class="sw" style="background:#a9d3a0"></span>growing</span>
+        <span><span class="sw" style="background:#6fae74"></span>solid</span>
+        <span><span class="sw" style="background:var(--bloom)"></span>bloomed</span>
+        <span><span class="sw" style="background:var(--red)"></span>review due</span>
+        <span class="muted">&mdash; tap to peek</span>
       </div>
       <div class="grid101" id="grid101"></div>
     </div>
+
+    <div class="settingsrow">
+      <span>Sound <button id="soundBtn" onclick="toggleSound()">on</button></span>
+      <span><button onclick="if(confirm('Reset all progress? This cannot be undone.')){resetAll()}">Reset progress</button></span>
+    </div>
   </section>
 
-  <!-- ============ PLAY ============ -->
-  <section id="play" class="play">
-    <div id="stageHost"></div>
-  </section>
-
+  <section id="play" class="play"><div id="stageHost"></div></section>
 </div>
 
-<div class="modal" id="modal" onclick="if(event.target===this)closePeek()">
-  <div class="peek" id="peekBody"></div>
-</div>
+<div class="modal" id="modal" onclick="if(event.target===this)closePeek()"><div class="peek" id="peekBody"></div></div>
+<div class="bloomflash" id="bloomflash"><div class="b">&#127804;</div></div>
 
 <script id="pegdata" type="application/json">[{"n":0,"word":"sauce","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M36 44 q0 -7 5 -10 v-9 q0 -3 3 -3 h12 q3 0 3 3 v9 q5 3 5 10 v30 q0 8 -8 8 h-12 q-8 0 -8 -8 Z\"/>\n        <line class=\"st\" x1=\"44\" y1=\"22\" x2=\"56\" y2=\"22\"/>\n        <path class=\"goldst\" d=\"M62 40 q5 8 3 20 q-1 8 2 14\"/>\n      </svg>","caption":""},{"n":1,"word":"seed","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M50 86 q-19 -8 -19 -30 q0 -20 19 -26 q19 6 19 26 q0 22 -19 30 Z\"/>\n        <path class=\"goldst\" d=\"M50 44 q0 -12 0 -20 q10 2 12 12 q-8 1 -12 4\"/>\n        <path class=\"goldst\" d=\"M50 30 q-9 0 -12 -9 q9 -1 12 3\"/>\n      </svg>","caption":""},{"n":2,"word":"sun","svg":"<svg viewBox=\"0 0 100 100\">\n        <circle class=\"st\" cx=\"50\" cy=\"50\" r=\"20\"/>\n        <g class=\"goldst\">\n          <line x1=\"50\" y1=\"12\" x2=\"50\" y2=\"24\"/>\n          <line x1=\"50\" y1=\"76\" x2=\"50\" y2=\"88\"/>\n          <line x1=\"12\" y1=\"50\" x2=\"24\" y2=\"50\"/>\n          <line x1=\"76\" y1=\"50\" x2=\"88\" y2=\"50\"/>\n          <line x1=\"23\" y1=\"23\" x2=\"32\" y2=\"32\"/>\n          <line x1=\"68\" y1=\"68\" x2=\"77\" y2=\"77\"/>\n          <line x1=\"77\" y1=\"23\" x2=\"68\" y2=\"32\"/>\n          <line x1=\"32\" y1=\"68\" x2=\"23\" y2=\"77\"/>\n        </g>\n      </svg>","caption":""},{"n":3,"word":"seam","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M30 20 h40 l-3 62 h-13 l-4 -40 -4 40 h-13 Z\"/>\n        <line class=\"st\" x1=\"30\" y1=\"28\" x2=\"70\" y2=\"28\"/>\n        <!-- rip zigzag opening down the seam -->\n        <path class=\"goldst\" d=\"M50 30 l-5 6 5 6 -5 6 5 6 -5 6\"/>\n      </svg>","caption":"a seam ripping on jeans"},{"n":4,"word":"seer","svg":"<svg viewBox=\"0 0 100 100\">\n        <circle class=\"stf\" cx=\"50\" cy=\"42\" r=\"24\"/>\n        <path class=\"stf\" d=\"M31 68 q19 10 38 0 l7 14 q-26 9 -52 0 Z\"/>\n        <path class=\"goldst\" d=\"M43 30 v8 M39 34 h8\"/>\n      </svg>","caption":"a crystal ball"},{"n":5,"word":"soul","svg":"<svg viewBox=\"0 0 100 100\">\n        <ellipse cx=\"50\" cy=\"48\" rx=\"31\" ry=\"37\" stroke=\"#e0a458\" stroke-width=\"2.4\" stroke-dasharray=\"1 8\" opacity=\"0.9\"/>\n        <circle cx=\"50\" cy=\"33\" r=\"11\" stroke=\"#2b3a67\" stroke-width=\"3.4\" stroke-dasharray=\"4 4\"/>\n        <path d=\"M33 80 q0 -25 17 -25 q17 0 17 25\" stroke=\"#2b3a67\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-dasharray=\"4 4\"/>\n      </svg>","caption":"a glowing figure"},{"n":6,"word":"sushi","svg":"<svg viewBox=\"0 0 100 100\">\n        <circle class=\"stf\" cx=\"64\" cy=\"40\" r=\"16\"/>\n        <circle class=\"gold\" cx=\"64\" cy=\"40\" r=\"5\"/>\n        <circle class=\"stf\" cx=\"42\" cy=\"58\" r=\"23\"/>\n        <circle class=\"st\" cx=\"42\" cy=\"58\" r=\"14\"/>\n        <circle class=\"gold\" cx=\"42\" cy=\"58\" r=\"7\"/>\n      </svg>","caption":"a maki roll"},{"n":7,"word":"sky","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- sun peeking -->\n        <circle class=\"goldst\" cx=\"34\" cy=\"34\" r=\"10\"/>\n        <!-- large cloud -->\n        <path class=\"stf\" d=\"M40 54 q-9 0 -9 -8 q0 -8 9 -8 q1 -9 11 -9 q9 0 11 8 q8 0 8 8 q0 9 -9 9 Z\"/>\n        <!-- small cloud -->\n        <path class=\"stf\" d=\"M60 40 q-6 0 -6 -5 q0 -5 6 -5 q1 -5 7 -5 q6 0 6 5 q5 0 5 5 q0 5 -6 5 Z\"/>\n        <!-- horizon -->\n        <line class=\"st\" x1=\"22\" y1=\"76\" x2=\"78\" y2=\"76\"/>\n        <line class=\"st\" x1=\"30\" y1=\"84\" x2=\"50\" y2=\"84\"/>\n      </svg>","caption":""},{"n":8,"word":"sofa","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M22 42 q0 -8 8 -8 h40 q8 0 8 8 v16 h-56 Z\"/>\n        <path class=\"stf\" d=\"M14 58 q0 -6 6 -6 h60 q6 0 6 6 v16 h-72 Z\"/>\n        <path class=\"stf\" d=\"M14 58 q-6 0 -6 8 v8 h10 v-16 Z\"/>\n        <path class=\"stf\" d=\"M86 58 q6 0 6 8 v8 h-10 v-16 Z\"/>\n        <line class=\"st\" x1=\"50\" y1=\"52\" x2=\"50\" y2=\"74\"/>\n        <line class=\"st\" x1=\"20\" y1=\"74\" x2=\"20\" y2=\"82\"/>\n        <line class=\"st\" x1=\"80\" y1=\"74\" x2=\"80\" y2=\"82\"/>\n      </svg>","caption":""},{"n":9,"word":"soap","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M24 60 q0 -16 18 -16 h16 q18 0 18 16 q0 14 -18 14 h-16 q-18 0 -18 -14 Z\"/>\n        <path class=\"st\" d=\"M34 54 q9 -6 20 -3\"/>\n        <circle class=\"goldst\" cx=\"68\" cy=\"30\" r=\"8\"/>\n        <circle class=\"gold\" cx=\"78\" cy=\"42\" r=\"4\"/>\n        <circle class=\"gold\" cx=\"60\" cy=\"22\" r=\"3\"/>\n      </svg>","caption":""},{"n":10,"word":"dice","svg":"<svg viewBox=\"0 0 100 100\">\n        <rect class=\"stf\" x=\"24\" y=\"40\" width=\"36\" height=\"36\" rx=\"7\"/>\n        <rect class=\"stf\" x=\"50\" y=\"22\" width=\"30\" height=\"30\" rx=\"6\" transform=\"rotate(8 65 37)\"/>\n        <!-- pips on big die (5) -->\n        <circle class=\"gold\" cx=\"33\" cy=\"49\" r=\"2.6\"/>\n        <circle class=\"gold\" cx=\"51\" cy=\"49\" r=\"2.6\"/>\n        <circle class=\"gold\" cx=\"42\" cy=\"58\" r=\"2.6\"/>\n        <circle class=\"gold\" cx=\"33\" cy=\"67\" r=\"2.6\"/>\n        <circle class=\"gold\" cx=\"51\" cy=\"67\" r=\"2.6\"/>\n        <!-- pips on small die (3) -->\n        <circle class=\"gold\" cx=\"60\" cy=\"31\" r=\"2.2\"/>\n        <circle class=\"gold\" cx=\"66\" cy=\"37\" r=\"2.2\"/>\n        <circle class=\"gold\" cx=\"72\" cy=\"43\" r=\"2.2\"/>\n      </svg>","caption":""},{"n":11,"word":"dad","svg":"<svg viewBox=\"0 0 100 100\">\n        <circle class=\"stf\" cx=\"50\" cy=\"50\" r=\"25\"/>\n        <!-- short side-parted hair -->\n        <path class=\"st\" d=\"M27 44 q0 -22 23 -22 q23 0 23 22 q-6 -10 -14 -10 q-3 -6 -9 -4 q-6 -2 -9 4 q-8 0 -14 10\"/>\n        <!-- brows -->\n        <path class=\"st\" d=\"M38 46 q4 -3 8 -1\"/>\n        <path class=\"st\" d=\"M54 45 q4 -2 8 1\"/>\n        <!-- eyes -->\n        <circle class=\"gold\" cx=\"42\" cy=\"52\" r=\"2.4\"/>\n        <circle class=\"gold\" cx=\"58\" cy=\"52\" r=\"2.4\"/>\n        <!-- moustache -->\n        <path class=\"st\" d=\"M40 64 q10 5 20 0\"/>\n        <!-- jaw stubble hint -->\n        <path class=\"st\" d=\"M36 62 q4 12 14 13 q10 -1 14 -13\"/>\n      </svg>","caption":""},{"n":12,"word":"DNA","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"st\" d=\"M18 50 C22 32 30 32 34 50 C38 68 46 68 50 50 C54 32 62 32 66 50 C70 68 78 68 82 50\"/>\n        <path class=\"st\" d=\"M18 50 C22 68 30 68 34 50 C38 32 46 32 50 50 C54 68 62 68 66 50 C70 32 78 32 82 50\"/>\n        <line class=\"goldst\" x1=\"26\" y1=\"42\" x2=\"26\" y2=\"58\"/>\n        <line class=\"goldst\" x1=\"42\" y1=\"42\" x2=\"42\" y2=\"58\"/>\n        <line class=\"goldst\" x1=\"58\" y1=\"42\" x2=\"58\" y2=\"58\"/>\n        <line class=\"goldst\" x1=\"74\" y1=\"42\" x2=\"74\" y2=\"58\"/>\n      </svg>","caption":""},{"n":13,"word":"tummy","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- belly sides bowing out -->\n        <path class=\"st\" d=\"M35 22 q-9 24 1 44\"/>\n        <path class=\"st\" d=\"M65 22 q9 24 -1 44\"/>\n        <!-- navel -->\n        <path class=\"st\" d=\"M50 48 q-3 3 0 6\"/>\n        <!-- jeans waistband -->\n        <path class=\"stf\" d=\"M34 66 q16 8 32 0 v12 q-16 7 -32 0 Z\"/>\n        <line class=\"st\" x1=\"50\" y1=\"66\" x2=\"50\" y2=\"74\"/>\n        <circle class=\"gold\" cx=\"50\" cy=\"70\" r=\"2.2\"/>\n      </svg>","caption":"a round belly"},{"n":14,"word":"door","svg":"<svg viewBox=\"0 0 100 100\">\n        <rect class=\"stf\" x=\"30\" y=\"18\" width=\"40\" height=\"64\" rx=\"4\"/>\n        <rect class=\"st\" x=\"37\" y=\"26\" width=\"26\" height=\"20\" rx=\"2\"/>\n        <rect class=\"st\" x=\"37\" y=\"52\" width=\"26\" height=\"22\" rx=\"2\"/>\n        <circle class=\"gold\" cx=\"60\" cy=\"52\" r=\"3\"/>\n      </svg>","caption":""},{"n":15,"word":"doll","svg":"<svg viewBox=\"0 0 100 100\">\n        <circle class=\"stf\" cx=\"50\" cy=\"30\" r=\"14\"/>\n        <!-- hair tufts -->\n        <path class=\"goldst\" d=\"M36 26 q-6 -4 -8 -12 q8 2 10 8\"/>\n        <path class=\"goldst\" d=\"M64 26 q6 -4 8 -12 q-8 2 -10 8\"/>\n        <!-- body -->\n        <path class=\"stf\" d=\"M50 44 q-14 2 -14 20 q0 14 14 14 q14 0 14 -14 q0 -18 -14 -20 Z\"/>\n        <!-- arms -->\n        <path class=\"st\" d=\"M38 54 l-10 8\"/>\n        <path class=\"st\" d=\"M62 54 l10 8\"/>\n        <!-- legs -->\n        <path class=\"st\" d=\"M44 78 v8\"/>\n        <path class=\"st\" d=\"M56 78 v8\"/>\n        <!-- face dots + stitched smile -->\n        <circle class=\"gold\" cx=\"45\" cy=\"30\" r=\"2\"/>\n        <circle class=\"gold\" cx=\"55\" cy=\"30\" r=\"2\"/>\n        <path class=\"st\" d=\"M45 36 q5 3 10 0\"/>\n      </svg>","caption":""},{"n":16,"word":"DJ","svg":"<svg viewBox=\"0 0 100 100\">\n        <rect class=\"stf\" x=\"20\" y=\"34\" width=\"60\" height=\"42\" rx=\"6\"/>\n        <circle class=\"st\" cx=\"46\" cy=\"55\" r=\"15\"/>\n        <circle class=\"gold\" cx=\"46\" cy=\"55\" r=\"3\"/>\n        <!-- tonearm -->\n        <line class=\"st\" x1=\"70\" y1=\"40\" x2=\"55\" y2=\"60\"/>\n        <circle class=\"st\" cx=\"70\" cy=\"40\" r=\"2.5\"/>\n        <!-- pitch slider -->\n        <line class=\"st\" x1=\"70\" y1=\"66\" x2=\"74\" y2=\"66\"/>\n      </svg>","caption":"turntables"},{"n":17,"word":"dog","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- head -->\n        <path class=\"stf\" d=\"M34 40 q0 -16 16 -16 q16 0 16 16 v6 q0 12 -16 18 q-16 -6 -16 -18 Z\"/>\n        <!-- floppy ears -->\n        <path class=\"stf\" d=\"M34 34 q-14 0 -14 18 q0 10 10 10 q6 0 6 -8\"/>\n        <path class=\"stf\" d=\"M66 34 q14 0 14 18 q0 10 -10 10 q-6 0 -6 -8\"/>\n        <!-- eyes -->\n        <circle class=\"gold\" cx=\"43\" cy=\"44\" r=\"2.6\"/>\n        <circle class=\"gold\" cx=\"57\" cy=\"44\" r=\"2.6\"/>\n        <!-- snout + nose -->\n        <path class=\"st\" d=\"M44 58 q6 5 12 0\"/>\n        <ellipse class=\"gold\" cx=\"50\" cy=\"54\" rx=\"3.4\" ry=\"2.6\"/>\n      </svg>","caption":""},{"n":18,"word":"TV","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- antenna -->\n        <line class=\"st\" x1=\"50\" y1=\"34\" x2=\"38\" y2=\"18\"/>\n        <line class=\"st\" x1=\"50\" y1=\"34\" x2=\"64\" y2=\"20\"/>\n        <!-- cabinet -->\n        <rect class=\"stf\" x=\"20\" y=\"34\" width=\"60\" height=\"44\" rx=\"6\"/>\n        <!-- screen -->\n        <rect class=\"st\" x=\"27\" y=\"41\" width=\"38\" height=\"30\" rx=\"5\"/>\n        <!-- dials -->\n        <circle class=\"gold\" cx=\"72\" cy=\"46\" r=\"3\"/>\n        <circle class=\"gold\" cx=\"72\" cy=\"58\" r=\"3\"/>\n        <!-- legs -->\n        <line class=\"st\" x1=\"30\" y1=\"78\" x2=\"26\" y2=\"86\"/>\n        <line class=\"st\" x1=\"70\" y1=\"78\" x2=\"74\" y2=\"86\"/>\n      </svg>","caption":"an old set"},{"n":19,"word":"tuba","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- big rounded body loop -->\n        <path class=\"stf\" d=\"M62 56 C34 44 16 58 22 80 C27 97 56 98 68 82 C76 70 74 60 62 56 Z\"/>\n        <!-- flared bell opening up-right -->\n        <path class=\"stf\" d=\"M60 52 Q74 32 87 17 L97 47 Q79 53 64 58 Z\"/>\n        <!-- inner valve-slide loop with hatching (lower-right) -->\n        <path class=\"st\" d=\"M50 84 q-5 -12 6 -17 q9 -4 17 3 q7 6 3 14\"/>\n        <line class=\"st\" x1=\"56\" y1=\"83\" x2=\"61\" y2=\"70\"/>\n        <line class=\"st\" x1=\"64\" y1=\"85\" x2=\"69\" y2=\"73\"/>\n        <line class=\"st\" x1=\"72\" y1=\"82\" x2=\"76\" y2=\"72\"/>\n        <!-- three valve pistons on top -->\n        <line class=\"goldst\" x1=\"33\" y1=\"47\" x2=\"31\" y2=\"34\"/>\n        <line class=\"goldst\" x1=\"42\" y1=\"45\" x2=\"41\" y2=\"32\"/>\n        <line class=\"goldst\" x1=\"51\" y1=\"45\" x2=\"50\" y2=\"33\"/>\n        <!-- mouthpiece pipe + T-end, bottom-left -->\n        <line class=\"st\" x1=\"26\" y1=\"80\" x2=\"12\" y2=\"92\"/>\n        <line class=\"st\" x1=\"7\" y1=\"87\" x2=\"18\" y2=\"98\"/>\n      </svg>","caption":""},{"n":20,"word":"nose","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"st\" d=\"M52 22 C46 34 40 44 42 54 C43 60 50 62 56 58\"/>\n        <path class=\"st\" d=\"M42 54 q-6 4 -1 8 q4 3 9 1\"/>\n        <path class=\"st\" d=\"M56 58 q3 -3 1 -7\"/>\n        <path class=\"goldst\" d=\"M45 60 q3 2 6 1\"/>\n      </svg>","caption":""},{"n":21,"word":"net","svg":"<svg viewBox=\"0 0 100 100\">\n        <ellipse class=\"stf\" cx=\"46\" cy=\"38\" rx=\"22\" ry=\"20\"/>\n        <path class=\"st\" d=\"M60 53 L76 80\"/>\n        <path class=\"st\" d=\"M53 57 L70 82\"/>\n        <g class=\"goldthin\">\n          <line x1=\"32\" y1=\"30\" x2=\"60\" y2=\"46\"/>\n          <line x1=\"28\" y1=\"40\" x2=\"56\" y2=\"52\"/>\n          <line x1=\"40\" y1=\"22\" x2=\"52\" y2=\"54\"/>\n          <line x1=\"52\" y1=\"24\" x2=\"44\" y2=\"54\"/>\n        </g>\n      </svg>","caption":""},{"n":22,"word":"nun","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- veil / habit -->\n        <path class=\"stf\" d=\"M28 52 q-2 -32 22 -32 q24 0 22 32 q-1 10 -6 20 h-32 q-5 -10 -6 -20 Z\"/>\n        <!-- face opening -->\n        <ellipse class=\"stf\" cx=\"50\" cy=\"48\" rx=\"13\" ry=\"16\"/>\n        <!-- eyes + gentle smile -->\n        <circle class=\"gold\" cx=\"45\" cy=\"46\" r=\"2\"/>\n        <circle class=\"gold\" cx=\"55\" cy=\"46\" r=\"2\"/>\n        <path class=\"st\" d=\"M45 54 q5 3 10 0\"/>\n        <!-- small cross -->\n        <line class=\"goldst\" x1=\"50\" y1=\"74\" x2=\"50\" y2=\"84\"/>\n        <line class=\"goldst\" x1=\"46\" y1=\"78\" x2=\"54\" y2=\"78\"/>\n      </svg>","caption":""},{"n":23,"word":"Nimh","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- body + head -->\n        <path class=\"stf\" d=\"M22 64 Q28 50 44 52 Q64 54 68 66 Q70 82 50 82 Q28 82 22 64 Z\"/>\n        <!-- ear -->\n        <circle class=\"stf\" cx=\"42\" cy=\"50\" r=\"9\"/>\n        <!-- nose -->\n        <circle class=\"gold\" cx=\"21\" cy=\"65\" r=\"2\"/>\n        <!-- glowing (red) eye -->\n        <circle class=\"gold\" cx=\"33\" cy=\"62\" r=\"3\"/>\n        <!-- whiskers -->\n        <g class=\"goldthin\">\n          <line x1=\"22\" y1=\"64\" x2=\"10\" y2=\"60\"/>\n          <line x1=\"22\" y1=\"67\" x2=\"10\" y2=\"68\"/>\n          <line x1=\"23\" y1=\"69\" x2=\"12\" y2=\"74\"/>\n        </g>\n        <!-- tail -->\n        <path class=\"st\" d=\"M68 70 Q86 72 84 58 Q83 50 75 52\"/>\n      </svg>","caption":"lab rat, glowing red eyes"},{"n":24,"word":"noir","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- shadow slats behind -->\n        <g class=\"goldthin\">\n          <line x1=\"20\" y1=\"26\" x2=\"80\" y2=\"26\"/>\n          <line x1=\"20\" y1=\"33\" x2=\"80\" y2=\"33\"/>\n        </g>\n        <!-- crown -->\n        <path class=\"stf\" d=\"M34 54 q-1 -22 16 -22 q17 0 16 22 Z\"/>\n        <!-- pinch -->\n        <path class=\"st\" d=\"M44 36 q6 4 12 0\"/>\n        <!-- band -->\n        <line class=\"goldst\" x1=\"34\" y1=\"50\" x2=\"66\" y2=\"50\"/>\n        <!-- brim -->\n        <path class=\"stf\" d=\"M22 56 q28 12 56 0 q-7 8 -28 8 q-21 0 -28 -8 Z\"/>\n      </svg>","caption":"a film-noir fedora"},{"n":25,"word":"nail","svg":"<svg viewBox=\"0 0 100 100\">\n        <ellipse class=\"stf\" cx=\"50\" cy=\"24\" rx=\"13\" ry=\"4\"/>\n        <path class=\"stf\" d=\"M44 26 L48 78 L50 82 L52 78 L56 26 Z\"/>\n        <line class=\"goldst\" x1=\"47\" y1=\"40\" x2=\"47\" y2=\"54\"/>\n      </svg>","caption":""},{"n":26,"word":"nacho","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M30 32 Q50 28 70 32 Q56 60 52 74 Q50 78 48 74 Q42 56 30 32 Z\"/>\n        <!-- melted cheese along the top -->\n        <path class=\"goldst\" d=\"M34 34 q6 6 4 12 M46 33 q1 8 -2 14 M58 34 q3 6 -1 12\"/>\n        <!-- jalape\u00f1o ring -->\n        <circle class=\"goldst\" cx=\"49\" cy=\"50\" r=\"3.4\"/>\n      </svg>","caption":""},{"n":27,"word":"knock","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- door -->\n        <path class=\"stf\" d=\"M74 16 h12 v68 h-12 Z\"/>\n        <rect class=\"st\" x=\"76\" y=\"26\" width=\"6\" height=\"18\" rx=\"2\"/>\n        <!-- forearm -->\n        <path class=\"stf\" d=\"M36 70 L18 80 q-6 3 -9 -3 q-2 -5 4 -8 L34 62 Z\"/>\n        <!-- fist: knuckle bumps on the right edge -->\n        <path class=\"stf\" d=\"M34 48 h18 q7 3 0 6 q7 3 0 6 q7 3 0 6 q7 3 0 6 h-16 q-4 0 -4 -4 v-16 q0 -4 4 -4 Z\"/>\n        <!-- folded-finger grooves -->\n        <path class=\"st\" d=\"M50 54 h-9 M50 60 h-9 M50 66 h-9\"/>\n        <!-- thumb -->\n        <path class=\"st\" d=\"M34 58 q-5 0 -5 4 q0 4 5 4\"/>\n        <!-- knock motion -->\n        <path class=\"goldst\" d=\"M60 44 q5 4 4 10\"/>\n        <path class=\"goldst\" d=\"M64 40 q7 6 5 16\"/>\n      </svg>","caption":""},{"n":28,"word":"knife","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- blade -->\n        <path class=\"stf\" d=\"M16 58 Q44 40 62 50 L62 58 Q40 60 16 58 Z\"/>\n        <!-- spine highlight -->\n        <path class=\"goldst\" d=\"M24 52 Q44 44 58 51\"/>\n        <!-- handle -->\n        <path class=\"stf\" d=\"M62 50 h20 q4 0 4 4 v2 q0 4 -4 4 h-20 Z\"/>\n        <circle class=\"gold\" cx=\"70\" cy=\"55\" r=\"1.8\"/>\n        <circle class=\"gold\" cx=\"78\" cy=\"55\" r=\"1.8\"/>\n      </svg>","caption":""},{"n":29,"word":"nap","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- headboard + bed base -->\n        <path class=\"st\" d=\"M18 46 v30\"/>\n        <path class=\"stf\" d=\"M18 66 h58 v10 h-58 Z\"/>\n        <!-- pillow -->\n        <path class=\"stf\" d=\"M22 60 q0 -6 8 -6 h10 q6 0 6 6 v6 h-24 Z\"/>\n        <!-- sleeper lump under blanket -->\n        <path class=\"stf\" d=\"M40 66 q4 -10 18 -10 q18 0 18 10 Z\"/>\n        <!-- head on pillow -->\n        <circle class=\"stf\" cx=\"34\" cy=\"56\" r=\"7\"/>\n        <!-- Zzz -->\n        <path class=\"goldst\" d=\"M62 40 h8 l-8 8 h8\"/>\n        <path class=\"goldst\" d=\"M74 30 h6 l-6 6 h6\"/>\n      </svg>","caption":""},{"n":30,"word":"mouse","svg":"<svg viewBox=\"0 0 100 100\">\n        <circle class=\"stf\" cx=\"38\" cy=\"40\" r=\"10\"/>\n        <circle class=\"stf\" cx=\"62\" cy=\"40\" r=\"10\"/>\n        <circle class=\"gold\" cx=\"38\" cy=\"40\" r=\"4\"/>\n        <circle class=\"gold\" cx=\"62\" cy=\"40\" r=\"4\"/>\n        <path class=\"stf\" d=\"M36 58 Q34 44 50 44 Q66 44 64 58 Q64 76 50 76 Q36 76 36 58 Z\"/>\n        <circle class=\"gold\" cx=\"45\" cy=\"56\" r=\"2.4\"/>\n        <circle class=\"gold\" cx=\"55\" cy=\"56\" r=\"2.4\"/>\n        <ellipse class=\"gold\" cx=\"50\" cy=\"63\" rx=\"3\" ry=\"2.2\"/>\n        <g class=\"goldthin\">\n          <line x1=\"47\" y1=\"64\" x2=\"34\" y2=\"62\"/>\n          <line x1=\"47\" y1=\"66\" x2=\"35\" y2=\"68\"/>\n          <line x1=\"53\" y1=\"64\" x2=\"66\" y2=\"62\"/>\n          <line x1=\"53\" y1=\"66\" x2=\"65\" y2=\"68\"/>\n        </g>\n        <path class=\"st\" d=\"M62 72 Q78 78 76 62 Q75 56 69 58\"/>\n      </svg>","caption":""},{"n":31,"word":"mat","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M28 46 L72 46 L84 72 L16 72 Z\"/>\n        <path class=\"goldthin\" d=\"M34 52 L66 52 L74 66 L26 66 Z\"/>\n        <g class=\"thin\">\n          <line x1=\"30\" y1=\"74\" x2=\"28\" y2=\"80\"/>\n          <line x1=\"42\" y1=\"74\" x2=\"41\" y2=\"80\"/>\n          <line x1=\"54\" y1=\"74\" x2=\"55\" y2=\"80\"/>\n          <line x1=\"66\" y1=\"74\" x2=\"68\" y2=\"80\"/>\n        </g>\n      </svg>","caption":"a doormat"},{"n":32,"word":"moon","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"st\" d=\"M63 18 a34 34 0 1 0 19 52 a26 26 0 1 1 -19 -52 Z\"/>\n        <circle class=\"gold\" cx=\"70\" cy=\"40\" r=\"2.6\"/>\n        <circle class=\"gold\" cx=\"60\" cy=\"58\" r=\"2\"/>\n        <circle class=\"gold\" cx=\"75\" cy=\"60\" r=\"1.6\"/>\n      </svg>","caption":""},{"n":33,"word":"mummy","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M38 30 Q38 20 50 20 Q62 20 62 30 L64 78 Q64 84 50 84 Q36 84 36 78 Z\"/>\n        <!-- wrap lines -->\n        <g class=\"thin\">\n          <line x1=\"39\" y1=\"30\" x2=\"61\" y2=\"34\"/>\n          <line x1=\"37\" y1=\"40\" x2=\"63\" y2=\"44\"/>\n          <line x1=\"37\" y1=\"66\" x2=\"63\" y2=\"70\"/>\n          <line x1=\"37\" y1=\"74\" x2=\"63\" y2=\"78\"/>\n        </g>\n        <!-- crossed arms -->\n        <path class=\"st\" d=\"M40 50 L60 60 M60 50 L40 60\"/>\n        <!-- eyes peeking -->\n        <circle class=\"gold\" cx=\"45\" cy=\"30\" r=\"1.8\"/>\n        <circle class=\"gold\" cx=\"55\" cy=\"31\" r=\"1.8\"/>\n        <!-- loose bandage end -->\n        <path class=\"goldst\" d=\"M64 66 q10 3 8 13\"/>\n      </svg>","caption":""},{"n":34,"word":"moor","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"goldst\" d=\"M64 40 a10 10 0 0 1 20 0\"/>\n        <path class=\"st\" d=\"M14 58 Q34 46 54 56 Q72 64 86 54\"/>\n        <path class=\"st\" d=\"M14 74 Q40 60 66 74 Q78 80 86 74\"/>\n        <g class=\"goldthin\">\n          <path d=\"M30 56 l-2 -8 M30 56 l2 -8\"/>\n          <path d=\"M46 60 l-2 -8 M46 60 l2 -8\"/>\n          <path d=\"M62 70 l-2 -8 M62 70 l2 -8\"/>\n        </g>\n      </svg>","caption":"open Scottish moorland"},{"n":35,"word":"mole","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- ground surface line + loose dirt -->\n        <path class=\"goldthin\" d=\"M14 28 h72\" stroke-dasharray=\"2 5\"/>\n        <circle class=\"gold\" cx=\"30\" cy=\"34\" r=\"1.4\"/>\n        <circle class=\"gold\" cx=\"58\" cy=\"33\" r=\"1.4\"/>\n        <circle class=\"gold\" cx=\"72\" cy=\"35\" r=\"1.4\"/>\n        <!-- mole body, pointed snout at left -->\n        <path class=\"stf\" d=\"M16 64 Q26 52 46 53 Q70 54 78 64 Q82 74 68 76 Q44 80 28 74 Q18 70 16 64 Z\"/>\n        <!-- nose tip -->\n        <circle class=\"gold\" cx=\"16\" cy=\"64\" r=\"2.2\"/>\n        <!-- tiny eye -->\n        <circle class=\"gold\" cx=\"30\" cy=\"61\" r=\"1.6\"/>\n        <!-- whiskers -->\n        <g class=\"goldthin\">\n          <line x1=\"17\" y1=\"62\" x2=\"8\" y2=\"58\"/>\n          <line x1=\"17\" y1=\"66\" x2=\"8\" y2=\"68\"/>\n        </g>\n        <!-- big front digging claw -->\n        <g class=\"st\">\n          <path d=\"M34 76 l-3 7 M39 77 l-1 7 M44 76 l1 7\"/>\n        </g>\n        <!-- short back foot + stubby tail -->\n        <path class=\"st\" d=\"M64 76 l1 6\"/>\n        <path class=\"st\" d=\"M78 64 q8 -1 8 5\"/>\n      </svg>","caption":"the burrowing animal"},{"n":36,"word":"matcha","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- bowl -->\n        <path class=\"stf\" d=\"M28 56 Q28 76 50 76 Q72 76 72 56 Z\"/>\n        <ellipse class=\"st\" cx=\"50\" cy=\"56\" rx=\"22\" ry=\"6\"/>\n        <!-- frothy matcha surface -->\n        <path class=\"goldst\" d=\"M34 56 q6 3 12 0 q6 -3 12 0\"/>\n        <!-- bamboo whisk handle + tines -->\n        <line class=\"st\" x1=\"50\" y1=\"52\" x2=\"50\" y2=\"30\"/>\n        <g class=\"thin\">\n          <path d=\"M50 52 q-6 2 -8 8 M50 52 q-3 3 -3 9 M50 52 q3 3 3 9 M50 52 q6 2 8 8\"/>\n        </g>\n        <!-- steam -->\n        <path class=\"goldthin\" d=\"M40 46 q-3 -5 0 -10 M60 46 q3 -5 0 -10\"/>\n      </svg>","caption":""},{"n":37,"word":"mic","svg":"<svg viewBox=\"0 0 100 100\">\n        <rect class=\"stf\" x=\"38\" y=\"18\" width=\"22\" height=\"30\" rx=\"11\"/>\n        <g class=\"goldthin\">\n          <line x1=\"42\" y1=\"26\" x2=\"56\" y2=\"26\"/>\n          <line x1=\"42\" y1=\"32\" x2=\"56\" y2=\"32\"/>\n          <line x1=\"42\" y1=\"38\" x2=\"56\" y2=\"38\"/>\n        </g>\n        <!-- handle -->\n        <path class=\"stf\" d=\"M45 48 h8 l2 26 q0 4 -6 4 q-6 0 -6 -4 Z\"/>\n        <!-- sound waves -->\n        <path class=\"goldst\" d=\"M66 26 q6 7 0 16\"/>\n        <path class=\"goldst\" d=\"M32 26 q-6 7 0 16\"/>\n      </svg>","caption":""},{"n":38,"word":"muff","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- wrists -->\n        <path class=\"stf\" d=\"M14 54 h20 v14 h-20 Z\"/>\n        <path class=\"stf\" d=\"M66 54 h20 v14 h-20 Z\"/>\n        <line class=\"st\" x1=\"20\" y1=\"54\" x2=\"20\" y2=\"68\"/>\n        <line class=\"st\" x1=\"80\" y1=\"54\" x2=\"80\" y2=\"68\"/>\n        <!-- fluffy muff barrel -->\n        <path class=\"stf\" d=\"M32 44 Q50 38 68 44 L68 76 Q50 82 32 76 Z\"/>\n        <!-- fur scallops -->\n        <g class=\"goldthin\">\n          <path d=\"M34 44 q4 -5 8 0 q4 -5 8 0 q4 -5 8 0 q4 -5 6 0\"/>\n          <path d=\"M34 76 q4 5 8 0 q4 5 8 0 q4 5 8 0 q4 5 6 0\"/>\n        </g>\n      </svg>","caption":"a fur hand-muff"},{"n":39,"word":"map","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M20 34 L42 30 L64 36 L80 32 L80 66 L64 70 L42 64 L20 68 Z\"/>\n        <path class=\"thin\" d=\"M42 30 V64 M64 36 V70\"/>\n        <path class=\"goldst\" d=\"M28 60 q10 -14 24 -8 q10 4 18 -8\" stroke-dasharray=\"1 5\"/>\n        <!-- pin -->\n        <path class=\"gold\" d=\"M69 34 q6 0 6 6 q0 6 -6 12 q-6 -6 -6 -12 q0 -6 6 -6 Z\"/>\n        <circle cx=\"69\" cy=\"40\" r=\"2\" fill=\"#fbf7ef\"/>\n      </svg>","caption":""},{"n":40,"word":"rose","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M35 40 Q35 24 50 24 Q65 24 65 40 Q65 54 50 56 Q35 54 35 40 Z\"/>\n        <path class=\"goldst\" d=\"M44 40 q0 -8 6 -8 q6 0 6 8 q0 6 -6 6 q-4 0 -4 -4\"/>\n        <line class=\"st\" x1=\"50\" y1=\"56\" x2=\"50\" y2=\"82\"/>\n        <path class=\"st\" d=\"M50 66 Q62 60 68 68 Q60 74 50 70\"/>\n        <path class=\"st\" d=\"M50 74 Q40 70 34 76\"/>\n      </svg>","caption":""},{"n":41,"word":"radio","svg":"<svg viewBox=\"0 0 100 100\">\n        <line class=\"st\" x1=\"60\" y1=\"42\" x2=\"76\" y2=\"22\"/>\n        <circle class=\"gold\" cx=\"76\" cy=\"22\" r=\"2.4\"/>\n        <rect class=\"stf\" x=\"20\" y=\"42\" width=\"60\" height=\"38\" rx=\"5\"/>\n        <circle class=\"st\" cx=\"38\" cy=\"61\" r=\"12\"/>\n        <g class=\"goldthin\">\n          <line x1=\"38\" y1=\"53\" x2=\"38\" y2=\"69\"/>\n          <line x1=\"30\" y1=\"61\" x2=\"46\" y2=\"61\"/>\n        </g>\n        <circle class=\"gold\" cx=\"66\" cy=\"54\" r=\"3\"/>\n        <line class=\"st\" x1=\"60\" y1=\"68\" x2=\"72\" y2=\"68\"/>\n        <line class=\"st\" x1=\"60\" y1=\"74\" x2=\"72\" y2=\"74\"/>\n      </svg>","caption":""},{"n":42,"word":"rain","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M22 50 Q26 26 50 24 Q74 26 78 50 Q64 44 50 50 Q36 44 22 50 Z\"/>\n        <path class=\"thin\" d=\"M50 24 V50 M36 47 Q43 44 50 50 M64 47 Q57 44 50 50\"/>\n        <path class=\"st\" d=\"M50 50 V74 q0 7 -9 7\"/>\n        <g class=\"goldst\">\n          <path d=\"M28 62 q-3 4 0 6 q3 -2 0 -6\"/>\n          <path d=\"M70 60 q-3 4 0 6 q3 -2 0 -6\"/>\n          <path d=\"M60 74 q-3 4 0 6 q3 -2 0 -6\"/>\n        </g>\n      </svg>","caption":""},{"n":43,"word":"rum","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M44 20 h12 v10 q0 4 4 7 q6 5 6 14 v27 q0 5 -5 5 h-28 q-5 0 -5 -5 V51 q0 -9 6 -14 q4 -3 4 -7 Z\"/>\n        <line class=\"st\" x1=\"44\" y1=\"20\" x2=\"56\" y2=\"20\"/>\n        <rect class=\"stf\" x=\"34\" y=\"52\" width=\"32\" height=\"22\" rx=\"3\"/>\n        <path class=\"gold\" d=\"M50 55 l2 5 5 0 -4 4 2 5 -5 -3 -5 3 2 -5 -4 -4 5 0 Z\"/>\n      </svg>","caption":""},{"n":44,"word":"error","svg":"<svg viewBox=\"0 0 100 100\">\n        <circle cx=\"50\" cy=\"50\" r=\"30\" stroke=\"#c0392b\" stroke-width=\"4\" fill=\"none\"/>\n        <line class=\"redst\" x1=\"38\" y1=\"38\" x2=\"62\" y2=\"62\"/>\n        <line class=\"redst\" x1=\"62\" y1=\"38\" x2=\"38\" y2=\"62\"/>\n      </svg>","caption":""},{"n":45,"word":"rail","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"st\" d=\"M34 82 L46 20\"/>\n        <path class=\"st\" d=\"M66 82 L54 20\"/>\n        <g class=\"goldst\">\n          <line x1=\"33\" y1=\"76\" x2=\"67\" y2=\"76\"/>\n          <line x1=\"36\" y1=\"62\" x2=\"64\" y2=\"62\"/>\n          <line x1=\"39\" y1=\"48\" x2=\"61\" y2=\"48\"/>\n          <line x1=\"42\" y1=\"35\" x2=\"58\" y2=\"35\"/>\n          <line x1=\"44\" y1=\"25\" x2=\"56\" y2=\"25\"/>\n        </g>\n      </svg>","caption":"a railroad track"},{"n":46,"word":"arch","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M24 80 V48 Q24 24 50 24 Q76 24 76 48 V80 H64 V50 Q64 38 50 38 Q36 38 36 50 V80 Z\"/>\n        <g class=\"goldthin\">\n          <line x1=\"30\" y1=\"40\" x2=\"40\" y2=\"46\"/>\n          <line x1=\"50\" y1=\"26\" x2=\"50\" y2=\"38\"/>\n          <line x1=\"70\" y1=\"40\" x2=\"60\" y2=\"46\"/>\n          <line x1=\"26\" y1=\"58\" x2=\"36\" y2=\"58\"/>\n          <line x1=\"64\" y1=\"58\" x2=\"74\" y2=\"58\"/>\n        </g>\n      </svg>","caption":""},{"n":47,"word":"rock","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M20 72 Q16 54 34 48 Q48 38 64 48 Q84 54 80 72 Q78 80 50 80 Q24 80 20 72 Z\"/>\n        <g class=\"goldthin\">\n          <path d=\"M40 50 L46 64 L34 72\"/>\n          <path d=\"M46 64 L66 60\"/>\n        </g>\n      </svg>","caption":""},{"n":48,"word":"roof","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M14 62 L50 28 L86 62 L78 62 L50 36 L22 62 Z\"/>\n        <rect class=\"stf\" x=\"64\" y=\"34\" width=\"9\" height=\"16\"/>\n        <g class=\"goldthin\">\n          <line x1=\"34\" y1=\"46\" x2=\"66\" y2=\"46\"/>\n          <line x1=\"28\" y1=\"52\" x2=\"72\" y2=\"52\"/>\n        </g>\n      </svg>","caption":""},{"n":49,"word":"rap","svg":"<svg viewBox=\"0 0 100 100\">\n        <g class=\"goldst\" fill=\"none\">\n          <ellipse cx=\"26\" cy=\"34\" rx=\"4\" ry=\"3\"/>\n          <ellipse cx=\"30\" cy=\"44\" rx=\"4\" ry=\"3\"/>\n          <ellipse cx=\"36\" cy=\"53\" rx=\"4\" ry=\"3\"/>\n          <ellipse cx=\"44\" cy=\"60\" rx=\"4\" ry=\"3\"/>\n          <ellipse cx=\"56\" cy=\"60\" rx=\"4\" ry=\"3\"/>\n          <ellipse cx=\"64\" cy=\"53\" rx=\"4\" ry=\"3\"/>\n          <ellipse cx=\"70\" cy=\"44\" rx=\"4\" ry=\"3\"/>\n          <ellipse cx=\"74\" cy=\"34\" rx=\"4\" ry=\"3\"/>\n        </g>\n        <!-- pendant note -->\n        <circle class=\"stf\" cx=\"46\" cy=\"74\" r=\"5\"/>\n        <line class=\"st\" x1=\"51\" y1=\"74\" x2=\"51\" y2=\"58\"/>\n        <path class=\"st\" d=\"M51 58 q7 1 8 7\"/>\n      </svg>","caption":"chain &amp; beat"},{"n":50,"word":"lasso","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"st\" d=\"M30 36 C22 46 26 60 44 62 C64 64 74 52 70 40 C67 30 44 26 30 36 Z\"/>\n        <circle class=\"stf\" cx=\"47\" cy=\"62\" r=\"4\"/>\n        <path class=\"st\" d=\"M50 65 Q66 70 62 84 Q60 90 52 88\"/>\n        <g class=\"goldthin\">\n          <line x1=\"34\" y1=\"34\" x2=\"37\" y2=\"39\"/>\n          <line x1=\"44\" y1=\"30\" x2=\"46\" y2=\"35\"/>\n          <line x1=\"56\" y1=\"31\" x2=\"57\" y2=\"36\"/>\n        </g>\n      </svg>","caption":""},{"n":51,"word":"lady","svg":"<svg viewBox=\"0 0 100 100\">\n        <circle class=\"stf\" cx=\"50\" cy=\"24\" r=\"9\"/>\n        <path class=\"st\" d=\"M41 24 q-4 12 -2 18 M59 24 q4 12 2 18\"/>\n        <path class=\"stf\" d=\"M44 36 L56 36 L66 80 L34 80 Z\"/>\n        <line class=\"st\" x1=\"44\" y1=\"42\" x2=\"36\" y2=\"66\"/>\n        <line class=\"st\" x1=\"56\" y1=\"42\" x2=\"64\" y2=\"66\"/>\n        <circle class=\"gold\" cx=\"50\" cy=\"46\" r=\"2\"/>\n      </svg>","caption":""},{"n":52,"word":"lion","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- full mane -->\n        <path class=\"stf\" d=\"M74 50 Q89 66 67 67 Q66 89 50 74 Q34 89 33 67 Q11 66 26 50 Q11 34 33 33 Q34 11 50 26 Q66 11 67 33 Q89 34 74 50 Z\" stroke=\"#e0a458\"/>\n        <!-- ears -->\n        <circle class=\"stf\" cx=\"38\" cy=\"36\" r=\"5\"/>\n        <circle class=\"stf\" cx=\"62\" cy=\"36\" r=\"5\"/>\n        <!-- face -->\n        <circle class=\"stf\" cx=\"50\" cy=\"50\" r=\"19\"/>\n        <!-- eyes -->\n        <circle class=\"gold\" cx=\"43\" cy=\"47\" r=\"2.4\"/>\n        <circle class=\"gold\" cx=\"57\" cy=\"47\" r=\"2.4\"/>\n        <!-- nose + muzzle -->\n        <path class=\"st\" d=\"M46 55 L54 55 L50 59 Z\"/>\n        <path class=\"st\" d=\"M50 59 v3\"/>\n        <path class=\"st\" d=\"M50 62 q-5 4 -9 1 M50 62 q5 4 9 1\"/>\n        <!-- whisker dots -->\n        <circle class=\"gold\" cx=\"40\" cy=\"60\" r=\"1.2\"/>\n        <circle class=\"gold\" cx=\"60\" cy=\"60\" r=\"1.2\"/>\n      </svg>","caption":""},{"n":53,"word":"lime","svg":"<svg viewBox=\"0 0 100 100\">\n        <circle class=\"stf\" cx=\"48\" cy=\"54\" r=\"22\"/>\n        <circle class=\"st\" cx=\"48\" cy=\"54\" r=\"16\"/>\n        <g class=\"goldthin\">\n          <line x1=\"48\" y1=\"54\" x2=\"48\" y2=\"38\"/>\n          <line x1=\"48\" y1=\"54\" x2=\"60\" y2=\"43\"/>\n          <line x1=\"48\" y1=\"54\" x2=\"64\" y2=\"54\"/>\n          <line x1=\"48\" y1=\"54\" x2=\"60\" y2=\"65\"/>\n          <line x1=\"48\" y1=\"54\" x2=\"48\" y2=\"70\"/>\n          <line x1=\"48\" y1=\"54\" x2=\"36\" y2=\"65\"/>\n          <line x1=\"48\" y1=\"54\" x2=\"32\" y2=\"54\"/>\n          <line x1=\"48\" y1=\"54\" x2=\"36\" y2=\"43\"/>\n        </g>\n        <path class=\"goldst\" d=\"M64 34 q10 -4 12 -12 q-10 0 -14 8\"/>\n      </svg>","caption":""},{"n":54,"word":"Laura","svg":"<svg viewBox=\"0 0 100 100\">\n        <circle class=\"stf\" cx=\"42\" cy=\"42\" r=\"15\"/>\n        <path class=\"st\" d=\"M27 40 q-4 16 2 24 M57 40 q4 16 -2 24\"/>\n        <path class=\"st\" d=\"M28 34 q14 -12 28 0\"/>\n        <circle class=\"gold\" cx=\"37\" cy=\"42\" r=\"2\"/>\n        <circle class=\"gold\" cx=\"47\" cy=\"42\" r=\"2\"/>\n        <path class=\"st\" d=\"M35 49 q7 7 14 0\"/>\n        <!-- wand -->\n        <line class=\"goldst\" x1=\"60\" y1=\"76\" x2=\"76\" y2=\"46\"/>\n        <path class=\"gold\" d=\"M78 40 l2 5 5 1 -4 4 1 5 -5 -3 -5 3 1 -5 -4 -4 5 -1 Z\"/>\n      </svg>","caption":"your sister"},{"n":55,"word":"Lily","svg":"<svg viewBox=\"0 0 100 100\">\n        <g class=\"stf\">\n          <path d=\"M50 46 Q38 30 50 16 Q62 30 50 46 Z\"/>\n          <path d=\"M50 46 Q32 40 26 24 Q44 26 50 46 Z\"/>\n          <path d=\"M50 46 Q68 40 74 24 Q56 26 50 46 Z\"/>\n          <path d=\"M50 46 Q40 52 24 50 Q34 38 50 46 Z\"/>\n          <path d=\"M50 46 Q60 52 76 50 Q66 38 50 46 Z\"/>\n        </g>\n        <g class=\"goldst\">\n          <path d=\"M50 46 L46 32\"/>\n          <path d=\"M50 46 L50 30\"/>\n          <path d=\"M50 46 L54 32\"/>\n        </g>\n        <circle class=\"gold\" cx=\"46\" cy=\"32\" r=\"1.8\"/>\n        <circle class=\"gold\" cx=\"50\" cy=\"30\" r=\"1.8\"/>\n        <circle class=\"gold\" cx=\"54\" cy=\"32\" r=\"1.8\"/>\n        <line class=\"st\" x1=\"50\" y1=\"46\" x2=\"50\" y2=\"82\"/>\n        <path class=\"st\" d=\"M50 66 Q62 62 66 70 Q58 74 50 70\"/>\n      </svg>","caption":"the flower"},{"n":56,"word":"leech","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M30 30 C52 22 68 38 62 58 C58 74 42 80 33 71 C27 65 33 58 39 62 C45 66 52 60 50 52 C48 42 38 40 34 46 C31 50 27 46 30 30 Z\"/>\n        <g class=\"goldthin\">\n          <line x1=\"42\" y1=\"28\" x2=\"45\" y2=\"34\"/>\n          <line x1=\"54\" y1=\"34\" x2=\"50\" y2=\"40\"/>\n          <line x1=\"60\" y1=\"46\" x2=\"54\" y2=\"49\"/>\n          <line x1=\"59\" y1=\"60\" x2=\"53\" y2=\"59\"/>\n        </g>\n      </svg>","caption":"a leech"},{"n":57,"word":"leek","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- leaves fanning at top -->\n        <g class=\"stf\">\n          <path d=\"M44 46 Q34 30 30 16 Q44 24 48 44 Z\"/>\n          <path d=\"M50 44 Q50 26 50 12 Q56 28 54 44 Z\"/>\n          <path d=\"M56 46 Q66 30 70 18 Q58 26 52 44 Z\"/>\n        </g>\n        <!-- white shaft -->\n        <path class=\"stf\" d=\"M44 46 h12 v30 q0 4 -6 4 q-6 0 -6 -4 Z\"/>\n        <line class=\"st\" x1=\"44\" y1=\"52\" x2=\"56\" y2=\"52\"/>\n        <!-- roots -->\n        <g class=\"goldthin\">\n          <path d=\"M46 80 q-2 6 -4 8 M50 80 v9 M54 80 q2 6 4 8\"/>\n        </g>\n      </svg>","caption":""},{"n":58,"word":"lava","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M20 80 L38 44 L62 44 L80 80 Z\"/>\n        <!-- lava pooling in crater -->\n        <path class=\"redst\" d=\"M38 46 q12 5 24 0\"/>\n        <!-- eruption spurts -->\n        <g class=\"redst\">\n          <path d=\"M46 42 q-2 -10 -4 -16\"/>\n          <path d=\"M52 40 q1 -12 0 -20\"/>\n          <path d=\"M58 42 q3 -9 6 -14\"/>\n        </g>\n        <circle class=\"gold\" cx=\"42\" cy=\"22\" r=\"2\"/>\n        <circle class=\"gold\" cx=\"52\" cy=\"16\" r=\"2.4\"/>\n        <circle class=\"gold\" cx=\"64\" cy=\"26\" r=\"2\"/>\n        <!-- lava flow down slope -->\n        <path class=\"goldst\" d=\"M62 46 q6 12 10 30\"/>\n      </svg>","caption":""},{"n":59,"word":"lip","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M26 50 Q34 40 42 46 Q46 42 50 46 Q54 42 58 46 Q66 40 74 50 Q62 66 50 62 Q38 66 26 50 Z\"/>\n        <path class=\"st\" d=\"M26 50 Q50 56 74 50\"/>\n        <path class=\"goldthin\" d=\"M40 52 Q50 55 60 52\"/>\n      </svg>","caption":""},{"n":60,"word":"cheese","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M20 64 L74 40 Q82 38 82 46 L82 62 Q82 66 76 66 Z\"/>\n        <path class=\"st\" d=\"M20 64 L20 56 L74 32 L74 40\"/>\n        <circle class=\"gold\" cx=\"40\" cy=\"56\" r=\"3.4\"/>\n        <circle class=\"gold\" cx=\"58\" cy=\"52\" r=\"2.6\"/>\n        <circle class=\"gold\" cx=\"68\" cy=\"58\" r=\"2.2\"/>\n      </svg>","caption":""},{"n":61,"word":"cheetah","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M32 34 q-2 -10 6 -8 q6 -8 12 -2 q6 -6 12 2 q8 -2 6 8 q6 8 -2 22 q-6 14 -16 14 q-10 0 -16 -14 q-8 -14 -2 -22 Z\"/>\n        <circle class=\"gold\" cx=\"43\" cy=\"44\" r=\"2.4\"/>\n        <circle class=\"gold\" cx=\"57\" cy=\"44\" r=\"2.4\"/>\n        <path class=\"st\" d=\"M46 54 q4 4 8 0\"/>\n        <path class=\"red\" d=\"M50 52 l3 3 -6 0 Z\"/>\n        <!-- tear lines -->\n        <path class=\"st\" d=\"M44 48 L40 62 M56 48 L60 62\"/>\n        <!-- spots -->\n        <g class=\"gold\">\n          <circle cx=\"38\" cy=\"56\" r=\"1.6\"/>\n          <circle cx=\"62\" cy=\"56\" r=\"1.6\"/>\n          <circle cx=\"46\" cy=\"66\" r=\"1.6\"/>\n          <circle cx=\"54\" cy=\"66\" r=\"1.6\"/>\n        </g>\n      </svg>","caption":""},{"n":62,"word":"genie","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- lamp -->\n        <path class=\"stf\" d=\"M24 76 Q24 66 40 66 L60 66 Q72 66 72 74 Q72 78 60 78 L34 78 Q24 78 24 76 Z\"/>\n        <path class=\"st\" d=\"M60 66 q10 -2 14 4\"/>\n        <path class=\"stf\" d=\"M40 66 q2 -6 8 -6 q6 0 6 6 Z\"/>\n        <!-- smoke -->\n        <path class=\"goldst\" d=\"M48 58 Q40 50 48 44 Q56 38 50 30\"/>\n        <!-- genie head -->\n        <circle class=\"stf\" cx=\"54\" cy=\"26\" r=\"9\"/>\n        <path class=\"st\" d=\"M54 35 q-8 6 -12 0 M54 35 q8 6 12 0\"/>\n        <circle class=\"gold\" cx=\"51\" cy=\"25\" r=\"1.6\"/>\n        <circle class=\"gold\" cx=\"57\" cy=\"25\" r=\"1.6\"/>\n      </svg>","caption":""},{"n":63,"word":"jam","svg":"<svg viewBox=\"0 0 100 100\">\n        <rect class=\"stf\" x=\"32\" y=\"30\" width=\"32\" height=\"10\" rx=\"2\"/>\n        <path class=\"stf\" d=\"M30 42 h36 v34 q0 4 -4 4 h-28 q-4 0 -4 -4 Z\"/>\n        <path class=\"red\" d=\"M34 58 q16 -6 28 0 v16 q0 2 -2 2 h-24 q-2 0 -2 -2 Z\"/>\n        <rect class=\"st\" x=\"40\" y=\"46\" width=\"16\" height=\"9\" rx=\"1.5\"/>\n      </svg>","caption":""},{"n":64,"word":"cherry","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"st\" d=\"M50 26 Q40 44 36 58 M50 26 Q60 44 66 56\"/>\n        <path class=\"st\" d=\"M50 26 Q64 22 74 30\"/>\n        <circle class=\"stf\" cx=\"34\" cy=\"66\" r=\"12\"/>\n        <circle class=\"stf\" cx=\"64\" cy=\"64\" r=\"12\"/>\n        <circle class=\"gold\" cx=\"30\" cy=\"62\" r=\"2.4\"/>\n        <circle class=\"gold\" cx=\"60\" cy=\"60\" r=\"2.4\"/>\n      </svg>","caption":""},{"n":65,"word":"chili","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- body -->\n        <path d=\"M52 34 C43 42 41 54 47 64 C52 74 60 80 65 74 C61 71 57 65 55 57 C52 47 54 40 57 35 Z\"\n              fill=\"#c0392b\" stroke=\"#c0392b\" stroke-width=\"3.4\" stroke-linejoin=\"round\"/>\n        <!-- stem + cap -->\n        <path class=\"st\" d=\"M55 35 q-2 -9 -8 -13\"/>\n        <path class=\"st\" d=\"M50 30 q4 -3 9 -2\"/>\n        <!-- highlight -->\n        <path class=\"goldthin\" d=\"M50 44 q-1 10 3 18\"/>\n      </svg>","caption":""},{"n":66,"word":"JJ","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- woman (70s): glasses, soft age lines -->\n        <circle class=\"stf\" cx=\"36\" cy=\"34\" r=\"11\"/>\n        <path class=\"st\" d=\"M25 34 q-2 -14 11 -14 q13 0 11 14 q-1 10 -3 20 M47 34 q1 10 3 18\"/>\n        <circle class=\"st\" cx=\"32\" cy=\"34\" r=\"3\"/>\n        <circle class=\"st\" cx=\"41\" cy=\"34\" r=\"3\"/>\n        <line class=\"st\" x1=\"35\" y1=\"34\" x2=\"38\" y2=\"34\"/>\n        <path class=\"thin\" d=\"M30 28 q3 -2 5 0 M39 28 q3 -2 4 0\"/>\n        <path class=\"st\" d=\"M32 40 q4 2 8 0\"/>\n        <path class=\"stf\" d=\"M24 78 v-16 q0 -12 12 -12 q12 0 12 12 v16\"/>\n        <!-- man (80s): ballcap, glasses, long beard -->\n        <circle class=\"stf\" cx=\"64\" cy=\"36\" r=\"11\"/>\n        <!-- ballcap -->\n        <path class=\"stf\" d=\"M53 30 q0 -12 11 -12 q11 0 11 12 Z\"/>\n        <path class=\"stf\" d=\"M53 30 q-8 1 -12 5 q6 1 12 -1 Z\"/>\n        <circle class=\"gold\" cx=\"64\" cy=\"20\" r=\"1.6\"/>\n        <!-- glasses -->\n        <circle class=\"st\" cx=\"60\" cy=\"37\" r=\"3\"/>\n        <circle class=\"st\" cx=\"69\" cy=\"37\" r=\"3\"/>\n        <line class=\"st\" x1=\"63\" y1=\"37\" x2=\"66\" y2=\"37\"/>\n        <!-- long beard -->\n        <path class=\"stf\" d=\"M55 42 q1 22 9 30 q8 -8 9 -30 q-9 6 -18 0 Z\"/>\n        <path class=\"st\" d=\"M60 44 q4 2 8 0\"/>\n        <path class=\"stf\" d=\"M52 78 v-14 q0 -10 8 -12\"/>\n        <path class=\"stf\" d=\"M76 78 v-14 q0 -10 -8 -12\"/>\n      </svg>","caption":"Ryan's parents"},{"n":67,"word":"chick","svg":"<svg viewBox=\"0 0 100 100\">\n        <circle class=\"stf\" cx=\"50\" cy=\"40\" r=\"14\"/>\n        <path class=\"stf\" d=\"M32 66 Q32 50 50 50 Q68 50 68 66 Q68 76 50 76 Q32 76 32 66 Z\"/>\n        <circle class=\"gold\" cx=\"46\" cy=\"38\" r=\"2.2\"/>\n        <circle class=\"gold\" cx=\"54\" cy=\"38\" r=\"2.2\"/>\n        <path class=\"gold\" d=\"M50 42 l6 3 -6 3 Z\"/>\n        <path class=\"st\" d=\"M36 70 l-6 3 6 3\"/>\n        <path class=\"goldthin\" d=\"M50 76 v6 M46 82 h8\"/>\n      </svg>","caption":""},{"n":68,"word":"Jeff","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M34 44 q0 -20 16 -20 q16 0 16 20 q0 20 -16 26 q-16 -6 -16 -26 Z\"/>\n        <!-- wavy hair -->\n        <path class=\"st\" d=\"M33 38 q2 -18 17 -18 q15 0 17 18 q-4 -8 -8 -6 q-3 -6 -9 -4 q-6 -2 -9 4 q-4 -2 -8 6\"/>\n        <!-- glasses -->\n        <circle class=\"st\" cx=\"43\" cy=\"46\" r=\"5\"/>\n        <circle class=\"st\" cx=\"57\" cy=\"46\" r=\"5\"/>\n        <line class=\"st\" x1=\"48\" y1=\"46\" x2=\"52\" y2=\"46\"/>\n        <circle class=\"gold\" cx=\"43\" cy=\"46\" r=\"1.6\"/>\n        <circle class=\"gold\" cx=\"57\" cy=\"46\" r=\"1.6\"/>\n        <!-- wry grin -->\n        <path class=\"st\" d=\"M42 60 q9 5 16 -1\"/>\n      </svg>","caption":"Jeff Goldblum"},{"n":69,"word":"chip","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M28 58 Q24 40 44 34 Q66 28 74 44 Q80 58 66 66 Q48 76 36 70 Q28 66 28 58 Z\"/>\n        <path class=\"goldthin\" d=\"M40 46 Q52 42 64 48\"/>\n        <circle class=\"gold\" cx=\"44\" cy=\"56\" r=\"1.6\"/>\n        <circle class=\"gold\" cx=\"56\" cy=\"58\" r=\"1.6\"/>\n        <circle class=\"gold\" cx=\"52\" cy=\"48\" r=\"1.4\"/>\n      </svg>","caption":"a potato chip"},{"n":70,"word":"goose","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- body -->\n        <path class=\"stf\" d=\"M46 58 Q42 76 62 76 Q82 76 82 60 Q82 48 64 48 Q52 48 46 58 Z\"/>\n        <!-- neck + head -->\n        <path class=\"stf\" d=\"M50 58 C38 54 34 38 40 28 C43 22 51 22 53 28 C55 33 53 40 52 46\"/>\n        <circle class=\"stf\" cx=\"46\" cy=\"26\" r=\"7\"/>\n        <!-- beak -->\n        <path class=\"gold\" d=\"M40 24 L30 27 L40 30 Z\"/>\n        <circle class=\"inkfill\" cx=\"47\" cy=\"24\" r=\"1.6\"/>\n        <!-- tail + wing + feet -->\n        <path class=\"st\" d=\"M82 60 q6 -3 9 0\"/>\n        <path class=\"thin\" d=\"M58 58 q10 -4 18 0\"/>\n        <g class=\"goldst\">\n          <path d=\"M58 76 l-2 7 M66 76 l1 7\"/>\n          <path d=\"M52 83 h8 M62 83 h8\"/>\n        </g>\n      </svg>","caption":""},{"n":71,"word":"cat","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M34 44 Q34 30 50 30 Q66 30 66 44 Q66 62 50 66 Q34 62 34 44 Z\"/>\n        <path class=\"stf\" d=\"M37 34 L32 20 L47 30 Z\"/>\n        <path class=\"stf\" d=\"M63 34 L68 20 L53 30 Z\"/>\n        <path class=\"gold\" d=\"M42 44 q3 4 0 8 q-4 -1 -4 -4 q0 -3 4 -4 Z\"/>\n        <path class=\"gold\" d=\"M58 44 q-3 4 0 8 q4 -1 4 -4 q0 -3 -4 -4 Z\"/>\n        <path class=\"red\" d=\"M50 52 l3 3 -6 0 Z\"/>\n        <path class=\"st\" d=\"M50 55 q-4 4 -8 1 M50 55 q4 4 8 1\"/>\n        <g class=\"goldthin\">\n          <line x1=\"40\" y1=\"50\" x2=\"26\" y2=\"47\"/>\n          <line x1=\"40\" y1=\"53\" x2=\"26\" y2=\"55\"/>\n          <line x1=\"60\" y1=\"50\" x2=\"74\" y2=\"47\"/>\n          <line x1=\"60\" y1=\"53\" x2=\"74\" y2=\"55\"/>\n        </g>\n      </svg>","caption":""},{"n":72,"word":"gun","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M16 42 H70 V52 H52 L48 74 H36 L44 52 H16 Z\"/>\n        <path class=\"st\" d=\"M44 54 q-6 3 -6 10\"/>\n        <line class=\"st\" x1=\"42\" y1=\"56\" x2=\"42\" y2=\"62\"/>\n        <line class=\"goldst\" x1=\"20\" y1=\"46\" x2=\"26\" y2=\"46\"/>\n      </svg>","caption":""},{"n":73,"word":"gum","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- gum stick -->\n        <path class=\"stf\" d=\"M40 30 q0 -6 5 -6 h10 q5 0 5 6 v44 h-25 Z\"/>\n        <!-- wrapper sleeve over lower half -->\n        <path class=\"stf\" d=\"M35 50 h30 v22 q0 3 -3 3 h-24 q-3 0 -3 -3 Z\"/>\n        <path class=\"st\" d=\"M35 50 q15 5 30 0\"/>\n        <g class=\"goldthin\">\n          <line x1=\"39\" y1=\"70\" x2=\"47\" y2=\"54\"/>\n          <line x1=\"47\" y1=\"72\" x2=\"55\" y2=\"54\"/>\n          <line x1=\"55\" y1=\"72\" x2=\"62\" y2=\"56\"/>\n        </g>\n      </svg>","caption":"a stick of gum"},{"n":74,"word":"car","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M14 66 L22 52 Q26 44 38 44 L60 44 Q70 44 78 54 L84 58 Q88 60 88 64 V68 H14 Z\"/>\n        <path class=\"st\" d=\"M34 46 V58 H62 L56 46\"/>\n        <line class=\"st\" x1=\"47\" y1=\"46\" x2=\"47\" y2=\"58\"/>\n        <circle class=\"stf\" cx=\"32\" cy=\"68\" r=\"8\"/>\n        <circle class=\"stf\" cx=\"70\" cy=\"68\" r=\"8\"/>\n        <circle class=\"gold\" cx=\"32\" cy=\"68\" r=\"2.4\"/>\n        <circle class=\"gold\" cx=\"70\" cy=\"68\" r=\"2.4\"/>\n      </svg>","caption":""},{"n":75,"word":"koala","svg":"<svg viewBox=\"0 0 100 100\">\n        <circle class=\"stf\" cx=\"30\" cy=\"40\" r=\"12\"/>\n        <circle class=\"stf\" cx=\"70\" cy=\"40\" r=\"12\"/>\n        <path class=\"goldthin\" d=\"M22 34 q4 -4 8 0 q4 -4 8 0\"/>\n        <path class=\"goldthin\" d=\"M62 34 q4 -4 8 0 q4 -4 8 0\"/>\n        <circle class=\"stf\" cx=\"50\" cy=\"52\" r=\"19\"/>\n        <circle class=\"gold\" cx=\"42\" cy=\"48\" r=\"2.2\"/>\n        <circle class=\"gold\" cx=\"58\" cy=\"48\" r=\"2.2\"/>\n        <path class=\"inkfill\" d=\"M50 54 q-8 0 -8 7 q0 6 8 8 q8 -2 8 -8 q0 -7 -8 -7 Z\"/>\n      </svg>","caption":""},{"n":76,"word":"cage","svg":"<svg viewBox=\"0 0 100 100\">\n        <circle class=\"st\" cx=\"50\" cy=\"18\" r=\"4\"/>\n        <path class=\"st\" d=\"M50 22 V28\"/>\n        <path class=\"stf\" d=\"M28 74 Q28 30 50 28 Q72 30 72 74 Z\"/>\n        <g class=\"st\">\n          <path d=\"M39 30 Q37 52 39 74\"/>\n          <path d=\"M50 28 V74\"/>\n          <path d=\"M61 30 Q63 52 61 74\"/>\n        </g>\n        <path class=\"goldst\" d=\"M30 50 Q50 56 70 50\"/>\n        <path class=\"stf\" d=\"M24 74 h52 v6 h-52 Z\"/>\n      </svg>","caption":"a birdcage"},{"n":77,"word":"cake","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- candles + flames -->\n        <line class=\"st\" x1=\"42\" y1=\"34\" x2=\"42\" y2=\"46\"/>\n        <line class=\"st\" x1=\"50\" y1=\"30\" x2=\"50\" y2=\"46\"/>\n        <line class=\"st\" x1=\"58\" y1=\"34\" x2=\"58\" y2=\"46\"/>\n        <path class=\"gold\" d=\"M42 34 q3 -4 0 -7 q-3 3 0 7 Z\"/>\n        <path class=\"gold\" d=\"M50 30 q3 -4 0 -7 q-3 3 0 7 Z\"/>\n        <path class=\"gold\" d=\"M58 34 q3 -4 0 -7 q-3 3 0 7 Z\"/>\n        <!-- cake body -->\n        <path class=\"stf\" d=\"M26 54 q6 -6 12 0 q6 -6 12 0 q6 -6 12 0 q6 -6 12 0 v22 q0 3 -3 3 h-54 q-3 0 -3 -3 Z\"/>\n        <line class=\"goldthin\" x1=\"26\" y1=\"66\" x2=\"74\" y2=\"66\"/>\n      </svg>","caption":""},{"n":78,"word":"coffee","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M30 46 h34 v18 q0 10 -12 10 h-10 q-12 0 -12 -10 Z\"/>\n        <path class=\"st\" d=\"M64 50 q12 0 12 9 q0 9 -12 9\"/>\n        <path class=\"goldst\" d=\"M40 40 q-4 -6 0 -12 M50 40 q-4 -6 0 -12 M60 40 q-4 -6 0 -12\"/>\n        <line class=\"thin\" x1=\"26\" y1=\"80\" x2=\"62\" y2=\"80\"/>\n      </svg>","caption":""},{"n":79,"word":"cube","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M50 22 L76 37 L50 52 L24 37 Z\"/>\n        <path class=\"stf\" d=\"M24 37 V65 L50 80 V52 Z\"/>\n        <path class=\"stf\" d=\"M76 37 V65 L50 80 V52 Z\"/>\n        <path class=\"goldthin\" d=\"M50 22 L50 52 M24 37 L50 52 L76 37\"/>\n      </svg>","caption":""},{"n":80,"word":"vase","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M42 24 h16 q-2 6 1 11 q11 8 11 25 q0 16 -20 16 q-20 0 -20 -16 q0 -17 11 -25 q3 -5 1 -11 Z\"/>\n        <line class=\"st\" x1=\"42\" y1=\"24\" x2=\"58\" y2=\"24\"/>\n        <path class=\"goldst\" d=\"M32 56 q9 6 18 0 q9 -6 18 0\"/>\n        <circle class=\"gold\" cx=\"50\" cy=\"66\" r=\"2.4\"/>\n      </svg>","caption":""},{"n":81,"word":"foot","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M40 36 Q58 33 61 44 Q63 56 57 66 Q52 76 45 73 Q39 71 39 61 Q33 53 37 45 Q38 39 40 36 Z\"/>\n        <circle class=\"gold\" cx=\"41\" cy=\"29\" r=\"4.4\"/>\n        <circle class=\"gold\" cx=\"48\" cy=\"26\" r=\"3.4\"/>\n        <circle class=\"gold\" cx=\"54\" cy=\"27\" r=\"2.8\"/>\n        <circle class=\"gold\" cx=\"59\" cy=\"30\" r=\"2.4\"/>\n        <circle class=\"gold\" cx=\"63\" cy=\"34\" r=\"2\"/>\n      </svg>","caption":""},{"n":82,"word":"fan","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M50 74 L24 42 Q50 26 76 42 Z\"/>\n        <g class=\"goldthin\">\n          <line x1=\"50\" y1=\"74\" x2=\"33\" y2=\"42\"/>\n          <line x1=\"50\" y1=\"74\" x2=\"42\" y2=\"35\"/>\n          <line x1=\"50\" y1=\"74\" x2=\"50\" y2=\"32\"/>\n          <line x1=\"50\" y1=\"74\" x2=\"58\" y2=\"35\"/>\n          <line x1=\"50\" y1=\"74\" x2=\"67\" y2=\"42\"/>\n        </g>\n        <circle class=\"stf\" cx=\"50\" cy=\"74\" r=\"4\"/>\n      </svg>","caption":""},{"n":83,"word":"foam","svg":"<svg viewBox=\"0 0 100 100\">\n        <line class=\"st\" x1=\"22\" y1=\"70\" x2=\"78\" y2=\"70\"/>\n        <circle class=\"stf\" cx=\"34\" cy=\"60\" r=\"10\"/>\n        <circle class=\"stf\" cx=\"50\" cy=\"54\" r=\"13\"/>\n        <circle class=\"stf\" cx=\"66\" cy=\"60\" r=\"10\"/>\n        <circle class=\"stf\" cx=\"42\" cy=\"66\" r=\"7\"/>\n        <circle class=\"stf\" cx=\"58\" cy=\"66\" r=\"7\"/>\n        <circle class=\"gold\" cx=\"48\" cy=\"50\" r=\"2\"/>\n        <circle class=\"gold\" cx=\"63\" cy=\"57\" r=\"1.6\"/>\n      </svg>","caption":""},{"n":84,"word":"fire","svg":"<svg viewBox=\"0 0 100 100\">\n        <path d=\"M50 72 C36 66 34 50 44 40 C46 46 50 46 50 40 C52 30 60 28 58 20 C70 30 70 46 64 56 C62 62 58 66 50 72 Z\"\n              fill=\"none\" stroke=\"#c0392b\" stroke-width=\"3.4\" stroke-linejoin=\"round\"/>\n        <path class=\"goldst\" d=\"M50 68 C44 64 44 54 50 48 C54 54 56 44 55 40 C62 48 60 60 50 68 Z\"/>\n        <g class=\"st\">\n          <line x1=\"34\" y1=\"76\" x2=\"54\" y2=\"72\"/>\n          <line x1=\"46\" y1=\"76\" x2=\"66\" y2=\"72\"/>\n        </g>\n      </svg>","caption":""},{"n":85,"word":"fly","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- wings sweeping back from thorax -->\n        <ellipse class=\"goldst\" cx=\"34\" cy=\"40\" rx=\"16\" ry=\"8\" transform=\"rotate(-32 34 40)\"/>\n        <ellipse class=\"goldst\" cx=\"66\" cy=\"40\" rx=\"16\" ry=\"8\" transform=\"rotate(32 66 40)\"/>\n        <!-- legs from thorax -->\n        <g class=\"st\">\n          <line x1=\"46\" y1=\"48\" x2=\"34\" y2=\"52\"/>\n          <line x1=\"46\" y1=\"52\" x2=\"34\" y2=\"60\"/>\n          <line x1=\"46\" y1=\"56\" x2=\"36\" y2=\"66\"/>\n          <line x1=\"54\" y1=\"48\" x2=\"66\" y2=\"52\"/>\n          <line x1=\"54\" y1=\"52\" x2=\"66\" y2=\"60\"/>\n          <line x1=\"54\" y1=\"56\" x2=\"64\" y2=\"66\"/>\n        </g>\n        <!-- head -->\n        <circle class=\"stf\" cx=\"50\" cy=\"30\" r=\"6\"/>\n        <circle class=\"inkfill\" cx=\"47\" cy=\"28\" r=\"2\"/>\n        <circle class=\"inkfill\" cx=\"53\" cy=\"28\" r=\"2\"/>\n        <!-- thorax -->\n        <ellipse class=\"stf\" cx=\"50\" cy=\"46\" rx=\"8\" ry=\"8\"/>\n        <!-- abdomen -->\n        <ellipse class=\"stf\" cx=\"50\" cy=\"66\" rx=\"9\" ry=\"14\"/>\n        <path class=\"thin\" d=\"M42 63 h16 M43 70 h14\"/>\n      </svg>","caption":""},{"n":86,"word":"fish","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M22 52 Q42 36 62 46 Q70 50 70 52 Q70 54 62 58 Q42 68 22 52 Z\"/>\n        <path class=\"stf\" d=\"M70 52 L84 42 L80 52 L84 64 Z\"/>\n        <path class=\"st\" d=\"M44 40 Q50 34 56 44\"/>\n        <path class=\"thin\" d=\"M34 46 Q36 52 34 58\"/>\n        <circle class=\"gold\" cx=\"30\" cy=\"50\" r=\"2.4\"/>\n      </svg>","caption":""},{"n":87,"word":"fig","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"st\" d=\"M50 24 q-3 -5 3 -8\"/>\n        <path class=\"stf\" d=\"M50 26 C39 30 32 44 32 58 C32 76 68 76 68 58 C68 44 61 30 50 26 Z\"/>\n        <path class=\"thin\" d=\"M50 33 C42 38 37 48 37 59 C37 70 63 70 63 59 C63 48 58 38 50 33 Z\"/>\n        <g class=\"gold\">\n          <circle cx=\"50\" cy=\"52\" r=\"1.7\"/>\n          <circle cx=\"45\" cy=\"58\" r=\"1.7\"/>\n          <circle cx=\"55\" cy=\"58\" r=\"1.7\"/>\n          <circle cx=\"50\" cy=\"63\" r=\"1.7\"/>\n          <circle cx=\"46\" cy=\"49\" r=\"1.5\"/>\n          <circle cx=\"54\" cy=\"49\" r=\"1.5\"/>\n          <circle cx=\"42\" cy=\"54\" r=\"1.4\"/>\n          <circle cx=\"58\" cy=\"54\" r=\"1.4\"/>\n        </g>\n      </svg>","caption":""},{"n":88,"word":"fife","svg":"<svg viewBox=\"0 0 100 100\">\n        <circle class=\"stf\" cx=\"50\" cy=\"46\" r=\"16\"/>\n        <path class=\"st\" d=\"M34 44 q-3 16 4 24 M66 44 q3 16 -4 24\"/>\n        <path class=\"st\" d=\"M34 40 q16 -14 32 0\"/>\n        <path class=\"goldst\" d=\"M37 40 q7 6 13 4 q6 2 13 -4\"/>\n        <circle class=\"st\" cx=\"44\" cy=\"46\" r=\"3\"/>\n        <circle class=\"st\" cx=\"56\" cy=\"46\" r=\"3\"/>\n        <circle class=\"gold\" cx=\"44\" cy=\"46\" r=\"1.4\"/>\n        <circle class=\"gold\" cx=\"56\" cy=\"46\" r=\"1.4\"/>\n        <path class=\"st\" d=\"M42 54 q8 8 16 0\"/>\n      </svg>","caption":"your niece"},{"n":89,"word":"fob","svg":"<svg viewBox=\"0 0 100 100\">\n        <circle class=\"st\" cx=\"50\" cy=\"24\" r=\"6\"/>\n        <line class=\"st\" x1=\"50\" y1=\"30\" x2=\"50\" y2=\"36\"/>\n        <rect class=\"stf\" x=\"36\" y=\"36\" width=\"28\" height=\"42\" rx=\"9\"/>\n        <rect class=\"goldst\" x=\"44\" y=\"46\" width=\"12\" height=\"9\" rx=\"2\"/>\n        <rect class=\"goldst\" x=\"44\" y=\"60\" width=\"12\" height=\"9\" rx=\"2\"/>\n      </svg>","caption":"a key fob"},{"n":90,"word":"bus","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M14 40 h68 q6 0 6 6 v22 h-74 v-24 q0 -4 0 -4 Z\"/>\n        <g class=\"st\">\n          <rect x=\"20\" y=\"46\" width=\"10\" height=\"10\" rx=\"1.5\"/>\n          <rect x=\"34\" y=\"46\" width=\"10\" height=\"10\" rx=\"1.5\"/>\n          <rect x=\"48\" y=\"46\" width=\"10\" height=\"10\" rx=\"1.5\"/>\n          <rect x=\"62\" y=\"46\" width=\"14\" height=\"10\" rx=\"1.5\"/>\n        </g>\n        <circle class=\"stf\" cx=\"30\" cy=\"68\" r=\"8\"/>\n        <circle class=\"stf\" cx=\"70\" cy=\"68\" r=\"8\"/>\n        <circle class=\"gold\" cx=\"30\" cy=\"68\" r=\"2.4\"/>\n        <circle class=\"gold\" cx=\"70\" cy=\"68\" r=\"2.4\"/>\n        <line class=\"goldst\" x1=\"14\" y1=\"60\" x2=\"88\" y2=\"60\"/>\n      </svg>","caption":""},{"n":91,"word":"bat","svg":"<svg viewBox=\"0 0 100 100\">\n        <ellipse class=\"stf\" cx=\"50\" cy=\"50\" rx=\"7\" ry=\"10\"/>\n        <path class=\"st\" d=\"M45 42 L41 36 M55 42 L59 36\"/>\n        <path class=\"stf\" d=\"M44 46 Q30 34 16 40 Q24 42 22 50 Q30 46 30 54 Q37 48 38 56 Q42 50 44 54 Z\"/>\n        <path class=\"stf\" d=\"M56 46 Q70 34 84 40 Q76 42 78 50 Q70 46 70 54 Q63 48 62 56 Q58 50 56 54 Z\"/>\n        <circle class=\"gold\" cx=\"47\" cy=\"48\" r=\"1.6\"/>\n        <circle class=\"gold\" cx=\"53\" cy=\"48\" r=\"1.6\"/>\n      </svg>","caption":"the animal"},{"n":92,"word":"piano","svg":"<svg viewBox=\"0 0 100 100\">\n        <rect class=\"stf\" x=\"20\" y=\"38\" width=\"60\" height=\"30\" rx=\"3\"/>\n        <g class=\"st\">\n          <line x1=\"30\" y1=\"38\" x2=\"30\" y2=\"68\"/>\n          <line x1=\"40\" y1=\"38\" x2=\"40\" y2=\"68\"/>\n          <line x1=\"50\" y1=\"38\" x2=\"50\" y2=\"68\"/>\n          <line x1=\"60\" y1=\"38\" x2=\"60\" y2=\"68\"/>\n          <line x1=\"70\" y1=\"38\" x2=\"70\" y2=\"68\"/>\n        </g>\n        <g class=\"inkfill\">\n          <rect x=\"27\" y=\"38\" width=\"6\" height=\"17\"/>\n          <rect x=\"37\" y=\"38\" width=\"6\" height=\"17\"/>\n          <rect x=\"57\" y=\"38\" width=\"6\" height=\"17\"/>\n          <rect x=\"67\" y=\"38\" width=\"6\" height=\"17\"/>\n        </g>\n      </svg>","caption":""},{"n":93,"word":"beam","svg":"<svg viewBox=\"0 0 100 100\">\n        <circle class=\"stf\" cx=\"34\" cy=\"28\" r=\"8\"/>\n        <g class=\"goldst\">\n          <line x1=\"26\" y1=\"20\" x2=\"22\" y2=\"14\"/>\n          <line x1=\"42\" y1=\"20\" x2=\"46\" y2=\"14\"/>\n          <line x1=\"24\" y1=\"28\" x2=\"16\" y2=\"28\"/>\n        </g>\n        <path class=\"st\" d=\"M38 34 L74 80 M30 36 L44 82\"/>\n        <g class=\"goldthin\">\n          <line x1=\"40\" y1=\"42\" x2=\"50\" y2=\"78\"/>\n          <line x1=\"46\" y1=\"42\" x2=\"60\" y2=\"78\"/>\n        </g>\n      </svg>","caption":"a beam of light"},{"n":94,"word":"beer","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M32 42 h30 v28 q0 6 -6 6 h-18 q-6 0 -6 -6 Z\"/>\n        <path class=\"stf\" d=\"M30 42 q4 -8 8 0 q4 -8 8 0 q4 -8 8 0 q4 -8 6 0 Z\"/>\n        <path class=\"st\" d=\"M62 48 q10 0 10 8 q0 8 -10 8\"/>\n        <g class=\"goldthin\">\n          <line x1=\"40\" y1=\"54\" x2=\"54\" y2=\"54\"/>\n          <line x1=\"40\" y1=\"62\" x2=\"54\" y2=\"62\"/>\n        </g>\n      </svg>","caption":""},{"n":95,"word":"pail","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"st\" d=\"M34 48 Q50 24 66 48\"/>\n        <ellipse class=\"stf\" cx=\"50\" cy=\"48\" rx=\"20\" ry=\"5\"/>\n        <path class=\"stf\" d=\"M30 48 L38 78 Q38 80 42 80 h16 Q62 80 62 78 L70 48\"/>\n        <path class=\"goldthin\" d=\"M33 60 Q50 64 67 60\"/>\n      </svg>","caption":""},{"n":96,"word":"bush","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M22 70 Q18 58 28 54 Q26 44 38 46 Q42 36 52 42 Q64 34 68 46 Q82 46 78 58 Q86 66 76 70 Z\"/>\n        <!-- pointed leaf tips breaking the crown -->\n        <path class=\"st\" d=\"M38 46 l-2 -9 6 4\"/>\n        <path class=\"st\" d=\"M52 42 l0 -10 6 5\"/>\n        <path class=\"st\" d=\"M68 46 l4 -8 -6 3\"/>\n        <!-- individual leaves across the surface -->\n        <g class=\"goldthin\">\n          <ellipse cx=\"34\" cy=\"58\" rx=\"4\" ry=\"2\" transform=\"rotate(-30 34 58)\"/>\n          <ellipse cx=\"46\" cy=\"53\" rx=\"4\" ry=\"2\" transform=\"rotate(20 46 53)\"/>\n          <ellipse cx=\"58\" cy=\"56\" rx=\"4\" ry=\"2\" transform=\"rotate(-15 58 56)\"/>\n          <ellipse cx=\"40\" cy=\"64\" rx=\"4\" ry=\"2\" transform=\"rotate(25 40 64)\"/>\n          <ellipse cx=\"54\" cy=\"64\" rx=\"4\" ry=\"2\" transform=\"rotate(-25 54 64)\"/>\n          <ellipse cx=\"66\" cy=\"61\" rx=\"4\" ry=\"2\" transform=\"rotate(15 66 61)\"/>\n        </g>\n        <line class=\"st\" x1=\"50\" y1=\"70\" x2=\"50\" y2=\"80\"/>\n        <line class=\"thin\" x1=\"34\" y1=\"80\" x2=\"66\" y2=\"80\"/>\n      </svg>","caption":""},{"n":97,"word":"book","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M18 38 Q50 30 50 40 Q50 30 82 38 L82 68 Q50 60 50 70 Q50 60 18 68 Z\"/>\n        <line class=\"st\" x1=\"50\" y1=\"40\" x2=\"50\" y2=\"70\"/>\n        <g class=\"goldthin\">\n          <path d=\"M26 46 Q38 42 46 46\"/>\n          <path d=\"M26 54 Q38 50 46 54\"/>\n          <path d=\"M54 46 Q62 42 74 46\"/>\n          <path d=\"M54 54 Q62 50 74 54\"/>\n        </g>\n      </svg>","caption":""},{"n":98,"word":"beef","svg":"<svg viewBox=\"0 0 100 100\">\n        <path class=\"stf\" d=\"M28 46 Q26 34 42 34 Q62 32 72 42 Q82 52 74 64 Q64 76 46 72 Q28 68 28 56 Q26 50 28 46 Z\"/>\n        <path class=\"st\" d=\"M50 40 V58 M42 58 h16\"/>\n        <g class=\"goldthin\">\n          <path d=\"M36 46 q4 4 2 10 M64 48 q3 5 0 10\"/>\n        </g>\n      </svg>","caption":"a steak"},{"n":99,"word":"pope","svg":"<svg viewBox=\"0 0 100 100\">\n        <!-- mitre -->\n        <path class=\"stf\" d=\"M38 42 Q40 14 50 8 Q60 14 62 42 Z\"/>\n        <line class=\"goldst\" x1=\"50\" y1=\"16\" x2=\"50\" y2=\"42\"/>\n        <line class=\"goldst\" x1=\"43\" y1=\"30\" x2=\"57\" y2=\"30\"/>\n        <!-- face -->\n        <circle class=\"stf\" cx=\"50\" cy=\"54\" r=\"13\"/>\n        <circle class=\"gold\" cx=\"45\" cy=\"52\" r=\"1.8\"/>\n        <circle class=\"gold\" cx=\"55\" cy=\"52\" r=\"1.8\"/>\n        <path class=\"st\" d=\"M45 60 q5 3 10 0\"/>\n        <!-- robe shoulders -->\n        <path class=\"stf\" d=\"M32 82 v-6 q0 -10 18 -10 q18 0 18 10 v6\"/>\n      </svg>","caption":"the Pope"},{"n":100,"word":"daisies","svg":"<svg viewBox=\"0 0 100 100\">\n        <line class=\"st\" x1=\"40\" y1=\"50\" x2=\"36\" y2=\"86\"/>\n        <line class=\"st\" x1=\"64\" y1=\"62\" x2=\"67\" y2=\"86\"/>\n        <path class=\"st\" d=\"M38 68 Q28 64 26 56 Q36 58 40 66\"/>\n        <path class=\"st\" d=\"M65 74 Q75 70 77 62 Q67 64 63 72\"/>\n        <!-- daisy 1 : 12 narrow petals -->\n        <g class=\"stf\">\n          <ellipse cx=\"40\" cy=\"30\" rx=\"2.4\" ry=\"9\"/>\n          <ellipse cx=\"40\" cy=\"30\" rx=\"2.4\" ry=\"9\" transform=\"rotate(30 40 42)\"/>\n          <ellipse cx=\"40\" cy=\"30\" rx=\"2.4\" ry=\"9\" transform=\"rotate(60 40 42)\"/>\n          <ellipse cx=\"40\" cy=\"30\" rx=\"2.4\" ry=\"9\" transform=\"rotate(90 40 42)\"/>\n          <ellipse cx=\"40\" cy=\"30\" rx=\"2.4\" ry=\"9\" transform=\"rotate(120 40 42)\"/>\n          <ellipse cx=\"40\" cy=\"30\" rx=\"2.4\" ry=\"9\" transform=\"rotate(150 40 42)\"/>\n          <ellipse cx=\"40\" cy=\"30\" rx=\"2.4\" ry=\"9\" transform=\"rotate(180 40 42)\"/>\n          <ellipse cx=\"40\" cy=\"30\" rx=\"2.4\" ry=\"9\" transform=\"rotate(210 40 42)\"/>\n          <ellipse cx=\"40\" cy=\"30\" rx=\"2.4\" ry=\"9\" transform=\"rotate(240 40 42)\"/>\n          <ellipse cx=\"40\" cy=\"30\" rx=\"2.4\" ry=\"9\" transform=\"rotate(270 40 42)\"/>\n          <ellipse cx=\"40\" cy=\"30\" rx=\"2.4\" ry=\"9\" transform=\"rotate(300 40 42)\"/>\n          <ellipse cx=\"40\" cy=\"30\" rx=\"2.4\" ry=\"9\" transform=\"rotate(330 40 42)\"/>\n        </g>\n        <circle class=\"gold\" cx=\"40\" cy=\"42\" r=\"5.5\"/>\n        <!-- daisy 2 : 10 narrow petals -->\n        <g class=\"stf\">\n          <ellipse cx=\"64\" cy=\"47\" rx=\"2\" ry=\"7\"/>\n          <ellipse cx=\"64\" cy=\"47\" rx=\"2\" ry=\"7\" transform=\"rotate(36 64 56)\"/>\n          <ellipse cx=\"64\" cy=\"47\" rx=\"2\" ry=\"7\" transform=\"rotate(72 64 56)\"/>\n          <ellipse cx=\"64\" cy=\"47\" rx=\"2\" ry=\"7\" transform=\"rotate(108 64 56)\"/>\n          <ellipse cx=\"64\" cy=\"47\" rx=\"2\" ry=\"7\" transform=\"rotate(144 64 56)\"/>\n          <ellipse cx=\"64\" cy=\"47\" rx=\"2\" ry=\"7\" transform=\"rotate(180 64 56)\"/>\n          <ellipse cx=\"64\" cy=\"47\" rx=\"2\" ry=\"7\" transform=\"rotate(216 64 56)\"/>\n          <ellipse cx=\"64\" cy=\"47\" rx=\"2\" ry=\"7\" transform=\"rotate(252 64 56)\"/>\n          <ellipse cx=\"64\" cy=\"47\" rx=\"2\" ry=\"7\" transform=\"rotate(288 64 56)\"/>\n          <ellipse cx=\"64\" cy=\"47\" rx=\"2\" ry=\"7\" transform=\"rotate(324 64 56)\"/>\n        </g>\n        <circle class=\"gold\" cx=\"64\" cy=\"56\" r=\"4.5\"/>\n      </svg>","caption":""}]</script>
 <script>
 "use strict";
 const PEGS = JSON.parse(document.getElementById('pegdata').textContent);
 const byN = {}; PEGS.forEach(p=>byN[p.n]=p);
+const DAY = 86400000;
+const today = () => Math.floor(Date.now()/DAY);
+const SPEED_GOAL = 3500;            // ms: "fast" recall threshold
+const SR = [1,3,7,16,35,70];       // spaced-review intervals (days)
 
-/* ---------- persistence ---------- */
-const KEY='oneHundredDaisies.v1';
-let stats = {};
-function blank(){return {seen:0,correct:0,wrong:0,streak:0,best:null};}
-function loadState(){
-  try{const s=localStorage.getItem(KEY); if(s) return JSON.parse(s);}catch(e){}
-  return null;
+/* ---------- state ---------- */
+const KEY='ohd.v2';
+let S = null;
+function blankPeg(){return {c:{n2w:0,w2n:0}, ok:{n2w:0,w2n:0}, at:{n2w:0,w2n:0}, ema:null, reps:0, due:0, days:[]};}
+function freshState(){
+  const pegs={}; for(let n=0;n<=100;n++) pegs[n]=blankPeg();
+  return {pegs, xp:0, streak:0, lastDay:0, best:{speed:0,rain:0}, sound:true};
 }
-function saveState(){ try{localStorage.setItem(KEY, JSON.stringify(stats));}catch(e){} }
-(function initStats(){
-  const saved = loadState() || {};
-  for(let n=0;n<=100;n++){ stats[n] = Object.assign(blank(), saved[n]||{}); }
+function load(){ try{const s=localStorage.getItem(KEY); if(s)return JSON.parse(s);}catch(e){} return null; }
+function save(){ try{localStorage.setItem(KEY, JSON.stringify(S));}catch(e){} }
+S = load() || freshState();
+// migrate any missing fields
+for(let n=0;n<=100;n++){ if(!S.pegs[n]) S.pegs[n]=blankPeg(); }
+if(S.sound===undefined) S.sound=true;
+
+/* ---------- daily streak ---------- */
+(function streakCheck(){
+  const t=today();
+  if(S.lastDay===0){ /* first ever */ }
+  else if(t - S.lastDay === 1){ /* consecutive handled when they play */ }
+  else if(t - S.lastDay > 1){ S.streak = 0; }  // missed a day -> reset
+  save();
 })();
-
-const isMastered = n => stats[n].streak >= 3;
-const isSeen = n => stats[n].seen > 0;
-function masteredCount(){let c=0;for(let n=0;n<=100;n++) if(isMastered(n))c++;return c;}
-
-/* ---------- scope ---------- */
-let scope = allNums();
-function allNums(){const a=[];for(let n=0;n<=100;n++)a.push(n);return a;}
-function setScope(v){
-  if(v==='all'){scope=allNums();}
-  else if(v==='weak'){scope=allNums().filter(n=>!isMastered(n)); if(scope.length===0)scope=allNums();}
-  else{const [a,b]=v.split('-').map(Number); scope=[]; for(let n=a;n<=b;n++)scope.push(n);}
-}
-
-/* ---------- helpers ---------- */
-const rnd = n => Math.floor(Math.random()*n);
-function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
-function sample(pool, k, exclude){
-  const opts = pool.filter(n=>n!==exclude);
-  return shuffle(opts).slice(0,k);
-}
-function weightedPick(pool){
-  // bias toward weaker / less-seen pegs
-  let total=0; const w=pool.map(n=>{
-    const s=stats[n]; let x=1 + s.wrong*2 + (s.streak<3?2:0) + (s.seen===0?2:0);
-    total+=x; return x;
-  });
-  let r=Math.random()*total;
-  for(let i=0;i<pool.length;i++){ r-=w[i]; if(r<=0) return pool[i]; }
-  return pool[pool.length-1];
-}
-function iconHTML(n){ return byN[n].svg; }
-function record(n, ok, ms){
-  const s=stats[n]; s.seen++;
-  if(ok){ s.correct++; s.streak++; if(ms!=null && (s.best==null||ms<s.best)) s.best=ms; }
-  else { s.wrong++; s.streak=0; }
-  saveState(); refreshHeader();
-}
-
-/* ---------- header / grid ---------- */
-function refreshHeader(){
-  const m=masteredCount();
-  document.getElementById('pill').textContent = m+' / 101 mastered';
-  const hc=document.getElementById('heroCount');
-  if(hc){
-    if(m===101) hc.textContent='Every peg mastered. The daisies are yours.';
-    else hc.textContent=m+' of 101 pegs mastered';
+function markPlayedToday(){
+  const t=today();
+  if(S.lastDay!==t){
+    if(t - S.lastDay === 1 || S.lastDay===0) S.streak = (S.streak||0)+1;
+    else S.streak = 1;
+    S.lastDay = t; save(); refreshHeader();
   }
 }
+
+/* ---------- mastery tiers ---------- */
+// 0 seed, 1 sprout, 2 learning, 3 solid, 4 bloomed
+function tier(n){
+  const p=S.pegs[n];
+  const bothOnce = p.ok.n2w>0 && p.ok.w2n>0;
+  const anyOnce = p.ok.n2w>0 || p.ok.w2n>0;
+  const fast = p.ema!=null && p.ema < SPEED_GOAL;
+  const multiDay = p.days.length >= 2;
+  if(bothOnce && p.c.n2w>=2 && p.c.w2n>=2 && p.reps>=3 && multiDay && fast) return 4;
+  if(bothOnce && (p.c.n2w>=1 && p.c.w2n>=1) && p.reps>=2) return 3;
+  if(bothOnce) return 2;
+  if(anyOnce) return 1;
+  return 0;
+}
+const isDue = n => S.pegs[n].reps>0 && S.pegs[n].due>0 && today() >= S.pegs[n].due;
+const isBloomed = n => tier(n)===4 && !isDue(n);
+function meadowPct(){ let b=0; for(let n=0;n<=100;n++) if(isBloomed(n))b++; return Math.round(b/101*100); }
+function bloomedCount(){ let b=0; for(let n=0;n<=100;n++) if(isBloomed(n))b++; return b; }
+
+/* ---------- recording an answer ---------- */
+function record(n, dir, ok, ms){
+  const p=S.pegs[n];
+  p.at[dir]++;
+  const wasBloomed = isBloomed(n);
+  if(ok){
+    p.ok[dir]++; p.c[dir]++;
+    if(ms!=null){ p.ema = p.ema==null ? ms : Math.round(p.ema*0.6 + ms*0.4); }
+    const d=today(); if(!p.days.includes(d)){ p.days.push(d); if(p.days.length>6)p.days.shift(); }
+    // spaced review advance if this was a due (or new) review
+    p.reps = Math.min(SR.length, p.reps+1);
+    p.due = today() + SR[Math.min(p.reps-1, SR.length-1)];
+    addXP(10 + comboBonus());
+  } else {
+    p.c[dir]=0;
+    p.reps = Math.max(0, p.reps-1);
+    p.due = today(); // due now
+  }
+  const nowBloomed = isBloomed(n);
+  if(!wasBloomed && nowBloomed){ onBloom(n); }
+  save(); refreshHeader();
+  return (!wasBloomed && nowBloomed);
+}
+
+/* ---------- xp / level / combo ---------- */
+function levelFromXP(xp){ return Math.floor(Math.sqrt(xp/60))+1; }
+function xpForLevel(l){ return Math.pow(l-1,2)*60; }
+let combo=0, comboMax=0;
+function comboBonus(){ return Math.min(20, Math.floor(combo/3)*2); }
+function bumpCombo(){ combo++; comboMax=Math.max(comboMax,combo); showCombo(); }
+function resetCombo(){ combo=0; }
+function addXP(x){ const before=levelFromXP(S.xp); S.xp+=x; const after=levelFromXP(S.xp); if(after>before){ beep(660,.12); } }
+function showCombo(){
+  const el=stageHost.querySelector('#combo'); if(!el)return;
+  if(combo>=3){ el.textContent=combo+'x'; el.classList.add('show'); }
+  else el.classList.remove('show');
+}
+
+/* ---------- sound ---------- */
+let actx=null;
+function beep(freq,dur){
+  if(!S.sound) return;
+  try{ actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    const o=actx.createOscillator(), g=actx.createGain();
+    o.frequency.value=freq; o.type='sine'; o.connect(g); g.connect(actx.destination);
+    g.gain.setValueAtTime(.08,actx.currentTime); g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+dur);
+    o.start(); o.stop(actx.currentTime+dur);
+  }catch(e){}
+}
+function toggleSound(){ S.sound=!S.sound; save(); document.getElementById('soundBtn').textContent=S.sound?'on':'off'; if(S.sound)beep(520,.1); }
+
+/* ---------- bloom moment ---------- */
+function onBloom(n){
+  beep(880,.15); setTimeout(()=>beep(1180,.18),120);
+  const bf=document.getElementById('bloomflash');
+  bf.classList.remove('go'); void bf.offsetWidth; bf.classList.add('go');
+}
+
+/* ---------- header ---------- */
+function refreshHeader(){
+  document.getElementById('flame').innerHTML='&#128293; '+(S.streak||0);
+  const l=levelFromXP(S.xp), cur=xpForLevel(l), next=xpForLevel(l+1);
+  document.getElementById('lvlLabel').textContent='Level '+l;
+  document.getElementById('meadowPct').textContent='Meadow '+meadowPct()+'%';
+  document.getElementById('xpfill').style.width=Math.min(100,((S.xp-cur)/(next-cur)*100))+'%';
+  document.getElementById('soundBtn').textContent=S.sound?'on':'off';
+  const dc=document.getElementById('dailyDesc');
+  if(dc){ const due=allNums().filter(isDue).length; dc.textContent = due>0 ? (due+' review'+(due>1?'s':'')+' due, plus a few new. One round, one score.') : 'A smart mixed set to keep every peg fresh. One round, one score.'; }
+}
+
+/* ---------- meadow grid ---------- */
+function two(n){ return n<10 ? '0'+n : ''+n; }
 function buildGrid(){
   const g=document.getElementById('grid101'); g.innerHTML='';
   for(let n=0;n<=100;n++){
+    const t=tier(n); const due=isDue(n);
     const c=document.createElement('button');
-    c.className='cell'+(isMastered(n)?' mastered':(isSeen(n)?' seen':''));
-    c.textContent=n; c.title=byN[n].word;
-    c.onclick=()=>peek(n);
+    c.className='cell t'+t+(due?' due':'');
+    c.innerHTML = (t===4&&!due)?'<span class="bl">&#10047;</span>':n;
+    c.title=byN[n].word; c.onclick=()=>peek(n);
     g.appendChild(c);
   }
 }
+const TIERNAME=['Seed','Sprout','Learning','Solid','Bloomed'];
 function peek(n){
-  const p=byN[n];
+  const p=byN[n]; const t=tier(n); const due=isDue(n);
   document.getElementById('peekBody').innerHTML =
     '<button class="peek-close" onclick="closePeek()">&times;</button>'+
-    '<div class="num">'+two(n)+'</div>'+
-    '<div class="iconbox">'+p.svg+'</div>'+
-    '<div class="theword">'+p.word+'</div>'+
-    (p.caption?'<div class="thecap">'+p.caption+'</div>':'');
+    '<div class="num">'+two(n)+'</div><div class="iconbox">'+p.svg+'</div>'+
+    '<div class="theword">'+p.word+'</div>'+(p.caption?'<div class="thecap">'+p.caption+'</div>':'')+
+    '<div class="tier">'+TIERNAME[t]+(due?' &middot; review due':'')+'</div>';
   document.getElementById('modal').classList.add('open');
 }
 function closePeek(){document.getElementById('modal').classList.remove('open');}
-function two(n){ return n<10 ? '0'+n : ''+n; }  // 0-9 -> 0X, 100 stays 100
+
+/* ---------- scope ---------- */
+let scope=allNums();
+function allNums(){const a=[];for(let n=0;n<=100;n++)a.push(n);return a;}
+function setScope(v){
+  if(v==='all')scope=allNums();
+  else if(v==='weak')scope=allNums().filter(n=>tier(n)<3);
+  else if(v==='due'){scope=allNums().filter(isDue); if(!scope.length)scope=allNums().filter(n=>tier(n)<4);}
+  else{const[a,b]=v.split('-').map(Number);scope=[];for(let n=a;n<=b;n++)scope.push(n);}
+  if(!scope.length)scope=allNums();
+}
+
+/* ---------- helpers ---------- */
+const rnd=n=>Math.floor(Math.random()*n);
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
+function sample(pool,k,ex){return shuffle(pool.filter(n=>n!==ex)).slice(0,k);}
+function weightedPick(pool){
+  let tot=0;const w=pool.map(n=>{const p=S.pegs[n];let x=1+(4-tier(n))*2+(isDue(n)?3:0)+(p.at.n2w+p.at.w2n===0?2:0);tot+=x;return x;});
+  let r=Math.random()*tot;for(let i=0;i<pool.length;i++){r-=w[i];if(r<=0)return pool[i];}return pool[pool.length-1];
+}
 
 /* ---------- navigation ---------- */
-const homeEl=document.getElementById('home');
-const playEl=document.getElementById('play');
-const stageHost=document.getElementById('stageHost');
+const homeEl=document.getElementById('home'), playEl=document.getElementById('play'), stageHost=document.getElementById('stageHost');
+let session=null, timerId=null, rainRAF=null;
 function goHome(){
-  session=null; if(timerId){clearInterval(timerId);timerId=null;}
+  session=null; if(timerId){clearInterval(timerId);timerId=null;} if(rainRAF){cancelAnimationFrame(rainRAF);rainRAF=null;}
   playEl.classList.remove('active'); homeEl.style.display='';
   document.getElementById('homeBtn').style.display='none';
+  document.getElementById('xpwrap').style.display='';
   buildGrid(); refreshHeader();
 }
-function enterPlay(){
-  homeEl.style.display='none'; playEl.classList.add('active');
-  document.getElementById('homeBtn').style.display='';
-}
+function enterPlay(){ homeEl.style.display='none'; playEl.classList.add('active'); document.getElementById('homeBtn').style.display=''; combo=0; comboMax=0; }
 
-/* ============ LEARN (flip / self-rate) ============ */
+/* ============ LEARN ============ */
 function startLearn(){
-  enterPlay();
-  const deck = shuffle(scope.slice());
-  let i=0, flipped=false;
+  markPlayedToday(); enterPlay();
+  const deck=shuffle(scope.slice()); let i=0;
   function render(){
     const n=deck[i], p=byN[n];
-    flipped=false;
-    stageHost.innerHTML =
-      '<div class="scoreline">Card <b>'+(i+1)+'</b> of '+deck.length+'</div>'+
+    stageHost.innerHTML=
+      '<div class="topline"><span>Card <b>'+(i+1)+'</b> / '+deck.length+'</span><span>'+TIERNAME[tier(n)]+'</span></div>'+
       '<div class="stage"><div class="inner">'+
-        '<div class="flipcard" id="fc">'+
-          '<div class="flipinner">'+
-            '<div class="face front">'+
-              '<div class="bignum">'+two(n)+'</div>'+
-              '<div class="iconbox">'+p.svg+'</div>'+
-              '<div class="muted" style="font-size:.8rem">tap to reveal</div>'+
-            '</div>'+
-            '<div class="face back">'+
-              '<div class="theword">'+p.word+'</div>'+
-              (p.caption?'<div class="thecap">'+p.caption+'</div>':'')+
-              '<div class="bignum" style="font-size:2rem">'+two(n)+'</div>'+
-            '</div>'+
-          '</div>'+
-        '</div>'+
-        '<div class="feedback" id="fb"></div>'+
-        '<div class="controls">'+
-          '<button class="btn ghost" id="prev">&larr; Prev</button>'+
-          '<div id="rate"></div>'+
-          '<button class="btn ghost" id="next">Next &rarr;</button>'+
-        '</div>'+
+      '<div class="flipcard" id="fc"><div class="flipinner">'+
+        '<div class="face front"><div class="bignum">'+two(n)+'</div><div class="iconbox">'+p.svg+'</div><div class="muted" style="font-size:.8rem">tap to reveal</div></div>'+
+        '<div class="face back"><div class="theword">'+p.word+'</div>'+(p.caption?'<div class="thecap">'+p.caption+'</div>':'')+'<div class="bignum" style="font-size:2rem">'+two(n)+'</div></div>'+
+      '</div></div>'+
+      '<div id="rate" class="center mt"></div>'+
+      '<div class="controls"><button class="btn ghost" id="prev">&larr; Prev</button><button class="btn ghost" id="next">Next &rarr;</button></div>'+
       '</div></div>';
     const fc=document.getElementById('fc');
-    fc.onclick=()=>{ flipped=!flipped; fc.classList.toggle('flipped',flipped);
-      document.getElementById('rate').innerHTML = flipped ?
-        '<button class="btn ghost" onclick="event.stopPropagation()" id="miss">Missed</button> '+
-        '<button class="btn gold" onclick="event.stopPropagation()" id="got">Got it</button>' : '';
-      const g=document.getElementById('got'), m=document.getElementById('miss');
-      if(g)g.onclick=(e)=>{e.stopPropagation();record(n,true,null);nextCard();};
-      if(m)m.onclick=(e)=>{e.stopPropagation();record(n,false,null);nextCard();};
+    fc.onclick=()=>{ fc.classList.toggle('flipped');
+      document.getElementById('rate').innerHTML = fc.classList.contains('flipped')?
+        '<button class="btn ghost" id="miss">Missed</button> <button class="btn gold" id="got">Got it</button>':'';
+      const g=document.getElementById('got'),m=document.getElementById('miss');
+      if(g)g.onclick=e=>{e.stopPropagation();record(n,'n2w',true,null);nextC();};
+      if(m)m.onclick=e=>{e.stopPropagation();record(n,'n2w',false,null);nextC();};
     };
-    document.getElementById('prev').onclick=()=>{ i=(i-1+deck.length)%deck.length; render(); };
-    document.getElementById('next').onclick=nextCard;
+    document.getElementById('prev').onclick=()=>{i=(i-1+deck.length)%deck.length;render();};
+    document.getElementById('next').onclick=nextC;
   }
-  function nextCard(){ i=(i+1)%deck.length; render(); }
+  function nextC(){i=(i+1)%deck.length;render();}
   render();
 }
 
-/* ============ shared quiz question ============ */
-function makeQuestion(pool){
-  const n = weightedPick(pool);
-  const dir = Math.random()<0.5 ? 'n2w' : 'w2n'; // number->picture/word  OR  picture/word->number
-  return {n, dir};
+/* ============ ROUNDS (drill / speed / diagnose / grind / daily) ============ */
+const ROUND_LEN=15;
+function startDaily(){
+  const due=allNums().filter(isDue);
+  const fresh=allNums().filter(n=>tier(n)<2);
+  let set=shuffle(due).slice(0,10);
+  set=set.concat(shuffle(fresh).slice(0,5));
+  if(set.length<ROUND_LEN) set=set.concat(shuffle(allNums().filter(n=>!set.includes(n))).slice(0,ROUND_LEN-set.length));
+  startRound('drill', shuffle(set).slice(0,ROUND_LEN), 'Daily Practice');
 }
-function renderMC(q, onPick){
-  const p=byN[q.n];
-  const distract = sample(allNums(), 3, q.n);
-  const opts = shuffle([q.n, ...distract]);
-  let head;
-  if(q.dir==='n2w'){
-    head = '<div class="prompt-label">Which picture is this number?</div>'+
-           '<div class="bignum">'+two(q.n)+'</div>';
-  }else{
-    head = '<div class="prompt-label">What number is this?</div>'+
-           '<div class="iconbox">'+p.svg+'</div>'+
-           '<div class="theword">'+p.word+'</div>'+
-           (p.caption?'<div class="thecap">'+p.caption+'</div>':'');
-  }
-  let optHTML = opts.map(o=>{
-    if(q.dir==='n2w'){
-      return '<button class="opt" data-n="'+o+'">'+
-        '<div class="iconbox sm">'+byN[o].svg+'</div>'+
-        '<div class="word-opt">'+byN[o].word+'</div></button>';
-    } else {
-      return '<button class="opt" data-n="'+o+'"><div class="num-opt">'+two(o)+'</div></button>';
-    }
-  }).join('');
-  const qhead = stageHost.querySelector('#qhead');
-  const box = stageHost.querySelector('#qbody');
-  if(!qhead || !box) return;
-  qhead.innerHTML = head;
-  box.innerHTML = '<div class="options">'+optHTML+'</div><div class="feedback" id="fb"></div>';
-  box.querySelectorAll('.opt').forEach(b=>{
-    b.onclick=()=>{
-      const chosen=+b.dataset.n; const ok=chosen===q.n;
-      box.querySelectorAll('.opt').forEach(x=>{
-        x.setAttribute('disabled','');
-        if(+x.dataset.n===q.n) x.classList.add('correct');
-        else if(x===b) x.classList.add('wrong');
-      });
-      onPick(ok);
-    };
-  });
-}
-
-/* ============ DRILL (endless MC) ============ */
-function startMode(mode){
-  if(mode==='drill') return runDrill();
+function startRound(mode, fixedSet, title){
+  markPlayedToday(); enterPlay();
   if(mode==='speed') return runSpeed();
   if(mode==='diagnose') return runDiagnose();
   if(mode==='grind') return runGrind();
-  if(mode==='rain') return runRain();
-  if(mode==='intro') return runIntro();
-}
-function drillShell(title, sub){
-  enterPlay();
-  stageHost.innerHTML =
-    '<div class="scoreline" id="score">'+sub+'</div>'+
-    '<div class="stage"><div class="inner">'+
-      '<div id="qhead"></div><div id="qbody"></div>'+
-    '</div></div>';
-}
-let session=null;
-function runDrill(){
-  session={mode:'drill', asked:0, right:0};
+  // drill
+  session={mode:'drill', title:title||'Practice Round', i:0, right:0, blooms:[], set: fixedSet||null};
   drillShell();
-  document.getElementById('score').innerHTML='Drill &middot; <b>0</b> correct of <b>0</b>';
   nextDrill();
 }
-function nextDrill(){
-  if(!session||session.mode!=='drill') return;
-  const q=makeQuestion(scope);
-  renderMC(q,(ok)=>{
-    session.asked++; if(ok)session.right++;
-    record(q.n, ok, null);
-    document.getElementById('score').innerHTML='Drill &middot; <b>'+session.right+'</b> correct of <b>'+session.asked+'</b>';
-    const fb=stageHost.querySelector('#fb');
-    fb.textContent = ok?'Yes \u2014 '+byN[q.n].word+' is '+two(q.n):'It\u2019s '+two(q.n)+' \u2014 '+byN[q.n].word;
-    fb.className='feedback '+(ok?'good':'bad');
-    setTimeout(nextDrill, ok?700:1300);
-  });
+function shell(topHTML){
+  stageHost.innerHTML='<div class="topline" id="tl">'+topHTML+'</div><div class="progbar"><i id="pb"></i></div>'+
+    '<div class="stage"><div class="inner"><div class="combo" id="combo"></div><div id="qhead"></div><div id="qbody"></div></div></div>';
 }
-
-/* ============ SPEED (timed MC) ============ */
-let timerId=null;
-function runSpeed(){
-  const DURATION=60;
-  session={mode:'speed', score:0, left:DURATION};
-  const best = +(localStorage.getItem('ohd.speedBest')||0);
-  enterPlay();
-  stageHost.innerHTML =
-    '<div class="scoreline"><span class="timer" id="tmr">'+DURATION+'s</span>'+
-      '<span>Score <b id="sc">0</b></span><span>Best <b>'+best+'</b></span></div>'+
-    '<div class="timerbar"><i id="tbar"></i></div>'+
-    '<div class="stage"><div class="inner"><div id="qhead"></div><div id="qbody"></div></div></div>';
-  nextSpeed();
-  const start=Date.now();
-  timerId=setInterval(()=>{
-    const elapsed=(Date.now()-start)/1000; session.left=Math.max(0,DURATION-elapsed);
-    document.getElementById('tmr').textContent=Math.ceil(session.left)+'s';
-    document.getElementById('tbar').style.width=(session.left/DURATION*100)+'%';
-    if(session.left<=0){ clearInterval(timerId); timerId=null; endSpeed(best); }
-  },200);
-}
-function nextSpeed(){
-  if(!session||session.mode!=='speed') return;
-  const q=makeQuestion(scope);
-  renderMC(q,(ok)=>{
-    if(ok)session.score++;
-    record(q.n, ok, null);
-    document.getElementById('sc').textContent=session.score;
-    const fb=stageHost.querySelector('#fb');
-    fb.textContent = ok?'\u2713':'\u2717 '+two(q.n);
-    fb.className='feedback '+(ok?'good':'bad');
-    setTimeout(()=>{ if(session&&session.left>0) nextSpeed(); }, ok?260:520);
-  });
-}
-function endSpeed(prevBest){
-  const s=session.score; const best=Math.max(prevBest,s);
-  try{localStorage.setItem('ohd.speedBest',best);}catch(e){}
-  const pb = s>prevBest && s>0;
-  stageHost.innerHTML =
-    '<div class="stage"><div class="inner results center">'+
-      '<h2>Time!</h2>'+
-      '<div class="bignum">'+s+'</div>'+
-      '<div class="muted">correct in 60 seconds'+(pb?' &middot; new best!':'')+'</div>'+
-      '<div class="mt"><button class="btn gold wide" onclick="runSpeed()">Go again</button></div>'+
-      '<div class="mt"><button class="btn ghost wide" onclick="goHome()">Back home</button></div>'+
-    '</div></div>';
-}
-
-/* ============ INTRO: THE CODE (major system) ============ */
-const CODE=[
-  {d:0, s:'S, Z',      h:'“Zero” starts with a Z sound.'},
-  {d:1, s:'T, D, Th',  h:'t has one downstroke.'},
-  {d:2, s:'N, Ng',     h:'n has two downstrokes.'},
-  {d:3, s:'M',         h:'m has three downstrokes.'},
-  {d:4, s:'R',         h:'“fouR” ends in R.'},
-  {d:5, s:'L',         h:'L is the Roman numeral for 50; an open hand makes an L.'},
-  {d:6, s:'J, Sh, Ch', h:'a handwritten J looks like a backwards 6.'},
-  {d:7, s:'K, G',      h:'a K can be built from two 7s.'},
-  {d:8, s:'F, V, Ph',  h:'a cursive f has two loops, like an 8.'},
-  {d:9, s:'P, B',      h:'P is a mirror image of 9.'},
-];
-function runIntro(){
-  session={mode:'intro'};
-  enterPlay();
-  const rows=CODE.map(c=>
-    '<div class="coderow"><div class="cd">'+c.d+'</div>'+
-    '<div class="ctext"><div class="csnd">'+c.s+'</div><div class="chook">'+c.h+'</div></div></div>'
-  ).join('');
-  stageHost.innerHTML=
-    '<div class="codenote">Every peg word is built from this code: each <b>consonant sound</b> stands for a digit. '+
-    '<b>Vowels</b> and the sounds <b>w, h, y</b> are free filler. So <b>“Nun”</b> (n&middot;n) is <b>2&thinsp;2</b>, and <b>“Rose”</b> (r&middot;s) is <b>4&thinsp;0</b>.</div>'+
-    '<div class="codelist">'+rows+'</div>'+
-    '<div class="introbtns">'+
-      '<button class="btn gold wide" onclick="runIntroQuiz()">Quiz me &rarr;</button>'+
-      '<button class="btn ghost wide" onclick="goHome()">Back home</button>'+
-    '</div>';
-}
-function runIntroQuiz(){
-  session={mode:'introquiz', i:0, score:0, order:shuffle(CODE.map(c=>c.d))};
-  enterPlay();
-  stageHost.innerHTML=
-    '<div class="scoreline" id="score">The Code &middot; question <b>1</b> of 10</div>'+
-    '<div class="stage"><div class="inner"><div id="qhead"></div><div id="qbody"></div></div></div>';
-  introQ();
-}
-function introQ(){
-  if(!session||session.mode!=='introquiz') return;
-  if(session.i>=session.order.length) return endIntroQuiz();
-  const d=session.order[session.i];
-  const c=CODE.find(x=>x.d===d);
-  const dir=Math.random()<0.5?'d2s':'s2d';
-  const opts=shuffle([c, ...shuffle(CODE.filter(x=>x.d!==d)).slice(0,3)]);
-  let head, optHTML;
-  if(dir==='d2s'){
-    head='<div class="prompt-label">Which sounds does this digit stand for?</div><div class="bignum">'+d+'</div>';
-    optHTML=opts.map(o=>'<button class="opt" data-d="'+o.d+'"><div class="word-opt">'+o.s+'</div></button>').join('');
-  }else{
-    head='<div class="prompt-label">Which digit do these sounds stand for?</div><div class="theword">'+c.s+'</div>';
-    optHTML=opts.map(o=>'<button class="opt" data-d="'+o.d+'"><div class="num-opt">'+o.d+'</div></button>').join('');
-  }
-  stageHost.querySelector('#qhead').innerHTML=head;
-  const box=stageHost.querySelector('#qbody');
-  box.innerHTML='<div class="options">'+optHTML+'</div><div class="feedback" id="fb"></div>';
+function drillShell(){ shell('<span>'+session.title+'</span><span><b id="rc">0</b>/'+ROUND_LEN+'</span>'); }
+function setProg(i){ const pb=stageHost.querySelector('#pb'); if(pb)pb.style.width=(i/ROUND_LEN*100)+'%'; }
+function renderMC(q,onPick){
+  const p=byN[q.n]; const opts=shuffle([q.n,...sample(allNums(),3,q.n)]);
+  const head = q.dir==='n2w'
+    ? '<div class="prompt-label">Which picture is this?</div><div class="bignum">'+two(q.n)+'</div>'
+    : '<div class="prompt-label">What number is this?</div><div class="iconbox">'+p.svg+'</div><div class="theword">'+p.word+'</div>'+(p.caption?'<div class="thecap">'+p.caption+'</div>':'');
+  const optHTML=opts.map(o=> q.dir==='n2w'
+    ? '<button class="opt" data-n="'+o+'"><div class="iconbox sm">'+byN[o].svg+'</div><div class="word-opt">'+byN[o].word+'</div></button>'
+    : '<button class="opt" data-n="'+o+'"><div class="num-opt">'+two(o)+'</div></button>').join('');
+  const qhead=stageHost.querySelector('#qhead'), box=stageHost.querySelector('#qbody');
+  if(!qhead||!box)return;
+  qhead.innerHTML=head; box.innerHTML='<div class="options">'+optHTML+'</div><div class="feedback" id="fb"></div>';
+  const t0=performance.now();
   box.querySelectorAll('.opt').forEach(b=>{
     b.onclick=()=>{
-      if(!session||session.mode!=='introquiz') return;
-      const chosen=+b.dataset.d, ok=chosen===d;
-      box.querySelectorAll('.opt').forEach(x=>{ x.setAttribute('disabled','');
-        if(+x.dataset.d===d) x.classList.add('correct'); else if(x===b) x.classList.add('wrong'); });
-      if(ok) session.score++;
-      const fb=box.querySelector('#fb');
-      fb.textContent=(ok?'✓ ':'✗ ')+d+' = '+c.s;
-      fb.className='feedback '+(ok?'good':'bad');
-      session.i++;
-      const sc=document.getElementById('score');
-      if(sc) sc.innerHTML='The Code &middot; question <b>'+Math.min(session.i+1,10)+'</b> of 10';
-      setTimeout(introQ, ok?750:1250);
+      const chosen=+b.dataset.n, ok=chosen===q.n, ms=performance.now()-t0;
+      box.querySelectorAll('.opt').forEach(x=>{x.setAttribute('disabled','');if(+x.dataset.n===q.n)x.classList.add('correct');else if(x===b)x.classList.add('wrong');});
+      onPick(ok,ms);
     };
   });
 }
-function endIntroQuiz(){
-  const s=session.score;
-  stageHost.innerHTML=
-    '<div class="stage"><div class="inner results center">'+
-      '<h2>'+(s===10?'Perfect — you know the code!':'The Code')+'</h2>'+
-      '<div class="bignum">'+s+'/10</div>'+
-      '<div class="muted">sounds matched to digits</div>'+
-      '<div class="mt"><button class="btn gold wide" onclick="runIntroQuiz()">Quiz again</button></div>'+
-      '<div class="mt"><button class="btn ghost wide" onclick="runIntro()">Review the code</button></div>'+
-      '<div class="mt"><button class="btn ghost wide" onclick="goHome()">Back home</button></div>'+
-    '</div></div>';
+function nextDrill(){
+  if(!session||session.mode!=='drill')return;
+  if(session.i>=ROUND_LEN) return endDrill();
+  setProg(session.i);
+  const n = session.set ? session.set[session.i] : weightedPick(scope);
+  const dir = Math.random()<0.5?'n2w':'w2n';
+  renderMC({n,dir},(ok,ms)=>{
+    session.i++; if(ok){session.right++;bumpCombo();beep(600,.07);}else{resetCombo();beep(200,.12);}
+    const bloomed=record(n,dir,ok,ms); if(bloomed)session.blooms.push(n);
+    const rc=stageHost.querySelector('#rc'); if(rc)rc.textContent=session.right;
+    const fb=stageHost.querySelector('#fb'); fb.textContent=ok?(byN[n].word+' = '+two(n)):('It\u2019s '+two(n)+' \u2014 '+byN[n].word); fb.className='feedback '+(ok?'good':'bad');
+    setTimeout(nextDrill, ok?650:1200);
+  });
+}
+function endDrill(){
+  setProg(ROUND_LEN);
+  const acc=Math.round(session.right/ROUND_LEN*100);
+  const xpGain=session.right*10;
+  scorecard(session.title, [
+    ['Correct', session.right+'/'+ROUND_LEN],
+    ['Accuracy', acc+'%'],
+    ['Best combo', comboMax+'x'],
+    ['XP', '+'+xpGain]
+  ], session.blooms, ()=>startRound('drill', session.set, session.title));
 }
 
-/* ============ DAISY RAIN (arcade / falling) ============ */
-// Every round keeps a NUMBER on one side — either a number falls and you pick
-// the matching item, or an item falls and you recall its number. (Pure
-// word<->picture rounds are left out: they teach artwork ID, not the numbers.)
-const RAIN_CHALLENGES=[
-  {show:'num',    pick:'pic'},   // number falls -> pick its picture
-  {show:'num',    pick:'word'},  // number falls -> pick its word
-  {show:'word',   pick:'num'},   // word falls   -> recall the number
-  {show:'pic',    pick:'num'},   // picture falls-> recall the number
-  {show:'picword',pick:'num'},   // picture+word -> recall the number
-];
-function rainCardHTML(p, show){
-  if(show==='num')  return '<div class="rnum">'+two(p.n)+'</div>';
-  if(show==='word') return '<div class="rword solo">'+p.word+'</div>';
-  if(show==='pic')  return '<div class="ricon">'+p.svg+'</div>';
-  return '<div class="ricon">'+p.svg+'</div><div class="rword">'+p.word+'</div>'; // picword
-}
-function rainOptHTML(o, pick){
-  if(pick==='pic')  return '<button class="ropt" data-n="'+o+'"><div class="iconbox">'+byN[o].svg+'</div></button>';
-  if(pick==='word') return '<button class="ropt" data-n="'+o+'"><span class="rword-opt">'+byN[o].word+'</span></button>';
-  return '<button class="ropt" data-n="'+o+'"><span class="rnum-opt">'+two(o)+'</span></button>'; // num
-}
-function runRain(){
-  const best=+(localStorage.getItem('ohd.rainBest')||0);
-  session={mode:'rain', score:0, lives:3, fallMs:7000, y:0, q:null, answered:false, over:false};
-  enterPlay();
-  stageHost.innerHTML =
-    '<div class="scoreline"><span>Score <b id="rsc">0</b></span>'+
-      '<span>Best <b>'+best+'</b></span>'+
-      '<span class="rlives" id="rlives"></span></div>'+
-    '<div class="stage rain"><div class="sky" id="sky">'+
-      '<div class="rcard" id="rcard"></div><div class="ground"></div></div></div>'+
-    '<div class="rain-opts" id="ropts"></div>'+
-    '<div class="feedback" id="fb"></div>';
-  updateRainHud();
-  spawnRain();
-  const TICK=25;
+/* ============ SPEED ============ */
+function runSpeed(){
+  const DUR=60; session={mode:'speed',score:0,left:DUR,blooms:[]};
+  shell('<span class="timer" id="tmr">'+DUR+'s</span><span>Score <b id="sc">0</b> &middot; Best <b>'+(S.best.speed||0)+'</b></span>');
+  nextSpeed();
+  const start=Date.now();
   timerId=setInterval(()=>{
-    if(!session||session.mode!=='rain'||session.answered||session.over) return;
-    const sky=document.getElementById('sky'), card=document.getElementById('rcard');
-    if(!sky||!card) return;
-    const travel=Math.max(0, sky.clientHeight-card.offsetHeight);
-    session.y=Math.min(travel, session.y + travel*TICK/session.fallMs);
-    card.style.top=session.y+'px';
-    if(session.y>=travel) landRain();
-  }, TICK);
+    const el=(Date.now()-start)/1000; session.left=Math.max(0,DUR-el);
+    const t=stageHost.querySelector('#tmr'); if(t)t.textContent=Math.ceil(session.left)+'s';
+    const pb=stageHost.querySelector('#pb'); if(pb)pb.style.width=(session.left/DUR*100)+'%';
+    if(session.left<=0){clearInterval(timerId);timerId=null;endSpeed();}
+  },200);
 }
-function updateRainHud(){
-  const sc=document.getElementById('rsc'); if(sc) sc.textContent=session.score;
-  const lv=document.getElementById('rlives'); if(lv){
-    let h=''; for(let i=0;i<3;i++) h+='<span class="rlife'+(i<session.lives?'':' spent')+'">🌼</span>';
-    lv.innerHTML=h;
-  }
+function nextSpeed(){
+  if(!session||session.mode!=='speed')return;
+  const n=weightedPick(scope), dir=Math.random()<0.5?'n2w':'w2n';
+  renderMC({n,dir},(ok,ms)=>{
+    if(ok){session.score++;bumpCombo();beep(640,.06);}else{resetCombo();beep(200,.1);}
+    const b=record(n,dir,ok,ms); if(b)session.blooms.push(n);
+    const sc=stageHost.querySelector('#sc'); if(sc)sc.textContent=session.score;
+    const fb=stageHost.querySelector('#fb'); fb.textContent=ok?'\u2713':'\u2717 '+two(n); fb.className='feedback '+(ok?'good':'bad');
+    setTimeout(()=>{if(session&&session.left>0)nextSpeed();}, ok?240:460);
+  });
 }
-function spawnRain(){
-  if(!session||session.over) return;
-  session.answered=false; session.y=0;
-  const n=weightedPick(scope);
-  const ch=RAIN_CHALLENGES[rnd(RAIN_CHALLENGES.length)];
-  session.q={n, show:ch.show, pick:ch.pick};
-  const p=byN[n];
-  const opts=shuffle([n, ...sample(allNums(),3,n)]);
-  const card=document.getElementById('rcard');
-  card.className='rcard'; card.style.top='0px';
-  card.innerHTML=rainCardHTML(p, ch.show);
-  const ropts=document.getElementById('ropts');
-  ropts.innerHTML=opts.map(o=>rainOptHTML(o, ch.pick)).join('');
-  ropts.querySelectorAll('.ropt').forEach(b=>{ b.onclick=()=>answerRain(+b.dataset.n, b); });
-}
-function answerRain(chosen, btn){
-  if(!session||session.answered||session.over) return;
-  session.answered=true;
-  const q=session.q, ok=chosen===q.n;
-  record(q.n, ok, null);
-  const card=document.getElementById('rcard');
-  const fb=document.getElementById('fb');
-  if(ok){
-    session.score++; updateRainHud();
-    if(card) card.classList.add('burst');
-    if(fb){ fb.textContent='✓ '+byN[q.n].word+' is '+two(q.n); fb.className='feedback good'; }
-    session.fallMs=Math.max(3200, session.fallMs*0.96);
-    setTimeout(()=>{ if(session&&!session.over) spawnRain(); }, 300);
-  } else {
-    if(card) card.classList.add('miss');
-    const ropts=document.getElementById('ropts');
-    if(ropts) ropts.querySelectorAll('.ropt').forEach(x=>{
-      x.setAttribute('disabled','');
-      if(+x.dataset.n===q.n) x.classList.add('correct');
-      else if(x===btn) x.classList.add('wrong');
-    });
-    loseLife(two(q.n)+' — '+byN[q.n].word);
-  }
-}
-function landRain(){
-  if(!session||session.answered||session.over) return;
-  session.answered=true;
-  const q=session.q;
-  record(q.n, false, null);
-  const card=document.getElementById('rcard'); if(card) card.classList.add('miss');
-  loseLife('missed — '+two(q.n)+' is '+byN[q.n].word);
-}
-function loseLife(msg){
-  session.lives--; updateRainHud();
-  const fb=document.getElementById('fb');
-  if(fb){ fb.textContent='✗ '+msg; fb.className='feedback bad'; }
-  const gap = session.lives<=0 ? 900 : 850;
-  setTimeout(()=>{
-    if(!session) return;
-    if(session.lives<=0) endRain(); else if(!session.over) spawnRain();
-  }, gap);
-}
-function endRain(){
-  if(!session) return;
-  session.over=true;
-  if(timerId){clearInterval(timerId); timerId=null;}
-  const s=session.score;
-  const prevBest=+(localStorage.getItem('ohd.rainBest')||0);
-  const best=Math.max(prevBest,s);
-  try{localStorage.setItem('ohd.rainBest',best);}catch(e){}
-  const pb=s>prevBest && s>0;
-  stageHost.innerHTML =
-    '<div class="stage"><div class="inner results center">'+
-      '<h2>Out of daisies!</h2>'+
-      '<div class="bignum">'+s+'</div>'+
-      '<div class="muted">caught before landing'+(pb?' &middot; new best!':'')+'</div>'+
-      '<div class="mt"><button class="btn gold wide" onclick="runRain()">Go again</button></div>'+
-      '<div class="mt"><button class="btn ghost wide" onclick="goHome()">Back home</button></div>'+
-    '</div></div>';
+function endSpeed(){
+  const s=session.score, prev=S.best.speed||0; const pb=s>prev; if(pb)S.best.speed=s; save();
+  scorecard('Time!', [['Score',s],['Best',Math.max(prev,s)],['Best combo',comboMax+'x'],['Blooms',session.blooms.length]], session.blooms, runSpeed, pb?'New best!':'');
 }
 
-/* ============ DIAGNOSE (one pass -> map) ============ */
+/* ============ DIAGNOSE ============ */
 function runDiagnose(){
-  const queue=shuffle(scope.slice());
-  session={mode:'diagnose', queue, i:0, results:{}};
-  drillShell();
-  stepDiagnose();
+  const queue=shuffle(scope.slice()); session={mode:'diagnose',queue,i:0,results:{},blooms:[]};
+  shell('<span>Check-up</span><span><b id="rc">1</b>/'+queue.length+'</span>');
+  stepDiag();
 }
-function stepDiagnose(){
-  if(!session||session.mode!=='diagnose') return;
-  if(session.i>=session.queue.length) return endDiagnose();
-  const n=session.queue[session.i];
-  document.getElementById('score').innerHTML='Diagnose &middot; <b>'+(session.i+1)+'</b> of '+session.queue.length;
-  const q={n, dir: Math.random()<0.5?'n2w':'w2n'};
-  renderMC(q,(ok)=>{
-    session.results[n]=ok; record(n, ok, null);
-    const fb=stageHost.querySelector('#fb');
-    fb.textContent = ok?'\u2713':'It\u2019s '+two(n)+' \u2014 '+byN[n].word;
-    fb.className='feedback '+(ok?'good':'bad');
-    session.i++;
-    setTimeout(stepDiagnose, ok?550:1100);
+function stepDiag(){
+  if(!session||session.mode!=='diagnose')return;
+  if(session.i>=session.queue.length)return endDiag();
+  const rc=stageHost.querySelector('#rc'); if(rc)rc.textContent=session.i+1;
+  const pb=stageHost.querySelector('#pb'); if(pb)pb.style.width=(session.i/session.queue.length*100)+'%';
+  const n=session.queue[session.i], dir=Math.random()<0.5?'n2w':'w2n';
+  renderMC({n,dir},(ok,ms)=>{
+    session.results[n]=ok; const b=record(n,dir,ok,ms); if(b)session.blooms.push(n);
+    if(ok){bumpCombo();beep(600,.06);}else resetCombo();
+    const fb=stageHost.querySelector('#fb'); fb.textContent=ok?'\u2713':'It\u2019s '+two(n)+' \u2014 '+byN[n].word; fb.className='feedback '+(ok?'good':'bad');
+    session.i++; setTimeout(stepDiag, ok?500:1000);
   });
 }
-function endDiagnose(){
-  const weak = Object.keys(session.results).filter(n=>!session.results[n]).map(Number).sort((a,b)=>a-b);
-  let grid='<div class="grid101">';
-  session.queue.slice().sort((a,b)=>a-b).forEach(n=>{
-    const cls = session.results[n] ? 'mastered':'';
-    grid += '<button class="cell '+cls+(session.results[n]?'':' ')+'" style="'+(session.results[n]?'':'background:#f6e3e0;border-color:#c0392b;color:#c0392b')+'" onclick="peek('+n+')">'+n+'</button>';
-  });
+function endDiag(){
+  const weak=Object.keys(session.results).filter(n=>!session.results[n]).map(Number).sort((a,b)=>a-b);
+  const right=session.queue.length-weak.length;
+  let grid='<div class="grid101" style="margin-top:6px">';
+  session.queue.slice().sort((a,b)=>a-b).forEach(n=>{ grid+='<button class="cell" style="'+(session.results[n]?'background:var(--bloom);border-color:var(--accent-deep);color:#4a3410':'background:#f6e3e0;border-color:#c0392b;color:#c0392b')+'" onclick="peek('+n+')">'+n+'</button>'; });
   grid+='</div>';
-  const weakTags = weak.length? weak.map(n=>'<span class="weaktag">'+two(n)+' '+byN[n].word+'</span>').join('') :
-    '<div class="muted">No misses this pass \u2014 beautifully solid.</div>';
-  stageHost.innerHTML =
-    '<div class="stage"><div class="inner results">'+
-      '<h2>Diagnosis</h2>'+
-      '<div class="center muted">'+ (session.queue.length-weak.length) +' of '+session.queue.length+' correct</div>'+
-      '<div class="weaklist">'+weakTags+'</div>'+
-      grid+
-      (weak.length?'<div class="mt"><button class="btn gold wide" onclick="grindThese(['+weak.join(',')+'])">Grind these '+weak.length+'</button></div>':'')+
-      '<div class="mt"><button class="btn ghost wide" onclick="goHome()">Back home</button></div>'+
-    '</div></div>';
+  const tags= weak.length? weak.map(n=>'<span class="weaktag">'+two(n)+' '+byN[n].word+'</span>').join('') : '<div class="muted center">No misses \u2014 beautifully solid.</div>';
+  stageHost.innerHTML='<div class="stage"><div class="inner results">'+
+    '<h2>Check-up</h2><div class="sub">'+right+' / '+session.queue.length+' correct</div>'+
+    '<div class="bloomrow">'+tags+'</div>'+grid+
+    (weak.length?'<div class="mt"><button class="btn gold wide" onclick="grindThese(['+weak.join(',')+'])">Grind these '+weak.length+'</button></div>':'')+
+    '<div class="mt"><button class="btn ghost wide" onclick="goHome()">Back to meadow</button></div></div></div>';
 }
 
-/* ============ GRIND (type the answer) ============ */
-function runGrind(){
-  const pool = scope.filter(n=>!isMastered(n));
-  grindThese(pool);
-}
+/* ============ GRIND (type) ============ */
+function runGrind(){ grindThese(scope.filter(n=>tier(n)<3)); }
 function grindThese(pool){
-  if(!pool || pool.length===0){
-    enterPlay();
-    stageHost.innerHTML='<div class="stage"><div class="inner results center"><h2>Nothing to grind</h2>'+
-      '<div class="muted">Every peg in this set is already solid.</div>'+
-      '<div class="mt"><button class="btn ghost wide" onclick="goHome()">Back home</button></div></div></div>';
-    return;
-  }
   enterPlay();
-  // local mastery: need 2 correct in a row this session to clear from the pool
-  session={mode:'grind', pool:shuffle(pool.slice()), need:{}, cleared:0, total:pool.length};
+  if(!pool||!pool.length){ stageHost.innerHTML='<div class="stage"><div class="inner results center"><h2>Nothing to grind</h2><div class="muted">Every peg in this set is already solid.</div><div class="mt"><button class="btn ghost wide" onclick="goHome()">Back to meadow</button></div></div></div>'; return; }
+  session={mode:'grind',pool:shuffle(pool.slice()),need:{},total:pool.length,blooms:[]};
   pool.forEach(n=>session.need[n]=2);
-  stageHost.innerHTML=
-    '<div class="scoreline" id="score"></div>'+
-    '<div class="stage"><div class="inner"><div id="qhead"></div><div id="qbody"></div></div></div>';
+  shell('<span>Grind</span><span><b id="rc">0</b>/'+session.total+' cleared</span>');
   nextGrind();
 }
 function nextGrind(){
-  if(!session||session.mode!=='grind') return;
-  const remaining = session.pool.filter(n=>session.need[n]>0);
-  if(remaining.length===0) return endGrind();
-  document.getElementById('score').innerHTML='Grind &middot; <b>'+(session.total-remaining.length)+'</b> of '+session.total+' cleared';
-  const n = remaining[rnd(remaining.length)];
-  const p=byN[n];
-  const dir = Math.random()<0.5?'n2w':'w2n';
-  let head;
-  if(dir==='n2w'){
-    head='<div class="prompt-label">Type the word for this number</div><div class="bignum">'+two(n)+'</div>';
-  }else{
-    head='<div class="prompt-label">Type the number for this picture</div>'+
-      '<div class="iconbox">'+p.svg+'</div>';
-  }
+  if(!session||session.mode!=='grind')return;
+  const rem=session.pool.filter(n=>session.need[n]>0);
+  if(!rem.length)return endGrind();
+  const rc=stageHost.querySelector('#rc'); if(rc)rc.textContent=session.total-rem.length;
+  const pb=stageHost.querySelector('#pb'); if(pb)pb.style.width=((session.total-rem.length)/session.total*100)+'%';
+  const n=rem[rnd(rem.length)], p=byN[n], dir=Math.random()<0.5?'n2w':'w2n';
+  const head = dir==='n2w'
+    ? '<div class="prompt-label">Type the word for this number</div><div class="bignum">'+two(n)+'</div>'
+    : '<div class="prompt-label">Type the number for this picture</div><div class="iconbox">'+p.svg+'</div>';
   stageHost.querySelector('#qhead').innerHTML=head;
-  stageHost.querySelector('#qbody').innerHTML=
-    '<div class="typerow"><input id="ans" autocomplete="off" autocapitalize="off" '+
-      (dir==='w2n'?'inputmode="numeric" ':'')+'placeholder="'+(dir==='n2w'?'the word\u2026':'the number\u2026')+'"/>'+
-      '<button class="btn" id="go">Check</button></div>'+
-    '<div class="feedback" id="fb"></div>';
+  stageHost.querySelector('#qbody').innerHTML='<div class="typerow"><input id="ans" autocomplete="off" autocapitalize="off" '+(dir==='w2n'?'inputmode="numeric" ':'')+'placeholder="'+(dir==='n2w'?'the word\u2026':'the number\u2026')+'"/><button class="btn" id="go">Check</button></div><div class="feedback" id="fb"></div>';
   const inp=document.getElementById('ans'); inp.focus();
+  const t0=performance.now();
   function submit(){
-    const val=inp.value.trim();
-    if(!val) return;
-    let ok;
-    if(dir==='n2w') ok = val.toLowerCase()===p.word.toLowerCase();
-    else ok = (val.replace(/\D/g,'')!=='' && parseInt(val,10)===n);
+    const v=inp.value.trim(); if(!v)return;
+    const ok = dir==='n2w' ? v.toLowerCase()===p.word.toLowerCase() : (v.replace(/\D/g,'')!==''&&parseInt(v,10)===n);
     const fb=document.getElementById('fb');
-    if(ok){
-      session.need[n]--; record(n,true,null);
-      fb.textContent = session.need[n]>0 ? '\u2713 once more to clear it' : '\u2713 cleared!';
-      fb.className='feedback good';
-    }else{
-      session.need[n]=2; record(n,false,null);
-      fb.textContent = (dir==='n2w'? 'It\u2019s "'+p.word+'"' : 'It\u2019s '+two(n)+' \u2014 '+p.word);
-      fb.className='feedback bad';
-    }
-    setTimeout(nextGrind, ok?650:1500);
+    if(ok){ session.need[n]--; const b=record(n,dir,true,performance.now()-t0); if(b)session.blooms.push(n); bumpCombo(); beep(620,.07);
+      fb.textContent=session.need[n]>0?'\u2713 once more to clear':'\u2713 cleared!'; fb.className='feedback good';
+    } else { session.need[n]=2; record(n,dir,false,null); resetCombo(); beep(200,.12);
+      fb.textContent=dir==='n2w'?('It\u2019s "'+p.word+'"'):('It\u2019s '+two(n)+' \u2014 '+p.word); fb.className='feedback bad'; }
+    setTimeout(nextGrind, ok?600:1400);
   }
   document.getElementById('go').onclick=submit;
   inp.addEventListener('keydown',e=>{if(e.key==='Enter')submit();});
 }
 function endGrind(){
-  stageHost.innerHTML='<div class="stage"><div class="inner results center">'+
-    '<h2>All cleared</h2>'+
-    '<div class="iconbox">'+byN[100].svg+'</div>'+
-    '<div class="muted">Every weak peg in this run is solid now.</div>'+
-    '<div class="mt"><button class="btn ghost wide" onclick="goHome()">Back home</button></div></div></div>';
+  scorecard('All cleared', [['Pegs cleared',session.total],['Best combo',comboMax+'x'],['Blooms',session.blooms.length],['XP','+'+session.total*20]], session.blooms, ()=>goHome(), '', true);
 }
+
+/* ============ SCORECARD ============ */
+function scorecard(title, stats, blooms, again, tagline, hideAgain){
+  let sc='<div class="statgrid">'+stats.map(s=>'<div class="stat"><div class="v">'+s[1]+'</div><div class="k">'+s[0]+'</div></div>').join('')+'</div>';
+  let bl = blooms&&blooms.length? '<div class="center muted" style="font-size:.85rem">New blooms</div><div class="bloomrow">'+blooms.map(n=>'<span class="bloomtag">&#10047; '+two(n)+' '+byN[n].word+'</span>').join('')+'</div>' : '';
+  stageHost.innerHTML='<div class="stage"><div class="inner results">'+
+    '<h2>'+title+'</h2>'+(tagline?'<div class="sub">'+tagline+'</div>':'<div class="sub">Meadow '+meadowPct()+'% bloomed</div>')+
+    sc+bl+
+    (hideAgain?'':'<div class="mt"><button class="btn gold wide" id="again">Go again</button></div>')+
+    '<div class="mt"><button class="btn ghost wide" onclick="goHome()">Back to meadow</button></div></div></div>';
+  const a=document.getElementById('again'); if(a)a.onclick=again;
+}
+
+/* ============ DAISY RAIN ============ */
+let rainDiff='gentle';
+const RAIN_CFG={ gentle:{fall:9000,ramp:180,min:4200,spawnGap:1400}, normal:{fall:6500,ramp:220,min:3200,spawnGap:1050}, brisk:{fall:4800,ramp:260,min:2400,spawnGap:800} };
+function rainIntro(){
+  enterPlay();
+  stageHost.innerHTML='<div class="stage"><div class="inner center">'+
+    '<h2 style="font-family:var(--serif);font-size:1.6rem">Daisy Rain &#127804;</h2>'+
+    '<p class="muted" style="margin:8px 0 4px">A peg drifts down from the sky. Tap its match at the bottom before it lands. It starts slow and speeds up gently. You have three lives.</p>'+
+    '<div class="diffrow">'+
+      '<button class="diffbtn '+(rainDiff==='gentle'?'sel':'')+'" data-d="gentle">Gentle</button>'+
+      '<button class="diffbtn '+(rainDiff==='normal'?'sel':'')+'" data-d="normal">Normal</button>'+
+      '<button class="diffbtn '+(rainDiff==='brisk'?'sel':'')+'" data-d="brisk">Brisk</button>'+
+    '</div>'+
+    '<div class="muted" style="font-size:.8rem">Best: '+(S.best.rain||0)+'</div>'+
+    '<div class="mt"><button class="btn gold wide" id="startRain">Start</button></div>'+
+    '<div class="mt"><button class="btn ghost wide" onclick="goHome()">Back to meadow</button></div>'+
+  '</div></div>';
+  stageHost.querySelectorAll('.diffbtn').forEach(b=>b.onclick=()=>{rainDiff=b.dataset.d; stageHost.querySelectorAll('.diffbtn').forEach(x=>x.classList.toggle('sel',x===b));});
+  document.getElementById('startRain').onclick=runRain;
+}
+function runRain(){
+  markPlayedToday(); enterPlay();
+  const cfg=RAIN_CFG[rainDiff];
+  session={mode:'rain', score:0, lives:3, catches:0, blooms:[], fall:cfg.fall, cfg, current:null, y:0, lastT:0};
+  stageHost.innerHTML=
+    '<div class="rainhud"><span class="hearts" id="hearts">&#10084;&#10084;&#10084;</span><span>Score <b id="rsc">0</b></span><span>Best <b>'+(S.best.rain||0)+'</b></span></div>'+
+    '<div id="rainStage"></div>'+
+    '<div class="rainchoices" id="rchoices"></div>';
+  spawnFaller();
+  session.lastT=performance.now();
+  rainRAF=requestAnimationFrame(rainTick);
+}
+function spawnFaller(){
+  const st=document.getElementById('rainStage'); if(!st)return;
+  const n=weightedPick(scope);
+  const showIcon = Math.random()<0.5;  // faller shows icon -> pick number; else shows number -> pick icon
+  session.current={n, mode: showIcon?'icon':'num'};
+  const el=document.createElement('div'); el.className='faller'; el.id='faller';
+  el.innerHTML = showIcon
+    ? '<div class="ficon">'+byN[n].svg+'</div><div class="fword">'+byN[n].word+'</div>'
+    : '<div class="fnum">'+two(n)+'</div>';
+  const w=st.clientWidth; el.style.left=Math.max(6, rnd(w-110))+'px';
+  st.appendChild(el);
+  session.y=-90; session.spawnedAt=performance.now();
+  // choices at bottom: opposite representation
+  const opts=shuffle([n,...sample(allNums(),3,n)]);
+  const rc=document.getElementById('rchoices');
+  rc.innerHTML=opts.map(o=> showIcon
+    ? '<button class="rchoice" data-n="'+o+'"><div class="rn">'+two(o)+'</div></button>'
+    : '<button class="rchoice" data-n="'+o+'"><div class="riconbox">'+byN[o].svg+'</div></button>').join('');
+  rc.querySelectorAll('.rchoice').forEach(b=>b.onclick=()=>rainAnswer(+b.dataset.n,b));
+}
+function rainTick(t){
+  if(!session||session.mode!=='rain')return;
+  const st=document.getElementById('rainStage'); const el=document.getElementById('faller');
+  if(!st||!el){return;}
+  const dt=t-session.lastT; session.lastT=t;
+  const dist=st.clientHeight+90;
+  session.y += dist*(dt/session.fall);
+  el.style.transform='translateY('+session.y+'px)';
+  if(session.y >= st.clientHeight-4){
+    // landed -> lose a life
+    loseLife();
+    if(session&&session.mode==='rain'){ el.remove(); spawnFaller(); }
+  }
+  if(session&&session.mode==='rain') rainRAF=requestAnimationFrame(rainTick);
+}
+function rainAnswer(chosen, btn){
+  if(!session||!session.current)return;
+  const n=session.current.n, ok=chosen===n, dir=session.current.mode==='icon'?'w2n':'n2w';
+  const b=record(n,dir,ok,null); if(b)session.blooms.push(n);
+  const el=document.getElementById('faller');
+  if(ok){
+    session.score++; session.catches++; bumpCombo(); beep(680,.06);
+    document.getElementById('rsc').textContent=session.score;
+    // gentle ramp
+    session.fall=Math.max(session.cfg.min, session.fall - session.cfg.ramp);
+    if(el)el.remove(); spawnFaller();
+  } else {
+    resetCombo(); beep(200,.12); if(btn)btn.classList.add('wrong');
+    loseLife();
+    if(session&&session.mode==='rain'){ if(el)el.remove(); spawnFaller(); }
+  }
+}
+function loseLife(){
+  session.lives--;
+  const h=document.getElementById('hearts'); if(h)h.innerHTML='&#10084;'.repeat(Math.max(0,session.lives))+'&#9825;'.repeat(3-Math.max(0,session.lives));
+  if(session.lives<=0) endRain();
+}
+function endRain(){
+  if(rainRAF){cancelAnimationFrame(rainRAF);rainRAF=null;}
+  const s=session.score, prev=S.best.rain||0, pb=s>prev; if(pb)S.best.rain=s; save();
+  const blooms=session.blooms;
+  session=null;
+  scorecard('Daisy Rain', [['Caught',s],['Best',Math.max(prev,s)],['Best combo',comboMax+'x'],['Blooms',blooms.length]], blooms, rainIntro, pb?'New best!':'');
+}
+
+/* ---------- reset ---------- */
+function resetAll(){ S=freshState(); save(); combo=0; goHome(); }
 
 /* ---------- boot ---------- */
 buildGrid(); refreshHeader();
-document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ if(document.getElementById('modal').classList.contains('open'))closePeek(); }});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&document.getElementById('modal').classList.contains('open'))closePeek(); });
 </script>
 </body>
 </html>
