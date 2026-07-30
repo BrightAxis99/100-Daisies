@@ -184,6 +184,16 @@
   .peek.t4{background:var(--bloom); border-color:var(--accent-deep)}
   .peek.t4 .num{color:#4a3410}
   .peek.due::after{content:""; position:absolute; top:12px; left:14px; width:9px; height:9px; border-radius:50%; background:var(--red)}
+  /* ---------- the code (intro lesson) ---------- */
+  .codenote{font-size:.9rem; color:var(--ink-soft); line-height:1.55; margin-bottom:14px; text-align:center}
+  .codenote b{color:var(--ink)}
+  .codelist{display:grid; gap:8px}
+  .coderow{display:flex; align-items:center; gap:14px; background:var(--card); border:1.5px solid var(--line); border-radius:12px; padding:10px 14px}
+  .coderow .cd{font-family:var(--serif); font-weight:700; font-size:2rem; color:var(--accent-deep); width:38px; text-align:center; flex:none}
+  .coderow .ctext{display:flex; flex-direction:column}
+  .coderow .csnd{font-family:var(--serif); font-weight:700; font-size:1.15rem; color:var(--ink)}
+  .coderow .chook{font-size:.8rem; color:var(--ink-soft); font-style:italic; margin-top:1px}
+  .introbtns{display:flex; flex-direction:column; gap:10px; margin-top:16px}
 
   .settingsrow{display:flex; align-items:center; justify-content:center; gap:14px; margin-top:18px; font-size:.82rem; color:var(--ink-soft)}
   .settingsrow button{font-family:var(--sans); border:1px solid var(--rule); background:var(--card); border-radius:8px; padding:5px 10px; cursor:pointer; color:var(--ink)}
@@ -244,6 +254,7 @@
     </div>
 
     <div class="modes">
+      <button class="mode" onclick="runIntro()" style="grid-column:1/-1; border-color:var(--accent-deep)"><div class="step">START HERE</div><h3>The Code</h3><p>What this is all about &mdash; the map of which letter-sounds make each digit 0&ndash;9. Learn this first; every peg is built on it.</p><div class="how">Reference &middot; self-quiz</div></button>
       <button class="mode" onclick="startLearn()"><div class="step">LEARN</div><h3>Study</h3><p>Flip through the cards &mdash; number, picture, word.</p><div class="how">Flip &amp; self-rate</div></button>
       <button class="mode" onclick="startRound('drill')"><div class="step">DRILL</div><h3>Practice Round</h3><p>15 questions, both directions, then a scorecard.</p><div class="how">Multiple choice &middot; combo</div></button>
       <button class="mode" onclick="startRound('diagnose')"><div class="step">DIAGNOSE</div><h3>Check-up</h3><p>One pass to map exactly which pegs are shaky.</p><div class="how">MC &rarr; weak-spot map</div></button>
@@ -495,6 +506,81 @@ function startLearn(){
   }
   function nextC(){i=(i+1)%deck.length;render();}
   render();
+}
+
+/* ============ THE CODE (intro lesson / major system) ============ */
+const CODE=[
+  {d:0, s:'S, Z',      h:'“Zero” starts with a Z sound.'},
+  {d:1, s:'T, D, Th',  h:'t has one downstroke.'},
+  {d:2, s:'N, Ng',     h:'n has two downstrokes.'},
+  {d:3, s:'M',         h:'m has three downstrokes.'},
+  {d:4, s:'R',         h:'“fouR” ends in R.'},
+  {d:5, s:'L',         h:'L is the Roman numeral for 50; an open hand makes an L.'},
+  {d:6, s:'J, Sh, Ch', h:'a handwritten J looks like a backwards 6.'},
+  {d:7, s:'K, G',      h:'a K can be built from two 7s.'},
+  {d:8, s:'F, V, Ph',  h:'a cursive f has two loops, like an 8.'},
+  {d:9, s:'P, B',      h:'P is a mirror image of 9.'},
+];
+function runIntro(){
+  enterPlay();
+  const rows=CODE.map(c=>'<div class="coderow"><div class="cd">'+c.d+'</div><div class="ctext"><div class="csnd">'+c.s+'</div><div class="chook">'+c.h+'</div></div></div>').join('');
+  stageHost.innerHTML=
+    '<div class="codenote">This game trains the <b>Major System</b>: each <b>consonant sound</b> stands for a digit, while <b>vowels</b> and <b>w, h, y</b> are free filler. So <b>“sun”</b> (s&middot;n) is <b>0&thinsp;2</b>, and <b>“rose”</b> (r&middot;s) is <b>4&thinsp;0</b>. Learn these ten and every peg word builds itself.</div>'+
+    '<div class="codelist">'+rows+'</div>'+
+    '<div class="introbtns">'+
+      '<button class="btn gold wide" onclick="runIntroQuiz()">Quiz me &rarr;</button>'+
+      '<button class="btn ghost wide" onclick="goHome()">Back to meadow</button>'+
+    '</div>';
+}
+function runIntroQuiz(){
+  enterPlay();
+  session={mode:'introquiz', i:0, score:0, order:shuffle(CODE.map(c=>c.d))};
+  stageHost.innerHTML=
+    '<div class="topline"><span>The Code</span><span><b id="iqn">1</b>/10</span></div>'+
+    '<div class="stage"><div class="inner"><div id="qhead"></div><div id="qbody"></div></div></div>';
+  introQ();
+}
+function introQ(){
+  if(!session||session.mode!=='introquiz')return;
+  if(session.i>=session.order.length)return endIntroQuiz();
+  const d=session.order[session.i], c=CODE.find(x=>x.d===d);
+  const dir=Math.random()<0.5?'d2s':'s2d';
+  const opts=shuffle([c, ...shuffle(CODE.filter(x=>x.d!==d)).slice(0,3)]);
+  let head, optHTML;
+  if(dir==='d2s'){
+    head='<div class="prompt-label">Which sounds does this digit stand for?</div><div class="bignum">'+d+'</div>';
+    optHTML=opts.map(o=>'<button class="opt" data-d="'+o.d+'"><div class="word-opt">'+o.s+'</div></button>').join('');
+  }else{
+    head='<div class="prompt-label">Which digit do these sounds stand for?</div><div class="theword">'+c.s+'</div>';
+    optHTML=opts.map(o=>'<button class="opt" data-d="'+o.d+'"><div class="num-opt">'+o.d+'</div></button>').join('');
+  }
+  stageHost.querySelector('#qhead').innerHTML=head;
+  const box=stageHost.querySelector('#qbody');
+  box.innerHTML='<div class="options">'+optHTML+'</div><div class="feedback" id="fb"></div>';
+  box.querySelectorAll('.opt').forEach(b=>{
+    b.onclick=()=>{
+      if(!session||session.mode!=='introquiz')return;
+      const chosen=+b.dataset.d, ok=chosen===d;
+      box.querySelectorAll('.opt').forEach(x=>{x.setAttribute('disabled','');if(+x.dataset.d===d)x.classList.add('correct');else if(x===b)x.classList.add('wrong');});
+      if(ok)session.score++;
+      const fb=box.querySelector('#fb'); fb.textContent=(ok?'✓ ':'✗ ')+d+' = '+c.s; fb.className='feedback '+(ok?'good':'bad');
+      session.i++;
+      const qn=document.getElementById('iqn'); if(qn)qn.textContent=Math.min(session.i+1,10);
+      setTimeout(introQ, ok?750:1250);
+    };
+  });
+}
+function endIntroQuiz(){
+  const s=session.score;
+  stageHost.innerHTML=
+    '<div class="stage"><div class="inner results center">'+
+      '<h2>'+(s===10?'Perfect — you know the code!':'The Code')+'</h2>'+
+      '<div class="bignum">'+s+'/10</div>'+
+      '<div class="muted">sounds matched to digits</div>'+
+      '<div class="mt"><button class="btn gold wide" onclick="runIntroQuiz()">Quiz again</button></div>'+
+      '<div class="mt"><button class="btn ghost wide" onclick="runIntro()">Review the code</button></div>'+
+      '<div class="mt"><button class="btn ghost wide" onclick="goHome()">Back to meadow</button></div>'+
+    '</div></div>';
 }
 
 /* ============ ROUNDS (drill / speed / diagnose / grind / daily) ============ */
