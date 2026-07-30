@@ -264,7 +264,7 @@
       <button class="mode" onclick="startRound('diagnose')"><div class="step">DIAGNOSE</div><h3>Check-up</h3><p>One pass to map exactly which pegs are shaky.</p><div class="how">MC &rarr; weak-spot map</div></button>
       <button class="mode" onclick="startRound('grind')"><div class="step">GRIND</div><h3>Weak Pegs</h3><p>Type-the-answer drilling on just your weak pegs.</p><div class="how">Type &middot; clear the set</div></button>
       <button class="mode" onclick="startRound('speed')"><div class="step">SPEED</div><h3>Beat the Clock</h3><p>60 seconds of rapid recall. Race your best.</p><div class="how">Timed &middot; combo</div></button>
-      <button class="mode" onclick="rainIntro()"><div class="step">ARCADE</div><h3>Daisy Rain <span class="dz"></span></h3><p>Pegs drift down &mdash; tap the match before they land. Starts gentle, 3 lives.</p><div class="how">Falling &middot; survive</div></button>
+      <button class="mode" onclick="rainIntro()"><div class="step">ARCADE</div><h3>Daisy Rain <span class="dz"></span></h3><p>Pegs drift down &mdash; tap the match before they land. Gentle mode is slow and forgiving.</p><div class="how">Falling &middot; survive</div></button>
     </div>
 
     <div class="prog">
@@ -826,12 +826,12 @@ function scorecard(title, stats, blooms, again, tagline, hideAgain){
 
 /* ============ DAISY RAIN ============ */
 let rainDiff='gentle';
-const RAIN_CFG={ gentle:{fall:9000,ramp:180,min:4200,spawnGap:1400}, normal:{fall:6500,ramp:220,min:3200,spawnGap:1050}, brisk:{fall:4800,ramp:260,min:2400,spawnGap:800} };
+const RAIN_CFG={ gentle:{fall:14000,ramp:80,min:7000,lives:5}, normal:{fall:9500,ramp:120,min:5000,lives:4}, brisk:{fall:7000,ramp:170,min:3800,lives:3} };
 function rainIntro(){
   enterPlay();
   stageHost.innerHTML='<div class="stage"><div class="inner center">'+
     '<h2 style="font-family:var(--serif);font-size:1.6rem">Daisy Rain <span class="dz"></span></h2>'+
-    '<p class="muted" style="margin:8px 0 4px">A peg drifts down from the sky. Tap its match at the bottom before it lands. It starts slow and speeds up gently. You have three lives.</p>'+
+    '<p class="muted" style="margin:8px 0 4px">A peg drifts down from the sky. Tap its match at the bottom before it lands. Gentle mode falls slowly and gives you 5 lives &mdash; plenty of time to learn. Pick a level:</p>'+
     '<div class="diffrow">'+
       '<button class="diffbtn '+(rainDiff==='gentle'?'sel':'')+'" data-d="gentle">Gentle</button>'+
       '<button class="diffbtn '+(rainDiff==='normal'?'sel':'')+'" data-d="normal">Normal</button>'+
@@ -847,9 +847,9 @@ function rainIntro(){
 function runRain(){
   markPlayedToday(); enterPlay();
   const cfg=RAIN_CFG[rainDiff];
-  session={mode:'rain', score:0, lives:3, catches:0, blooms:[], fall:cfg.fall, cfg, current:null, y:0, lastT:0};
+  session={mode:'rain', score:0, lives:cfg.lives, maxLives:cfg.lives, catches:0, blooms:[], fall:cfg.fall, cfg, current:null, y:0, lastT:0};
   stageHost.innerHTML=
-    '<div class="rainhud"><span class="hearts" id="hearts">&#10084;&#10084;&#10084;</span><span>Score <b id="rsc">0</b></span><span>Best <b>'+(S.best.rain||0)+'</b></span></div>'+
+    '<div class="rainhud"><span class="hearts" id="hearts">'+'&#10084;'.repeat(cfg.lives)+'</span><span>Score <b id="rsc">0</b></span><span>Best <b>'+(S.best.rain||0)+'</b></span></div>'+
     '<div id="rainStage"></div>'+
     '<div class="rainchoices" id="rchoices"></div>';
   spawnFaller();
@@ -910,7 +910,7 @@ function rainAnswer(chosen, btn){
 }
 function loseLife(){
   session.lives--;
-  const h=document.getElementById('hearts'); if(h)h.innerHTML='&#10084;'.repeat(Math.max(0,session.lives))+'&#9825;'.repeat(3-Math.max(0,session.lives));
+  const h=document.getElementById('hearts'); if(h)h.innerHTML='&#10084;'.repeat(Math.max(0,session.lives))+'&#9825;'.repeat(session.maxLives-Math.max(0,session.lives));
   if(session.lives<=0) endRain();
 }
 function endRain(){
