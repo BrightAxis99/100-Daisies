@@ -826,6 +826,7 @@ function scorecard(title, stats, blooms, again, tagline, hideAgain){
 
 /* ============ DAISY RAIN ============ */
 let rainDiff='gentle';
+const RAIN_GAP=1500; // ms of breathing space between one answer and the next peg appearing
 const RAIN_CFG={ gentle:{fall:14000,ramp:80,min:7000,lives:5}, normal:{fall:9500,ramp:120,min:5000,lives:4}, brisk:{fall:7000,ramp:170,min:3800,lives:3} };
 function rainIntro(){
   enterPlay();
@@ -867,7 +868,7 @@ function spawnFaller(){
     : '<div class="fnum">'+two(n)+'</div>';
   const w=st.clientWidth; el.style.left=Math.max(6, rnd(w-110))+'px';
   st.appendChild(el);
-  session.y=-90; session.spawnedAt=performance.now();
+  session.y=0; session.spawnedAt=performance.now();   // appear at the top of the sky, then fall
   // choices at bottom: opposite representation
   const opts=shuffle([n,...sample(allNums(),3,n)]);
   const rc=document.getElementById('rchoices');
@@ -876,18 +877,29 @@ function spawnFaller(){
     : '<button class="rchoice" data-n="'+o+'"><div class="riconbox">'+byN[o].svg+'</div></button>').join('');
   rc.querySelectorAll('.rchoice').forEach(b=>b.onclick=()=>rainAnswer(+b.dataset.n,b));
 }
+function nextFaller(){
+  if(!session||session.mode!=='rain')return;
+  session.current=null;
+  const rc=document.getElementById('rchoices'); if(rc) rc.innerHTML='';   // clear the bottom during the pause
+  setTimeout(()=>{ if(session&&session.mode==='rain') spawnFaller(); }, RAIN_GAP);
+}
 function rainTick(t){
   if(!session||session.mode!=='rain')return;
-  const st=document.getElementById('rainStage'); const el=document.getElementById('faller');
-  if(!st||!el){return;}
-  const dt=t-session.lastT; session.lastT=t;
-  const dist=st.clientHeight+90;
-  session.y += dist*(dt/session.fall);
-  el.style.transform='translateY('+session.y+'px)';
-  if(session.y >= st.clientHeight-4){
-    // landed -> lose a life
-    loseLife();
-    if(session&&session.mode==='rain'){ el.remove(); spawnFaller(); }
+  const st=document.getElementById('rainStage');
+  if(st){
+    const el=document.getElementById('faller');
+    if(el){
+      const dt=t-session.lastT;
+      const dist=st.clientHeight+90;
+      session.y += dist*(dt/session.fall);
+      el.style.transform='translateY('+session.y+'px)';
+      if(session.y >= st.clientHeight-4){
+        // landed -> lose a life
+        loseLife();
+        if(session&&session.mode==='rain'){ el.remove(); nextFaller(); }
+      }
+    }
+    session.lastT=t;   // advance every frame (even during the gap) so the next drop doesn't jump
   }
   if(session&&session.mode==='rain') rainRAF=requestAnimationFrame(rainTick);
 }
@@ -901,11 +913,11 @@ function rainAnswer(chosen, btn){
     document.getElementById('rsc').textContent=session.score;
     // gentle ramp
     session.fall=Math.max(session.cfg.min, session.fall - session.cfg.ramp);
-    if(el)el.remove(); spawnFaller();
+    if(el)el.remove(); nextFaller();
   } else {
     resetCombo(); beep(200,.12); if(btn)btn.classList.add('wrong');
     loseLife();
-    if(session&&session.mode==='rain'){ if(el)el.remove(); spawnFaller(); }
+    if(session&&session.mode==='rain'){ if(el)el.remove(); nextFaller(); }
   }
 }
 function loseLife(){
