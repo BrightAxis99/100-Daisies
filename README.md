@@ -13,7 +13,7 @@ Open `index.html` in any browser. New to the system? **Start with The Code** —
 Then four modes for when you want something specific:
 
 1. **Study** — flip through the cards to learn each number, picture, and word.
-2. **Name It** — a number or a picture, and you type the word from memory. No options to choose from. This is the mode that teaches, and the only one that can bloom a peg.
+2. **Name It** — just the number. You work it back through the code and type the word from memory, no options to choose from. Seeing 86 and knowing it's an F and a SH sound gets you close, but you still have to land on *fish* rather than a word you invented on the spot. That gap is the whole game. This is the mode that teaches, and the only one that can bloom a peg. The picture appears after you answer, so the image reinforces what you just recalled.
 3. **Beat the Clock** — 60-second rapid recall, to turn "I can work it out" into "it's just there."
 4. **Daisy Rain** — arcade mode. A word, number, or picture drifts down from the sky; tap its match before it lands. Every catch makes the next fall faster, and running out of hearts ends the run.
 

@@ -261,7 +261,7 @@
     <div class="modes">
       <button class="mode" onclick="runIntro()" style="grid-column:1/-1; border-color:var(--accent-deep)"><div class="step">START HERE</div><h3>The Code</h3><p>What this is all about &mdash; the map of which letter-sounds make each digit 0&ndash;9. Learn this first; every peg is built on it.</p><div class="how">Reference &middot; self-quiz</div></button>
       <button class="mode" onclick="startLearn()"><div class="step">LEARN</div><h3>Study</h3><p>Flip through the cards &mdash; number, picture, word.</p><div class="how">Flip &amp; self-rate</div></button>
-      <button class="mode" onclick="startRound('grind')" style="grid-column:1/-1"><div class="step">RECALL</div><h3>Name It</h3><p>A number or a picture, and you type the word from memory. No options to choose from. This is the only mode that blooms a peg.</p><div class="how">Type &middot; clear the set</div></button>
+      <button class="mode" onclick="startRound('grind')" style="grid-column:1/-1"><div class="step">RECALL</div><h3>Name It</h3><p>Just the number. You work it back through the code and type the word from memory. No options to choose from. This is the only mode that blooms a peg.</p><div class="how">Type &middot; clear the set</div></button>
       <button class="mode" onclick="startRound('speed')"><div class="step">SPEED</div><h3>Beat the Clock</h3><p>60 seconds of rapid recall. Race your best.</p><div class="how">Timed &middot; combo</div></button>
       <button class="mode" onclick="rainIntro()"><div class="step">ARCADE</div><h3>Daisy Rain <span class="dz"></span></h3><p>Pegs drift down &mdash; tap the match before they land. Gentle mode is slow and forgiving.</p><div class="how">Falling &middot; survive</div></button>
     </div>
@@ -756,6 +756,7 @@ const GRIND_MAX = 12;   // cap a round so it is always finishable in one sitting
 /* Forgiving spelling check. Ignores case, spaces, punctuation, accents and a
    trailing plural. Allows one typo, but only on words of 4+ letters, so short
    pegs like "tie" and "toe" can't be confused for each other. */
+function esc(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function normWord(s){
   return String(s).toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
     .replace(/[^a-z0-9]/g,'').replace(/s$/,'');
@@ -824,12 +825,11 @@ function nextGrind(){
   const rc=stageHost.querySelector('#rc'); if(rc)rc.textContent=session.total-rem.length;
   const pb=stageHost.querySelector('#pb'); if(pb)pb.style.width=((session.total-rem.length)/session.total*100)+'%';
   const n=rem[rnd(rem.length)], p=byN[n];
-  // Both prompts ask you to produce the word, so both record as n2w.
-  const fromPicture = Math.random()<0.5;
-  const head = fromPicture
-    ? '<div class="prompt-label">What is this peg called?</div><div class="iconbox">'+p.svg+'</div>'
-    : '<div class="prompt-label">Type the word for this number</div><div class="bignum">'+two(n)+'</div>';
-  stageHost.querySelector('#qhead').innerHTML=head;
+  // Always number -> word. Showing the picture and asking for its name tests
+  // nothing: you can read a drawing of a fish. The number is the only prompt
+  // that makes you go through the code and land on the actual peg word.
+  stageHost.querySelector('#qhead').innerHTML=
+    '<div class="prompt-label">Type the word for this number</div><div class="bignum">'+two(n)+'</div>';
   stageHost.querySelector('#qbody').innerHTML='<div class="typerow"><input id="ans" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="the word…"/><button class="btn" id="go">Check</button></div><div class="feedback" id="fb"></div>';
   const inp=document.getElementById('ans'); inp.focus();
   const t0=performance.now();
@@ -840,20 +840,25 @@ function nextGrind(){
     const exact = normWord(v)===normWord(p.word);
     const fb=document.getElementById('fb');
     document.getElementById('go').disabled=true; inp.disabled=true;
+    // reveal the picture now, so the image reinforces the answer you just gave
+    stageHost.querySelector('#qhead').innerHTML=
+      '<div class="bignum">'+two(n)+'</div><div class="iconbox">'+p.svg+'</div><div class="theword">'+p.word+'</div>';
     if(ok){
       session.need[n]--;
       const b=record(n,'n2w',true,performance.now()-t0,true); if(b)session.blooms.push(n);
       bumpCombo(); beep(620,.07);
       const left = TYPED_TO_BLOOM - S.pegs[n].tc;
       const note = b ? '✻ bloomed!' : (left>0 ? left+' more typed to bloom' : 'ready to bloom — come back tomorrow');
-      fb.innerHTML=(exact?'✓ ':'✓ '+p.word+' · ')+'<span class="muted">'+note+'</span>';
+      fb.innerHTML='✓ <span class="muted">'+note+'</span>';
       fb.className='feedback good';
     } else {
       session.need[n]=2; if(!session.missed.includes(n)) session.missed.push(n);
       record(n,'n2w',false,null,true); resetCombo(); beep(200,.12);
-      fb.textContent='It’s “'+p.word+'” ('+two(n)+')'; fb.className='feedback bad';
+      // show her own answer against the real one — the made-up word is the lesson
+      fb.innerHTML='✗ you said <b>'+esc(v)+'</b>';
+      fb.className='feedback bad';
     }
-    setTimeout(nextGrind, ok?800:1600);
+    setTimeout(nextGrind, ok?900:2400);
   }
   document.getElementById('go').onclick=submit;
   inp.addEventListener('keydown',e=>{if(e.key==='Enter')submit();});
