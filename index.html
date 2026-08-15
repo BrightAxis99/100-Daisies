@@ -71,8 +71,8 @@
   .prog h4{font-family:var(--serif); font-size:1.05rem; margin-bottom:2px}
   .prog .legend{font-size:.72rem; color:var(--ink-soft); margin:6px 0 10px; display:flex; gap:12px; flex-wrap:wrap; align-items:center}
   .sw{display:inline-block; width:11px;height:11px;border-radius:3px;vertical-align:middle;margin-right:4px;border:1px solid var(--rule)}
-  .grid101{display:grid; grid-template-columns:repeat(auto-fill,minmax(30px,1fr)); gap:5px}
-  .cell{position:relative; aspect-ratio:1; border-radius:7px; border:1px solid var(--rule); background:#f4ede0; font-family:var(--serif); font-size:.6rem; color:var(--ink-soft); display:flex; align-items:center; justify-content:center; cursor:pointer; overflow:hidden}
+  .grid101{display:grid; grid-template-columns:repeat(auto-fill,minmax(38px,1fr)); gap:5px}
+  .cell{position:relative; aspect-ratio:1; border-radius:7px; border:1px solid var(--rule); background:#f4ede0; font-family:var(--serif); font-size:.68rem; color:var(--ink-soft); display:flex; align-items:center; justify-content:center; cursor:pointer; overflow:hidden}
   .cell.t1{background:#cfe6c5}
   .cell.t2{background:#a9d3a0}
   .cell.t3{background:#6fae74; color:#fff}
@@ -111,8 +111,9 @@
   .opt.wrong{background:#f6e3e0; border-color:var(--red)}
   .opt[disabled]{cursor:default}
 
-  .typerow{display:flex; gap:10px; margin-top:18px}
-  .typerow input{flex:1; font-family:var(--serif); font-size:1.4rem; text-align:center; padding:12px; border:1.5px solid var(--line); border-radius:12px; background:#fff; color:var(--ink)}
+  .typerow{display:flex; flex-direction:column; gap:10px; margin-top:18px}
+  .typerow input{width:100%; box-sizing:border-box; font-family:var(--serif); font-size:1.4rem; text-align:center; padding:14px 12px; border:1.5px solid var(--line); border-radius:12px; background:#fff; color:var(--ink)}
+  .typerow .btn{width:100%; padding:14px}
   .typerow input:focus{outline:3px solid var(--accent)}
   .btn{font-family:var(--sans); font-weight:600; border:1.5px solid var(--line); background:var(--ink); color:#fdf8ee; border-radius:12px; padding:0 20px; cursor:pointer; font-size:1rem; min-height:46px}
   .btn:hover{background:#0f1730}
@@ -148,7 +149,7 @@
   .center{text-align:center} .muted{color:var(--ink-soft)} .mt{margin-top:12px}
 
   /* daisy rain */
-  #rainStage{position:relative; height:60vh; min-height:380px; max-height:560px; overflow:hidden; border-radius:14px; background:linear-gradient(180deg,#d6ebf5 0%,#e6efd6 100%); border:1px solid var(--rule)}
+  #rainStage{position:relative; height:56vh; min-height:min(380px,46vh); max-height:560px; overflow:hidden; border-radius:14px; background:linear-gradient(180deg,#d6ebf5 0%,#e6efd6 100%); border:1px solid var(--rule)}
   .faller{position:absolute; top:-90px; display:flex; flex-direction:column; align-items:center; gap:2px; will-change:transform}
   .faller .fnum{font-family:var(--serif); font-weight:700; font-size:2.4rem; color:var(--accent-deep)}
   .faller .ficon{width:74px;height:74px}
@@ -253,16 +254,14 @@
         <option value="40-49">40&ndash;49</option><option value="50-59">50&ndash;59</option>
         <option value="60-69">60&ndash;69</option><option value="70-79">70&ndash;79</option>
         <option value="80-89">80&ndash;89</option><option value="90-100">90&ndash;100</option>
-        <option value="due">Reviews due</option><option value="weak">Weak spots</option>
+        <option value="due">Reviews due</option><option value="weak">Not yet bloomed</option>
       </select>
     </div>
 
     <div class="modes">
       <button class="mode" onclick="runIntro()" style="grid-column:1/-1; border-color:var(--accent-deep)"><div class="step">START HERE</div><h3>The Code</h3><p>What this is all about &mdash; the map of which letter-sounds make each digit 0&ndash;9. Learn this first; every peg is built on it.</p><div class="how">Reference &middot; self-quiz</div></button>
       <button class="mode" onclick="startLearn()"><div class="step">LEARN</div><h3>Study</h3><p>Flip through the cards &mdash; number, picture, word.</p><div class="how">Flip &amp; self-rate</div></button>
-      <button class="mode" onclick="startRound('drill')"><div class="step">DRILL</div><h3>Practice Round</h3><p>15 questions, both directions, then a scorecard.</p><div class="how">Multiple choice &middot; combo</div></button>
-      <button class="mode" onclick="startRound('diagnose')"><div class="step">DIAGNOSE</div><h3>Check-up</h3><p>One pass to map exactly which pegs are shaky.</p><div class="how">MC &rarr; weak-spot map</div></button>
-      <button class="mode" onclick="startRound('grind')"><div class="step">GRIND</div><h3>Weak Pegs</h3><p>Type-the-answer drilling on just your weak pegs.</p><div class="how">Type &middot; clear the set</div></button>
+      <button class="mode" onclick="startRound('grind')" style="grid-column:1/-1"><div class="step">RECALL</div><h3>Name It</h3><p>A number or a picture, and you type the word from memory. No options to choose from. This is the only mode that blooms a peg.</p><div class="how">Type &middot; clear the set</div></button>
       <button class="mode" onclick="startRound('speed')"><div class="step">SPEED</div><h3>Beat the Clock</h3><p>60 seconds of rapid recall. Race your best.</p><div class="how">Timed &middot; combo</div></button>
       <button class="mode" onclick="rainIntro()"><div class="step">ARCADE</div><h3>Daisy Rain <span class="dz"></span></h3><p>Pegs drift down &mdash; tap the match before they land. Gentle mode is slow and forgiving.</p><div class="how">Falling &middot; survive</div></button>
     </div>
@@ -349,13 +348,14 @@ const PEGS = JSON.parse(document.getElementById('pegdata').textContent);
 const byN = {}; PEGS.forEach(p=>byN[p.n]=p);
 const DAY = 86400000;
 const today = () => Math.floor(Date.now()/DAY);
-const SPEED_GOAL = 3500;            // ms: "fast" recall threshold
+const SPEED_GOAL = 3500;            // ms: "fast" recall threshold (measured, shown in Beat the Clock)
+const TYPED_TO_BLOOM = 3;           // typed-correct answers in a row before a peg blooms
 const SR = [1,3,7,16,35,70];       // spaced-review intervals (days)
 
 /* ---------- state ---------- */
 const KEY='ohd.v2';
 let S = null;
-function blankPeg(){return {c:{n2w:0,w2n:0}, ok:{n2w:0,w2n:0}, at:{n2w:0,w2n:0}, ema:null, reps:0, due:0, days:[]};}
+function blankPeg(){return {c:{n2w:0,w2n:0}, ok:{n2w:0,w2n:0}, at:{n2w:0,w2n:0}, tc:0, ema:null, reps:0, due:0, days:[]};}
 function freshState(){
   const pegs={}; for(let n=0;n<=100;n++) pegs[n]=blankPeg();
   return {pegs, xp:0, streak:0, lastDay:0, best:{speed:0,rain:0}, sound:true};
@@ -364,8 +364,12 @@ function load(){ try{const s=localStorage.getItem(KEY); if(s)return JSON.parse(s
 function save(){ try{localStorage.setItem(KEY, JSON.stringify(S));}catch(e){} }
 S = load() || freshState();
 // migrate any missing fields
-for(let n=0;n<=100;n++){ if(!S.pegs[n]) S.pegs[n]=blankPeg(); }
+for(let n=0;n<=100;n++){ if(!S.pegs[n]) S.pegs[n]=blankPeg(); if(S.pegs[n].tc===undefined) S.pegs[n].tc=0; }
 if(S.sound===undefined) S.sound=true;
+
+/* Pegs missed since this page loaded. Feeds the "just missed" option in Name It. */
+const justMissed = new Map();   // n -> timestamp of the miss
+function missedRecently(){ return [...justMissed.keys()]; }
 
 /* ---------- daily streak ---------- */
 (function streakCheck(){
@@ -386,13 +390,15 @@ function markPlayedToday(){
 
 /* ---------- mastery tiers ---------- */
 // 0 seed, 1 sprout, 2 learning, 3 solid, 4 bloomed
+// A peg only BLOOMS on typed recall: 3 in a row, spread over at least 2 days.
+// Multiple choice can carry a peg to "solid" but never past it — too easy to
+// reach the right answer by elimination once you know the code.
 function tier(n){
   const p=S.pegs[n];
   const bothOnce = p.ok.n2w>0 && p.ok.w2n>0;
   const anyOnce = p.ok.n2w>0 || p.ok.w2n>0;
-  const fast = p.ema!=null && p.ema < SPEED_GOAL;
   const multiDay = p.days.length >= 2;
-  if(bothOnce && p.c.n2w>=2 && p.c.w2n>=2 && p.reps>=3 && multiDay && fast) return 4;
+  if(p.tc>=TYPED_TO_BLOOM && multiDay) return 4;
   if(bothOnce && (p.c.n2w>=1 && p.c.w2n>=1) && p.reps>=2) return 3;
   if(bothOnce) return 2;
   if(anyOnce) return 1;
@@ -404,10 +410,14 @@ function meadowPct(){ let b=0; for(let n=0;n<=100;n++) if(isBloomed(n))b++; retu
 function bloomedCount(){ let b=0; for(let n=0;n<=100;n++) if(isBloomed(n))b++; return b; }
 
 /* ---------- recording an answer ---------- */
-function record(n, dir, ok, ms){
+function record(n, dir, ok, ms, typed){
   const p=S.pegs[n];
   p.at[dir]++;
   const wasBloomed = isBloomed(n);
+  // Typed answers build the bloom streak. A miss anywhere resets it.
+  if(typed && ok) p.tc++;
+  if(!ok) p.tc = 0;
+  if(ok) justMissed.delete(n); else justMissed.set(n, Date.now());
   if(ok){
     p.ok[dir]++; p.c[dir]++;
     if(ms!=null){ p.ema = p.ema==null ? ms : Math.round(p.ema*0.6 + ms*0.4); }
@@ -504,7 +514,7 @@ let scope=allNums();
 function allNums(){const a=[];for(let n=0;n<=100;n++)a.push(n);return a;}
 function setScope(v){
   if(v==='all')scope=allNums();
-  else if(v==='weak')scope=allNums().filter(n=>tier(n)<3);
+  else if(v==='weak')scope=allNums().filter(n=>tier(n)<4);
   else if(v==='due'){scope=allNums().filter(isDue); if(!scope.length)scope=allNums().filter(n=>tier(n)<4);}
   else{const[a,b]=v.split('-').map(Number);scope=[];for(let n=a;n<=b;n++)scope.push(n);}
   if(!scope.length)scope=allNums();
@@ -514,6 +524,9 @@ function setScope(v){
 const rnd=n=>Math.floor(Math.random()*n);
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
 function sample(pool,k,ex){return shuffle(pool.filter(n=>n!==ex)).slice(0,k);}
+// Wrong answers come from the set you're practising, so a single decade actually
+// tests within that decade instead of handing you three obviously-wrong sounds.
+function distractorPool(){ return scope && scope.length>=4 ? scope : allNums(); }
 function weightedPick(pool){
   let tot=0;const w=pool.map(n=>{const p=S.pegs[n];let x=1+(4-tier(n))*2+(isDue(n)?3:0)+(p.at.n2w+p.at.w2n===0?2:0);tot+=x;return x;});
   let r=Math.random()*tot;for(let i=0;i<pool.length;i++){r-=w[i];if(r<=0)return pool[i];}return pool[pool.length-1];
@@ -637,7 +650,7 @@ function endIntroQuiz(){
     '</div></div>';
 }
 
-/* ============ ROUNDS (drill / speed / diagnose / grind / daily) ============ */
+/* ============ ROUNDS (daily / speed / name-it) ============ */
 const ROUND_LEN=15;
 function startDaily(){
   const due=allNums().filter(isDue);
@@ -650,7 +663,6 @@ function startDaily(){
 function startRound(mode, fixedSet, title){
   markPlayedToday(); enterPlay();
   if(mode==='speed') return runSpeed();
-  if(mode==='diagnose') return runDiagnose();
   if(mode==='grind') return runGrind();
   // drill
   session={mode:'drill', title:title||'Practice Round', i:0, right:0, blooms:[], set: fixedSet||null};
@@ -664,7 +676,7 @@ function shell(topHTML){
 function drillShell(){ shell('<span>'+session.title+'</span><span><b id="rc">0</b>/'+ROUND_LEN+'</span>'); }
 function setProg(i){ const pb=stageHost.querySelector('#pb'); if(pb)pb.style.width=(i/ROUND_LEN*100)+'%'; }
 function renderMC(q,onPick){
-  const p=byN[q.n]; const opts=shuffle([q.n,...sample(allNums(),3,q.n)]);
+  const p=byN[q.n]; const opts=shuffle([q.n,...sample(distractorPool(),3,q.n)]);
   const head = q.dir==='n2w'
     ? '<div class="prompt-label">Which picture is this?</div><div class="bignum">'+two(q.n)+'</div>'
     : '<div class="prompt-label">What number is this?</div><div class="iconbox">'+p.svg+'</div><div class="theword">'+p.word+'</div>'+(p.caption?'<div class="thecap">'+p.caption+'</div>':'');
@@ -738,47 +750,71 @@ function endSpeed(){
   scorecard('Time!', [['Score',s],['Best',Math.max(prev,s)],['Best combo',comboMax+'x'],['Blooms',session.blooms.length]], session.blooms, runSpeed, pb?'New best!':'');
 }
 
-/* ============ DIAGNOSE ============ */
-function runDiagnose(){
-  const queue=shuffle(scope.slice()); session={mode:'diagnose',queue,i:0,results:{},blooms:[]};
-  shell('<span>Check-up</span><span><b id="rc">1</b>/'+queue.length+'</span>');
-  stepDiag();
+/* ============ NAME IT (typed recall - the only mode that blooms a peg) ============ */
+const GRIND_MAX = 12;   // cap a round so it is always finishable in one sitting
+
+/* Forgiving spelling check. Ignores case, spaces, punctuation, accents and a
+   trailing plural. Allows one typo, but only on words of 4+ letters, so short
+   pegs like "tie" and "toe" can't be confused for each other. */
+function normWord(s){
+  return String(s).toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]/g,'').replace(/s$/,'');
 }
-function stepDiag(){
-  if(!session||session.mode!=='diagnose')return;
-  if(session.i>=session.queue.length)return endDiag();
-  const rc=stageHost.querySelector('#rc'); if(rc)rc.textContent=session.i+1;
-  const pb=stageHost.querySelector('#pb'); if(pb)pb.style.width=(session.i/session.queue.length*100)+'%';
-  const n=session.queue[session.i], dir=Math.random()<0.5?'n2w':'w2n';
-  renderMC({n,dir},(ok,ms)=>{
-    session.results[n]=ok; const b=record(n,dir,ok,ms); if(b)session.blooms.push(n);
-    if(ok){bumpCombo();beep(600,.06);}else resetCombo();
-    const fb=stageHost.querySelector('#fb'); fb.textContent=ok?'\u2713':'It\u2019s '+two(n)+' \u2014 '+byN[n].word; fb.className='feedback '+(ok?'good':'bad');
-    session.i++; setTimeout(stepDiag, ok?500:1000);
-  });
+function within1(a,b){
+  if(Math.abs(a.length-b.length)>1) return false;
+  let i=0,j=0,edits=0;
+  while(i<a.length && j<b.length){
+    if(a[i]===b[j]){i++;j++;continue;}
+    if(++edits>1) return false;
+    if(a.length>b.length) i++;
+    else if(b.length>a.length) j++;
+    else {i++;j++;}
+  }
+  return edits + (a.length-i) + (b.length-j) <= 1;
 }
-function endDiag(){
-  const weak=Object.keys(session.results).filter(n=>!session.results[n]).map(Number).sort((a,b)=>a-b);
-  const right=session.queue.length-weak.length;
-  let grid='<div class="grid101" style="margin-top:6px">';
-  session.queue.slice().sort((a,b)=>a-b).forEach(n=>{ grid+='<button class="cell" style="'+(session.results[n]?'background:var(--bloom);border-color:var(--accent-deep);color:#4a3410':'background:#f6e3e0;border-color:#c0392b;color:#c0392b')+'" onclick="peek('+n+')">'+n+'</button>'; });
-  grid+='</div>';
-  const tags= weak.length? weak.map(n=>'<span class="weaktag">'+two(n)+' '+byN[n].word+'</span>').join('') : '<div class="muted center">No misses \u2014 beautifully solid.</div>';
-  stageHost.innerHTML='<div class="stage"><div class="inner results">'+
-    '<h2>Check-up</h2><div class="sub">'+right+' / '+session.queue.length+' correct</div>'+
-    '<div class="bloomrow">'+tags+'</div>'+grid+
-    (weak.length?'<div class="mt"><button class="btn gold wide" onclick="grindThese(['+weak.join(',')+'])">Grind these '+weak.length+'</button></div>':'')+
-    '<div class="mt"><button class="btn ghost wide" onclick="goHome()">Back to meadow</button></div></div></div>';
+// two adjacent letters swapped: "koaal" for "koala"
+function isSwap(a,b){
+  if(a.length!==b.length) return false;
+  const d=[]; for(let i=0;i<a.length;i++) if(a[i]!==b[i]){ d.push(i); if(d.length>2) return false; }
+  return d.length===2 && d[1]===d[0]+1 && a[d[0]]===b[d[1]] && a[d[1]]===b[d[0]];
+}
+function wordMatches(input, target){
+  const a=normWord(input), b=normWord(target);
+  if(!a) return false;
+  if(a===b) return true;
+  return b.length>=4 && (within1(a,b) || isSwap(a,b));
 }
 
-/* ============ GRIND (type) ============ */
-function runGrind(){ grindThese(scope.filter(n=>tier(n)<3)); }
+function pickWeighted(pool, k){
+  const p=pool.slice(), out=[];
+  while(out.length<k && p.length){ const n=weightedPick(p); out.push(n); p.splice(p.indexOf(n),1); }
+  return out;
+}
+function runGrind(){
+  enterPlay();
+  const recent = missedRecently();
+  const weak = scope.filter(n=>tier(n)<4);
+  if(recent.length>=3){
+    const label = weak.length>GRIND_MAX ? 'Work your weakest '+GRIND_MAX : 'Work all '+weak.length+' unbloomed';
+    stageHost.innerHTML='<div class="stage"><div class="inner results center">'+
+      '<h2>Name It</h2>'+
+      '<div class="sub">You’ve slipped on '+recent.length+' peg'+(recent.length===1?'':'s')+' since you opened the game.</div>'+
+      '<div class="bloomrow">'+recent.slice().sort((a,b)=>a-b).map(n=>'<span class="weaktag">'+two(n)+' '+byN[n].word+'</span>').join('')+'</div>'+
+      '<div class="mt"><button class="btn gold wide" onclick="grindThese(['+recent.join(',')+'])">Work these '+recent.length+'</button></div>'+
+      '<div class="mt"><button class="btn wide" onclick="grindThese(['+weak.join(',')+'])">'+label+'</button></div>'+
+      '<div class="mt"><button class="btn ghost wide" onclick="goHome()">Back to meadow</button></div>'+
+      '</div></div>';
+    return;
+  }
+  grindThese(weak);
+}
 function grindThese(pool){
   enterPlay();
-  if(!pool||!pool.length){ stageHost.innerHTML='<div class="stage"><div class="inner results center"><h2>Nothing to grind</h2><div class="muted">Every peg in this set is already solid.</div><div class="mt"><button class="btn ghost wide" onclick="goHome()">Back to meadow</button></div></div></div>'; return; }
-  session={mode:'grind',pool:shuffle(pool.slice()),need:{},total:pool.length,blooms:[]};
+  if(!pool||!pool.length){ stageHost.innerHTML='<div class="stage"><div class="inner results center"><h2>Nothing left to name</h2><div class="muted">Every peg in this set has bloomed.</div><div class="mt"><button class="btn ghost wide" onclick="goHome()">Back to meadow</button></div></div></div>'; return; }
+  if(pool.length>GRIND_MAX) pool = pickWeighted(pool, GRIND_MAX);
+  session={mode:'grind',pool:shuffle(pool.slice()),need:{},missed:[],total:pool.length,blooms:[]};
   pool.forEach(n=>session.need[n]=2);
-  shell('<span>Grind</span><span><b id="rc">0</b>/'+session.total+' cleared</span>');
+  shell('<span>Name It</span><span><b id="rc">0</b>/'+session.total+' cleared</span>');
   nextGrind();
 }
 function nextGrind(){
@@ -787,38 +823,61 @@ function nextGrind(){
   if(!rem.length)return endGrind();
   const rc=stageHost.querySelector('#rc'); if(rc)rc.textContent=session.total-rem.length;
   const pb=stageHost.querySelector('#pb'); if(pb)pb.style.width=((session.total-rem.length)/session.total*100)+'%';
-  const n=rem[rnd(rem.length)], p=byN[n], dir=Math.random()<0.5?'n2w':'w2n';
-  const head = dir==='n2w'
-    ? '<div class="prompt-label">Type the word for this number</div><div class="bignum">'+two(n)+'</div>'
-    : '<div class="prompt-label">Type the number for this picture</div><div class="iconbox">'+p.svg+'</div>';
+  const n=rem[rnd(rem.length)], p=byN[n];
+  // Both prompts ask you to produce the word, so both record as n2w.
+  const fromPicture = Math.random()<0.5;
+  const head = fromPicture
+    ? '<div class="prompt-label">What is this peg called?</div><div class="iconbox">'+p.svg+'</div>'
+    : '<div class="prompt-label">Type the word for this number</div><div class="bignum">'+two(n)+'</div>';
   stageHost.querySelector('#qhead').innerHTML=head;
-  stageHost.querySelector('#qbody').innerHTML='<div class="typerow"><input id="ans" autocomplete="off" autocapitalize="off" '+(dir==='w2n'?'inputmode="numeric" ':'')+'placeholder="'+(dir==='n2w'?'the word\u2026':'the number\u2026')+'"/><button class="btn" id="go">Check</button></div><div class="feedback" id="fb"></div>';
+  stageHost.querySelector('#qbody').innerHTML='<div class="typerow"><input id="ans" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="the word…"/><button class="btn" id="go">Check</button></div><div class="feedback" id="fb"></div>';
   const inp=document.getElementById('ans'); inp.focus();
   const t0=performance.now();
+  let done=false;
   function submit(){
-    const v=inp.value.trim(); if(!v)return;
-    const ok = dir==='n2w' ? v.toLowerCase()===p.word.toLowerCase() : (v.replace(/\D/g,'')!==''&&parseInt(v,10)===n);
+    if(done)return; const v=inp.value.trim(); if(!v)return; done=true;
+    const ok = wordMatches(v, p.word);
+    const exact = normWord(v)===normWord(p.word);
     const fb=document.getElementById('fb');
-    if(ok){ session.need[n]--; const b=record(n,dir,true,performance.now()-t0); if(b)session.blooms.push(n); bumpCombo(); beep(620,.07);
-      fb.textContent=session.need[n]>0?'\u2713 once more to clear':'\u2713 cleared!'; fb.className='feedback good';
-    } else { session.need[n]=2; record(n,dir,false,null); resetCombo(); beep(200,.12);
-      fb.textContent=dir==='n2w'?('It\u2019s "'+p.word+'"'):('It\u2019s '+two(n)+' \u2014 '+p.word); fb.className='feedback bad'; }
-    setTimeout(nextGrind, ok?600:1400);
+    document.getElementById('go').disabled=true; inp.disabled=true;
+    if(ok){
+      session.need[n]--;
+      const b=record(n,'n2w',true,performance.now()-t0,true); if(b)session.blooms.push(n);
+      bumpCombo(); beep(620,.07);
+      const left = TYPED_TO_BLOOM - S.pegs[n].tc;
+      const note = b ? '✻ bloomed!' : (left>0 ? left+' more typed to bloom' : 'ready to bloom — come back tomorrow');
+      fb.innerHTML=(exact?'✓ ':'✓ '+p.word+' · ')+'<span class="muted">'+note+'</span>';
+      fb.className='feedback good';
+    } else {
+      session.need[n]=2; if(!session.missed.includes(n)) session.missed.push(n);
+      record(n,'n2w',false,null,true); resetCombo(); beep(200,.12);
+      fb.textContent='It’s “'+p.word+'” ('+two(n)+')'; fb.className='feedback bad';
+    }
+    setTimeout(nextGrind, ok?800:1600);
   }
   document.getElementById('go').onclick=submit;
   inp.addEventListener('keydown',e=>{if(e.key==='Enter')submit();});
 }
 function endGrind(){
-  scorecard('All cleared', [['Pegs cleared',session.total],['Best combo',comboMax+'x'],['Blooms',session.blooms.length],['XP','+'+session.total*20]], session.blooms, ()=>goHome(), '', true);
+  const shaky = session.missed.slice().sort((a,b)=>a-b);
+  const tags = shaky.length
+    ? '<div class="center muted" style="font-size:.85rem">Tripped you up on the way</div><div class="bloomrow">'+shaky.map(n=>'<span class="weaktag">'+two(n)+' '+byN[n].word+'</span>').join('')+'</div>'
+    : '';
+  scorecard('All cleared', [
+    ['Pegs cleared',session.total],
+    ['Clean first try',session.total-shaky.length],
+    ['Blooms',session.blooms.length],
+    ['XP','+'+session.total*20]
+  ], session.blooms, ()=>goHome(), '', true, tags);
 }
 
 /* ============ SCORECARD ============ */
-function scorecard(title, stats, blooms, again, tagline, hideAgain){
+function scorecard(title, stats, blooms, again, tagline, hideAgain, extra){
   let sc='<div class="statgrid">'+stats.map(s=>'<div class="stat"><div class="v">'+s[1]+'</div><div class="k">'+s[0]+'</div></div>').join('')+'</div>';
   let bl = blooms&&blooms.length? '<div class="center muted" style="font-size:.85rem">New blooms</div><div class="bloomrow">'+blooms.map(n=>'<span class="bloomtag">&#10047; '+two(n)+' '+byN[n].word+'</span>').join('')+'</div>' : '';
   stageHost.innerHTML='<div class="stage"><div class="inner results">'+
     '<h2>'+title+'</h2>'+(tagline?'<div class="sub">'+tagline+'</div>':'<div class="sub">Meadow '+meadowPct()+'% bloomed</div>')+
-    sc+bl+
+    sc+bl+(extra||'')+
     (hideAgain?'':'<div class="mt"><button class="btn gold wide" id="again">Go again</button></div>')+
     '<div class="mt"><button class="btn ghost wide" onclick="goHome()">Back to meadow</button></div></div></div>';
   const a=document.getElementById('again'); if(a)a.onclick=again;
@@ -827,12 +886,12 @@ function scorecard(title, stats, blooms, again, tagline, hideAgain){
 /* ============ DAISY RAIN ============ */
 let rainDiff='gentle';
 const RAIN_GAP=1500; // ms of breathing space between one answer and the next peg appearing
-const RAIN_CFG={ gentle:{fall:14000,ramp:80,min:7000,lives:5}, normal:{fall:9500,ramp:120,min:5000,lives:4}, brisk:{fall:7000,ramp:170,min:3800,lives:3} };
+const RAIN_CFG={ gentle:{fall:14000,ramp:80,min:7000,lives:4}, normal:{fall:9500,ramp:120,min:5000,lives:3}, brisk:{fall:7000,ramp:170,min:3800,lives:2} };
 function rainIntro(){
   enterPlay();
   stageHost.innerHTML='<div class="stage"><div class="inner center">'+
     '<h2 style="font-family:var(--serif);font-size:1.6rem">Daisy Rain <span class="dz"></span></h2>'+
-    '<p class="muted" style="margin:8px 0 4px">A peg drifts down from the sky. Tap its match at the bottom before it lands. Gentle mode falls slowly and gives you 5 lives &mdash; plenty of time to learn. Pick a level:</p>'+
+    '<p class="muted" style="margin:8px 0 4px">A peg drifts down from the sky. Tap its match at the bottom before it lands. Gentle mode falls slowly and gives you 4 lives, plenty of time to learn. Pick a level:</p>'+
     '<div class="diffrow">'+
       '<button class="diffbtn '+(rainDiff==='gentle'?'sel':'')+'" data-d="gentle">Gentle</button>'+
       '<button class="diffbtn '+(rainDiff==='normal'?'sel':'')+'" data-d="normal">Normal</button>'+
@@ -870,7 +929,7 @@ function spawnFaller(){
   st.appendChild(el);
   session.y=0; session.spawnedAt=performance.now();   // appear at the top of the sky, then fall
   // choices at bottom: opposite representation
-  const opts=shuffle([n,...sample(allNums(),3,n)]);
+  const opts=shuffle([n,...sample(distractorPool(),3,n)]);
   const rc=document.getElementById('rchoices');
   rc.innerHTML=opts.map(o=> showIcon
     ? '<button class="rchoice" data-n="'+o+'"><div class="rn">'+two(o)+'</div></button>'
@@ -906,7 +965,8 @@ function rainTick(t){
 function rainAnswer(chosen, btn){
   if(!session||!session.current)return;
   const n=session.current.n, ok=chosen===n, dir=session.current.mode==='icon'?'w2n':'n2w';
-  const b=record(n,dir,ok,null); if(b)session.blooms.push(n);
+  const ms=session.spawnedAt?performance.now()-session.spawnedAt:null;
+  const b=record(n,dir,ok,ms); if(b)session.blooms.push(n);
   const el=document.getElementById('faller');
   if(ok){
     session.score++; session.catches++; bumpCombo(); beep(680,.06);

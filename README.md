@@ -6,16 +6,28 @@ Everything lives in a single `index.html` file: 101 hand-drawn SVG icons and all
 
 ## How to play
 
-Open `index.html` in any browser. New to the system? **Start with The Code** — a one-screen reference (with memory hooks) of which consonant sounds map to each digit 0–9, plus a quick self-quiz. Every peg word is built from it. Then work through the six practice modes:
+Open `index.html` in any browser. New to the system? **Start with The Code** — a one-screen reference (with memory hooks) of which consonant sounds map to each digit 0–9, plus a quick self-quiz. Every peg word is built from it.
 
-1. **Learn** — flip through the cards to study each number, picture, and word.
-2. **Drill** — mixed-direction multiple choice; reinforces the links, weighted toward your shakier pegs.
-3. **Diagnose** — one pass over the set, then a colour-coded 0–100 map of exactly which pegs are weak.
-4. **Grind** — type-the-answer practice on just the weak pegs; each needs two correct in a row to clear.
-5. **Speed** — 60-second beat-the-clock to turn "I can work it out" into "it's just there."
-6. **Daisy Rain** — arcade mode. A word, number, or picture drifts down from the sky; tap its match before it lands. Every catch makes the next fall faster, and three misses ends the run. Turns recall into reflex.
+**Daily Practice** is the front door. A 15-question round the game picks for you: pegs due for spaced review, plus a few you haven't met yet. Most days this is the only button you need.
 
-A **Practice set** dropdown focuses any run on all 101, a single tens-group, or weak-spots-only. The home screen shows a live mastery grid — tap any cell to peek at that card. Progress is saved in your browser between sessions.
+Then four modes for when you want something specific:
+
+1. **Study** — flip through the cards to learn each number, picture, and word.
+2. **Name It** — a number or a picture, and you type the word from memory. No options to choose from. This is the mode that teaches, and the only one that can bloom a peg.
+3. **Beat the Clock** — 60-second rapid recall, to turn "I can work it out" into "it's just there."
+4. **Daisy Rain** — arcade mode. A word, number, or picture drifts down from the sky; tap its match before it lands. Every catch makes the next fall faster, and running out of hearts ends the run.
+
+A **Practice set** dropdown focuses any run on all 101, a single tens-group, reviews due, or everything not yet bloomed. Within a tens-group the wrong answers are drawn from that same group, so you're forced to tell 74 from 76 rather than from 3.
+
+The home screen shows a live mastery grid — tap any cell to peek at that card. Progress is saved in your browser between sessions.
+
+## What it takes to bloom a peg
+
+Multiple choice is easy to beat. Once you know the code, seeing 75 tells you the word starts with a K sound, and picking Koala out of four options needs no memory at all. So multiple choice can carry a peg to "solid" on the grid, and no further.
+
+**A peg only blooms once you've typed its word correctly 3 times, across at least 2 different days.** Getting it wrong anywhere, in any mode, resets the count. Typing is checked forgivingly: case, spaces, punctuation and plurals are ignored, and one typo is allowed on words of 4 letters or more.
+
+Name It also watches what you miss. Fumble a few pegs in Daisy Rain or Daily Practice, then open Name It, and it offers to drill exactly those.
 
 ## The art
 
