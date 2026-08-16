@@ -125,26 +125,27 @@
   .feedback{text-align:center; min-height:26px; margin-top:12px; font-family:var(--serif); font-size:1.02rem}
   .feedback.good{color:var(--good)} .feedback.bad{color:var(--red)}
 
-  /* Name It answer slot. Fixed height on purpose: it holds its space while the
-     question is still open, so revealing the answer never shifts the input or
-     the button. Kept deliberately SHORT — the whole card has to fit on a phone
-     with the keyboard up, or the browser scrolls to the input and pushes the
-     number off the top of the screen. Exactly one note line, always. */
-  .reveal{min-height:94px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px}
-  .reveal .rvicon{width:42px;height:42px}
-  .reveal .rvicon svg{width:100%;height:100%}
-  .reveal .rvword{font-family:var(--serif); font-weight:600; font-size:1.25rem; line-height:1.15}
-  .reveal .rvword.good{color:var(--good)} .reveal .rvword.bad{color:var(--red)}
-  /* One line, never two — a wrapped note would change the slot height and put
+  /* Name It uses ONE fixed-height block above the input: the number while the
+     question is open, the answer once you've replied. No separate reveal slot,
+     because reserving empty space for it left a dead gap above the keyboard and
+     pushed the whole card off a phone screen. Same height either way, so
+     nothing below it ever moves. */
+  .stage.naming #qhead{min-height:90px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:1px}
+  .rvicon{width:40px;height:40px}
+  .rvicon svg{width:100%;height:100%}
+  .rvword{font-family:var(--serif); font-weight:600; font-size:1.25rem; line-height:1.15}
+  .rvword.good{color:var(--good)} .rvword.bad{color:var(--red)}
+  /* One line, never two — a wrapped note would change the block height and put
      the jumping back. Anything too long is ellipsised instead. */
-  .reveal .rvnote{font-family:var(--sans); font-size:.78rem; color:var(--ink-soft);
+  .rvnote{font-family:var(--sans); font-size:.78rem; color:var(--ink-soft);
     white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis}
 
   /* Compact sizing for the typed-recall round only. Every other mode keeps the
      roomier layout; this one has to share the screen with a keyboard. */
   .stage.naming{padding:14px}
   .stage.naming .prompt-label{font-size:.72rem}
-  .stage.naming .bignum{font-size:2.6rem; margin:2px 0}
+  .stage.naming .bignum{font-size:2.6rem; margin:0}
   .stage.naming .typerow{margin-top:10px; gap:8px}
   .stage.naming .typerow input{font-size:1.2rem; padding:10px}
   .stage.naming .typerow .btn{padding:10px; min-height:42px}
@@ -849,7 +850,6 @@ function grindThese(pool){
   // keyboard drop and jump back up between every single peg.
   stageHost.querySelector('.stage').classList.add('naming');   // compact sizing, see CSS
   stageHost.querySelector('#qbody').innerHTML=
-    '<div class="reveal" id="rv"></div>'+
     '<div class="typerow"><input id="ans" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="the word&hellip;"/><button class="btn" id="go">Check</button></div>';
   const inp=document.getElementById('ans');
   document.getElementById('go').onclick=grindKey;
@@ -895,7 +895,6 @@ function nextGrind(){
   // that makes you go through the code and land on the actual peg word.
   stageHost.querySelector('#qhead').innerHTML=
     '<div class="prompt-label">Type the word for this number</div><div class="bignum">'+two(n)+'</div>';
-  stageHost.querySelector('#rv').innerHTML='';
   const inp=document.getElementById('ans'), go=document.getElementById('go');
   inp.readOnly=false; inp.value=''; go.disabled=false; go.className='btn'; go.textContent='Check';
   session.n=n; session.p=p; session.t0=performance.now(); session.phase='ask';
@@ -911,9 +910,10 @@ function submitGrind(){
   go.className='btn gold'; go.textContent='Next →';
 
   const ok = wordMatches(v, p.word);
-  // The answer lands in the fixed slot right above the input, which is the part
-  // of the screen the keyboard leaves visible. Nothing above it moves. Keep it
-  // to ONE note line — a second line makes the card too tall for a phone.
+  // The answer replaces the number in the same fixed-height block right above
+  // the input, which is the part of the screen the keyboard leaves visible.
+  // Keep it to ONE note line — a second line changes the height and everything
+  // below it shifts again.
   let note;
   if(ok){
     session.need[n]--;
@@ -941,9 +941,9 @@ function submitGrind(){
     session.need[n]=0; session.parked.push(n);
     note = '<div class="rvnote">you said <b>'+esc(v)+'</b> &middot; parked for today</div>';
   }
-  stageHost.querySelector('#rv').innerHTML=
+  stageHost.querySelector('#qhead').innerHTML=
     '<div class="rvicon">'+p.svg+'</div>'+
-    '<div class="rvword '+(ok?'good':'bad')+'">'+(ok?'✓':'✗')+' '+p.word+'</div>'+note;
+    '<div class="rvword '+(ok?'good':'bad')+'">'+(ok?'✓':'✗')+' '+two(n)+' '+p.word+'</div>'+note;
 
   // Right answers roll on by themselves so a good run keeps its rhythm. Wrong
   // ones wait for you to tap Next, because that's the one you need to sit with.
